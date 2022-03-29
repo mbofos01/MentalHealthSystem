@@ -32,7 +32,7 @@ public class EmailService {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-				return new PasswordAuthentication("wmpofos@gmail.com", "m1x@l1$mp0f0$");
+				return new PasswordAuthentication("wmpofos@gmail.com", "");
 
 			}
 
