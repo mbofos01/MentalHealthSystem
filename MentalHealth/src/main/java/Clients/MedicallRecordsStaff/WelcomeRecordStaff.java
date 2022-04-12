@@ -8,6 +8,8 @@ import Database.JDBC;
 import Objects.RecordsStaff;
 import javax.swing.JLabel;
 
+import Clients.Client;
+
 public class WelcomeRecordStaff {
 
 	private JFrame frame;
@@ -15,11 +17,11 @@ public class WelcomeRecordStaff {
 	/**
 	 * Launch the application.
 	 */
-	public static void openWindow(final JDBC database, final RecordsStaff model) {
+	public static void openWindow(final Client client, final RecordsStaff model) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					WelcomeRecordStaff window = new WelcomeRecordStaff(database, model);
+					WelcomeRecordStaff window = new WelcomeRecordStaff(client, model);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -31,14 +33,14 @@ public class WelcomeRecordStaff {
 	/**
 	 * Create the application.
 	 */
-	public WelcomeRecordStaff(JDBC database, RecordsStaff model) {
-		initialize(database, model);
+	public WelcomeRecordStaff(Client client, RecordsStaff model) {
+		initialize(client, model);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(JDBC database, RecordsStaff model) {
+	private void initialize(Client client, RecordsStaff model) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 697, 436);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

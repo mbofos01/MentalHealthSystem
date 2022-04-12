@@ -12,7 +12,10 @@ import java.util.concurrent.Executors;
 
 import com.google.gson.Gson;
 
-import Clients.Item;
+import Database.JDBC;
+import Objects.RecordsStaff;
+import Tools.Query;
+import Tools.Viewpoint;
 
 public class MultiThreadedTCPServer {
 
@@ -20,6 +23,7 @@ public class MultiThreadedTCPServer {
 
 		private Socket client;
 		private String clientbuffer;
+		private static JDBC database = new JDBC();
 
 		public TCPWorker(Socket client) {
 			this.client = client;
@@ -35,11 +39,21 @@ public class MultiThreadedTCPServer {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
 
 				this.clientbuffer = reader.readLine();
+				Query incoming = new Gson().fromJson(clientbuffer, Query.class);
+
+				if (incoming.getClient() == Viewpoint.MedicalRecords)
+					HandleMedicalRecords(incoming, output);
+				else if (incoming.getClient() == Viewpoint.Clinical)
+					HandleClinical(incoming, output);
+				else if (incoming.getClient() == Viewpoint.Receptionist)
+					HandleReceptionist(incoming, output);
+				else if (incoming.getClient() == Viewpoint.HealthService)
+					HandleHealthService(incoming, output);
+				else {
+					System.out.println("UNKNOWN CLIENT ISSUED REQUEST");
+				}
+
 				System.out.println("[" + new Date() + "] Received: " + this.clientbuffer);
-
-				Item item = new Item("thread", 0.5);
-
-				output.writeBytes(new Gson().toJson(item) + System.lineSeparator());
 
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -47,6 +61,41 @@ public class MultiThreadedTCPServer {
 
 		}
 
+		private void HandleHealthService(Query incoming, DataOutputStream output) {
+			// TODO Auto-generated method stub
+
+		}
+
+		private void HandleReceptionist(Query incoming, DataOutputStream output) {
+			// TODO Auto-generated method stub
+
+		}
+
+		private void HandleClinical(Query incoming, DataOutputStream output) {
+			// TODO Auto-generated method stub
+
+		}
+
+		/**
+		 * This method is used to implement all the function issued by Medical Records
+		 * Staff client.
+		 * 
+		 * @param incoming Query issued
+		 * @param output   the data stream we send out
+		 * @throws IOException
+		 */
+		public void HandleMedicalRecords(Query incoming, DataOutputStream output) throws IOException {
+			if (incoming.getFunction() == 0) {
+				RecordsStaff rec = database.loginMedicalRecords(incoming.getArguments().get(0),
+						incoming.getArguments().get(1));
+				if (rec == null) {
+					rec = new RecordsStaff();
+					rec.emptyValue();
+				}
+				output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
+			}
+
+		}
 	}
 
 	public static ExecutorService TCP_WORKER_SERVICE = Executors.newFixedThreadPool(10);
@@ -54,7 +103,7 @@ public class MultiThreadedTCPServer {
 	public static void main(String args[]) {
 		try {
 			@SuppressWarnings("resource")
-			ServerSocket socket = new ServerSocket(8083);
+			ServerSocket socket = new ServerSocket(8081);
 
 			System.out.println("Server listening to: " + socket.getInetAddress() + ":" + socket.getLocalPort());
 

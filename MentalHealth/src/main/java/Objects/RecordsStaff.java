@@ -78,4 +78,18 @@ public class RecordsStaff {
 		this.username = username;
 	}
 
+	@Override
+	public String toString() {
+		return "RecordsStaff [id=" + id + ", name=" + name + ", surname=" + surname + ", email=" + email + ", username="
+				+ username + "]";
+	}
+
+	/**
+	 * If we want to indicate a failed log in attempt we add the id value -1.
+	 */
+	public void emptyValue() {
+		id = -1;
+
+	}
+
 }

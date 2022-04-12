@@ -97,6 +97,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function is used to login a Medical Records Staff Person
+	 * 
+	 * @param username String the username we enter
+	 * @param password String the password we enter
+	 * @return
+	 */
 	public RecordsStaff loginMedicalRecords(String username, String password) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call loginMedicalRecords(?,?)}");

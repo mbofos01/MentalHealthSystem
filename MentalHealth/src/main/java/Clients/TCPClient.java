@@ -1,35 +1,34 @@
 package Clients;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import com.google.gson.Gson;
+import Objects.RecordsStaff;
+import Tools.Query;
+import Tools.Viewpoint;
 
 public class TCPClient {
 
 	public static void main(String args[]) {
 		try {
 
-			String message, response;
-			Socket socket = new Socket("127.0.0.1", 8083);
+			String response;
+			Client cli = new Client("127.0.0.1", 8081);
+			// message = reader.readLine() + System.lineSeparator();
 
-			DataOutputStream output = new DataOutputStream(socket.getOutputStream());
-			BufferedReader server = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			Query query = new Query(Viewpoint.MedicalRecords);
+			query.setFunction(0);
+			query.addArgument("jwill01");
+			query.addArgument("1234");
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-			message = reader.readLine() + System.lineSeparator();
+			cli.send(query);
+			cli.output.writeBytes(new Gson().toJson(query) + System.lineSeparator());
 
-			output.writeBytes(message);
-			response = server.readLine();
+			response = cli.read();
 
-			System.out.println(response + "|" + response.length());
+			RecordsStaff record = new Gson().fromJson(response, RecordsStaff.class);
+			System.out.println(record.toString());
 
-			Item item = new Gson().fromJson(response, Item.class);
-			System.out.println(item.toString());
-
-			socket.close();
+			cli.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();

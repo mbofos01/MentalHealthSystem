@@ -7,6 +7,8 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
@@ -14,8 +16,13 @@ import javax.swing.SwingConstants;
 import UI.CustomColours;
 import javax.swing.event.ChangeListener;
 
+import com.google.gson.Gson;
+
+import Clients.Client;
 import Database.JDBC;
 import Objects.RecordsStaff;
+import Tools.Query;
+import Tools.Viewpoint;
 
 import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionListener;
@@ -26,7 +33,7 @@ public class MedicalRecordsLogin {
 	private JFrame frmMedicalRecordsStaff;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
-	private static int tries = 0;
+	private static String[] rets = new String[2];
 
 	/**
 	 * Launch the application.
@@ -35,9 +42,10 @@ public class MedicalRecordsLogin {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					JDBC database = new JDBC();
-					MedicalRecordsLogin window = new MedicalRecordsLogin(database);
+					Client client = new Client("127.0.0.1", 8081);
+					MedicalRecordsLogin window = new MedicalRecordsLogin(client);
 					window.frmMedicalRecordsStaff.setVisible(true);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -48,14 +56,14 @@ public class MedicalRecordsLogin {
 	/**
 	 * Create the application.
 	 */
-	public MedicalRecordsLogin(JDBC database) {
-		initialize(database);
+	public MedicalRecordsLogin(Client client) {
+		initialize(client);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(final JDBC database) {
+	private void initialize(final Client client) {
 		frmMedicalRecordsStaff = new JFrame();
 		frmMedicalRecordsStaff.getContentPane().setForeground(CustomColours.Gray());
 		frmMedicalRecordsStaff.setTitle("Medical Records Staff Login Page");
@@ -89,19 +97,26 @@ public class MedicalRecordsLogin {
 				String user1 = usernameField.getText();
 				String pass1 = new String(passwordField.getPassword());
 
-				RecordsStaff recstaff = database.loginMedicalRecords(user1, pass1);
-				if (recstaff == null) {
-					usernameField.setText("");
-					passwordField.setText("");
-					tries++;
-					if (tries == 3)
-						System.exit(1);
-				} else {
-					WelcomeRecordStaff.openWindow(database, recstaff);
-					frmMedicalRecordsStaff.dispose();
+				Query query = new Query(Viewpoint.MedicalRecords);
+				query.setFunction(0);
+				query.addArgument(user1);
+				query.addArgument(pass1);
+				client.send(query);
 
+				RecordsStaff record = new Gson().fromJson(client.read(), RecordsStaff.class);
+				if (record.getId() == -1) {
+					JOptionPane.showMessageDialog(null, "Wrong password!" + '\n', "Error", JOptionPane.ERROR_MESSAGE);
+					System.exit(0);
+
+				} else {
+					System.out.println(record.toString());
+					frmMedicalRecordsStaff.dispose();
+					WelcomeRecordStaff.openWindow(client, record);
 				}
+
+				return;
 			}
+
 		});
 
 		loginbtn.setBackground(CustomColours.Green());
@@ -113,7 +128,7 @@ public class MedicalRecordsLogin {
 		JButton cancelbtn = new JButton("Cancel");
 		cancelbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.exit(tries);
+				System.exit(1);
 			}
 		});
 		cancelbtn.setForeground(CustomColours.White());
