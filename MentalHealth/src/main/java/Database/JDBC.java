@@ -3,6 +3,8 @@ package Database;
 //import java.io.*;
 import java.sql.*;
 
+import Objects.RecordsStaff;
+
 public class JDBC {
 	private boolean dbDriverLoaded = false;
 	private Connection conn = null;
@@ -60,7 +62,7 @@ public class JDBC {
 
 	public static void main(String[] args) throws SQLException {
 		JDBC base = new JDBC();
-		base.select();
+		base.insert();
 
 	}
 
@@ -93,5 +95,28 @@ public class JDBC {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public RecordsStaff loginMedicalRecords(String username, String password) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call loginMedicalRecords(?,?)}");
+			cs.setString(1, username);
+			cs.setString(2, password);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				RecordsStaff rec = new RecordsStaff();
+				rec.setId(rs.getInt("records_id"));
+				rec.setName(rs.getString("name"));
+				rec.setSurname(rs.getString("surname"));
+				rec.setUsername(rs.getString("username"));
+				rec.setEmail(rs.getString("email"));
+				return rec;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }
