@@ -105,7 +105,8 @@ public class MedicalRecordsLogin {
 
 				RecordsStaff record = new Gson().fromJson(client.read(), RecordsStaff.class);
 				if (record.getId() == -1) {
-					JOptionPane.showMessageDialog(null, "Wrong password!" + '\n', "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "           Wrong password!" + '\n', "Error",
+							JOptionPane.ERROR_MESSAGE);
 					System.exit(0);
 
 				} else {
