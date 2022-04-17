@@ -21,11 +21,9 @@ public class FileResourcesUtils {
 		// String fileName = "database.properties";
 		String fileName = "clientConf.json";
 
-		System.out.println("getResourceAsStream : " + fileName);
 		InputStream is = app.getFileFromResourceAsStream(fileName);
 		printInputStream(is);
 
-		System.out.println("\ngetResource : " + fileName);
 		File file = null;
 		try {
 			file = app.getFileFromResource(fileName);
@@ -38,7 +36,6 @@ public class FileResourcesUtils {
 	}
 
 	public Configuration getConfig(String filename) {
-		System.out.println("getResourceAsStream : " + filename);
 		InputStream is = this.getFileFromResourceAsStream(filename);
 		return new Gson().fromJson(this.getInputStream(is), Configuration.class);
 	}
