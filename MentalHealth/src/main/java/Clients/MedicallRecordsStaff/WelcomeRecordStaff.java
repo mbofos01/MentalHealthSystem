@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import Database.JDBC;
 import Objects.RecordsStaff;
 import javax.swing.JLabel;
 

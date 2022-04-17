@@ -3,7 +3,6 @@ package Clients.MedicallRecordsStaff;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
@@ -14,17 +13,13 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
 import UI.CustomColours;
-import javax.swing.event.ChangeListener;
-
 import com.google.gson.Gson;
 
 import Clients.Client;
-import Database.JDBC;
 import Objects.RecordsStaff;
 import Tools.Query;
 import Tools.Viewpoint;
 
-import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -33,7 +28,6 @@ public class MedicalRecordsLogin {
 	private JFrame frmMedicalRecordsStaff;
 	private JTextField usernameField;
 	private JPasswordField passwordField;
-	private static String[] rets = new String[2];
 
 	/**
 	 * Launch the application.
