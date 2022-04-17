@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import com.google.gson.Gson;
 
 import Objects.Configuration;
+import Tools.FileResourcesUtils;
 import Tools.Query;
 
 /**
@@ -25,8 +26,36 @@ public class Client {
 	public BufferedReader server;
 	public BufferedReader reader;
 
-	public Client(Configuration con) {
-		this(con.getHost(), con.getPort());
+	public Client(String filename) {
+		FileResourcesUtils app = new FileResourcesUtils();
+		Configuration con = app.getConfig(filename);
+		String ip = con.getHost();
+		int port = con.getPort();
+		Socket socket = null;
+		try {
+			socket = new Socket(ip, port);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			output = new DataOutputStream(socket.getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			server = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		reader = new BufferedReader(new InputStreamReader(System.in));
 	}
 
 	/**

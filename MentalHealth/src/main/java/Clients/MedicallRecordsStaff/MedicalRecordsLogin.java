@@ -40,12 +40,11 @@ public class MedicalRecordsLogin {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		FileResourcesUtils app = new FileResourcesUtils();
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Client client = new Client(app.getConfig("clientConf.json"));
+					Client client = new Client("clientConf.json");
 					MedicalRecordsLogin window = new MedicalRecordsLogin(client);
 					window.frmMedicalRecordsStaff.setVisible(true);
 

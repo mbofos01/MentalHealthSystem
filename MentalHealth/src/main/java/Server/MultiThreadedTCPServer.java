@@ -57,7 +57,7 @@ public class MultiThreadedTCPServer {
 				System.out.println("[" + new Date() + "] Received: " + this.clientbuffer);
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("Connection with client ended unexpectedly");
 			}
 
 		}
