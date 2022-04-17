@@ -14,22 +14,21 @@ import javax.swing.SwingConstants;
 
 import UI.CustomColours;
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
-
 import Clients.Client;
-import Objects.Configuration;
 import Objects.RecordsStaff;
-import Tools.FileResourcesUtils;
 import Tools.Query;
 import Tools.Viewpoint;
 
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.awt.event.ActionEvent;
 
+/**
+ * In-page for the Medical Records Management Viewpoint. As stated in the basic
+ * structure each viewpoint must have a client object as an argument.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class MedicalRecordsLogin {
 
 	private JFrame frmMedicalRecordsStaff;

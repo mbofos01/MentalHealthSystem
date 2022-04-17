@@ -1,9 +1,6 @@
 package Tools;
 
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
@@ -12,36 +9,27 @@ import com.google.gson.Gson;
 
 import Objects.Configuration;
 
+/**
+ * This class supports IO fetch and usage. Due to the nature of a Maven project
+ * we save all the resources to the resources directory.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class FileResourcesUtils {
-
-	public static void main(String[] args) throws IOException {
-
-		FileResourcesUtils app = new FileResourcesUtils();
-
-		// String fileName = "database.properties";
-		String fileName = "clientConf.json";
-
-		InputStream is = app.getFileFromResourceAsStream(fileName);
-		printInputStream(is);
-
-		File file = null;
-		try {
-			file = app.getFileFromResource(fileName);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		printFile(file);
-
-	}
 
 	public Configuration getConfig(String filename) {
 		InputStream is = this.getFileFromResourceAsStream(filename);
 		return new Gson().fromJson(this.getInputStream(is), Configuration.class);
 	}
 
-	// get a file from the resources folder
-	// works everywhere, IDEA, unit test and JAR file.
+	/**
+	 * This method fetches a file from the resources directory (where all files,
+	 * images etc should be saved).
+	 * 
+	 * @param fileName The name of the file
+	 * @return InputStream handler of the file
+	 */
 	public InputStream getFileFromResourceAsStream(String fileName) {
 
 		// The class loader that loaded the class
@@ -57,30 +45,11 @@ public class FileResourcesUtils {
 
 	}
 
-	/*
-	 * The resource URL is not working in the JAR If we try to access a file that is
-	 * inside a JAR, It throws NoSuchFileException (linux), InvalidPathException
-	 * (Windows)
+	/**
+	 * This method print the content of a file using its inputStream handler.
 	 * 
-	 * Resource URL Sample: file:java-io.jar!/json/file1.json
+	 * @param is InputStream handler of the file
 	 */
-	public File getFileFromResource(String fileName) throws URISyntaxException {
-
-		ClassLoader classLoader = getClass().getClassLoader();
-		URL resource = classLoader.getResource(fileName);
-		if (resource == null) {
-			throw new IllegalArgumentException("file not found! " + fileName);
-		} else {
-
-			// failed if files have whitespaces or special characters
-			// return new File(resource.getFile());
-
-			return new File(resource.toURI());
-		}
-
-	}
-
-	// print input stream
 	public static void printInputStream(InputStream is) {
 
 		try (InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
@@ -97,6 +66,19 @@ public class FileResourcesUtils {
 
 	}
 
+	/**
+	 * This method reads and returns ONLY the first line of a file
+	 * 
+	 * Be careful, in this stage we only use this object and this function to get
+	 * the configuration of the clients and the servers which means we only need a
+	 * line for host IP and the port in use. If you wish to extend the IO from files
+	 * using this function, you could and should create a string with all the lines
+	 * of the file in it. In any other case you should create a new function which
+	 * fits your purpose better.
+	 * 
+	 * @param is InputStream the file handler
+	 * @return the first line of the file
+	 */
 	public String getInputStream(InputStream is) {
 
 		try (InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
@@ -111,7 +93,11 @@ public class FileResourcesUtils {
 
 	}
 
-	// print a file
+	/**
+	 * This method prints a files' content.
+	 * 
+	 * @param file The name of the file we want to print its content
+	 */
 	public static void printFile(File file) {
 
 		List<String> lines;

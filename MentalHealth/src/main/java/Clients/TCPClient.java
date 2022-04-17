@@ -6,6 +6,12 @@ import Objects.RecordsStaff;
 import Tools.Query;
 import Tools.Viewpoint;
 
+/**
+ * Demo class for a tcp connection NOT IN USE
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class TCPClient {
 
 	public static void main(String args[]) {

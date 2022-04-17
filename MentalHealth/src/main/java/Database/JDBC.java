@@ -1,17 +1,22 @@
 package Database;
 
-//import java.io.*;
 import java.sql.*;
 
 import Objects.RecordsStaff;
 
+/**
+ * This object is the middleware between the server and the SQL Database. Each
+ * method of this object should call a procedure which is defined in the actual
+ * DB, and also return an object or a list of objects whom handle the returned
+ * data.
+ * 
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class JDBC {
 	private boolean dbDriverLoaded = false;
 	private Connection conn = null;
-	// handling the keyboard inputs through a BufferedReader
-	// This variable became global for your convenience.
-	// private BufferedReader in = new BufferedReader(new
-	// InputStreamReader(System.in));
 
 	public JDBC() {
 		getDBConnection();
@@ -58,43 +63,6 @@ public class JDBC {
 			System.exit(1);
 		}
 		return conn;
-	}
-
-	public static void main(String[] args) throws SQLException {
-		JDBC base = new JDBC();
-		base.insert();
-
-	}
-
-	/**
-	 * Example for insert action
-	 */
-	public void insert() {
-		try {
-			PreparedStatement cs = this.conn.prepareCall("{call vale(?,?)}");
-			cs.setString(1, "test1");
-			cs.setString(2, "kaloee");
-			cs.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Example for get action
-	 */
-	public void select() {
-		try {
-			PreparedStatement cs = this.conn.prepareCall("{call pare(?)}");
-			cs.setString(1, "kaloee");
-			ResultSet rs = cs.executeQuery();
-
-			while (rs.next()) {
-				System.out.println(rs.getString("test") + "  " + rs.getString("extra_col"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**

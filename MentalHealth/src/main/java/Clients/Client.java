@@ -26,6 +26,12 @@ public class Client {
 	public BufferedReader server;
 	public BufferedReader reader;
 
+	/**
+	 * This constructor creates the TCP connection using a configuration file. This
+	 * file MUST be in a json form like this one: {"host":"127.0.0.1","port":8081}
+	 * 
+	 * @param filename The name of the configuration file
+	 */
 	public Client(String filename) {
 		FileResourcesUtils app = new FileResourcesUtils();
 		Configuration con = app.getConfig(filename);
@@ -35,23 +41,19 @@ public class Client {
 		try {
 			socket = new Socket(ip, port);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		try {
 			output = new DataOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			server = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -70,23 +72,19 @@ public class Client {
 		try {
 			socket = new Socket(ip, port);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		try {
 			output = new DataOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			server = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -101,7 +99,6 @@ public class Client {
 		try {
 			server.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -116,7 +113,6 @@ public class Client {
 		try {
 			output.writeBytes(new Gson().toJson(query) + System.lineSeparator());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -131,7 +127,6 @@ public class Client {
 		try {
 			return server.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return "error";
