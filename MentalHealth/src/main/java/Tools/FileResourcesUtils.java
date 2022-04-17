@@ -76,6 +76,10 @@ public class FileResourcesUtils {
 	 * of the file in it. In any other case you should create a new function which
 	 * fits your purpose better.
 	 * 
+	 * 
+	 * UPDATE: Most probably this is resolved but if you intend to use this method I
+	 * strongly recommend to try it thoroughly.
+	 * 
 	 * @param is InputStream the file handler
 	 * @return the first line of the file
 	 */
@@ -84,7 +88,14 @@ public class FileResourcesUtils {
 		try (InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
 				BufferedReader reader = new BufferedReader(streamReader)) {
 
-			return reader.readLine();
+			String all_in_one_line = " ";
+			String line;
+			while ((line = reader.readLine()) != null) {
+				all_in_one_line += line;
+
+			}
+
+			return all_in_one_line;
 
 		} catch (IOException e) {
 			e.printStackTrace();
