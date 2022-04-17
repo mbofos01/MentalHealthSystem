@@ -14,13 +14,20 @@ import javax.swing.SwingConstants;
 
 import UI.CustomColours;
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 
 import Clients.Client;
+import Objects.Configuration;
 import Objects.RecordsStaff;
+import Tools.FileResourcesUtils;
 import Tools.Query;
 import Tools.Viewpoint;
 
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.awt.event.ActionEvent;
 
 public class MedicalRecordsLogin {
@@ -33,10 +40,12 @@ public class MedicalRecordsLogin {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		FileResourcesUtils app = new FileResourcesUtils();
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Client client = new Client("127.0.0.1", 8081);
+					Client client = new Client(app.getConfig("clientConf.json"));
 					MedicalRecordsLogin window = new MedicalRecordsLogin(client);
 					window.frmMedicalRecordsStaff.setVisible(true);
 
@@ -45,6 +54,7 @@ public class MedicalRecordsLogin {
 				}
 			}
 		});
+
 	}
 
 	/**

@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 
 import com.google.gson.Gson;
 
+import Objects.Configuration;
 import Tools.Query;
 
 /**
@@ -23,6 +24,10 @@ public class Client {
 	public DataOutputStream output;
 	public BufferedReader server;
 	public BufferedReader reader;
+
+	public Client(Configuration con) {
+		this(con.getHost(), con.getPort());
+	}
 
 	/**
 	 * To establish the connection we need a port and an IP.

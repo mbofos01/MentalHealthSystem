@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 import Database.JDBC;
 import Objects.RecordsStaff;
+import Tools.FileResourcesUtils;
 import Tools.Query;
 import Tools.Viewpoint;
 
@@ -102,8 +103,10 @@ public class MultiThreadedTCPServer {
 
 	public static void main(String args[]) {
 		try {
+			FileResourcesUtils app = new FileResourcesUtils();
+
 			@SuppressWarnings("resource")
-			ServerSocket socket = new ServerSocket(8081);
+			ServerSocket socket = new ServerSocket(app.getConfig("serverConf.json").getPort());
 
 			System.out.println("Server listening to: " + socket.getInetAddress() + ":" + socket.getLocalPort());
 
