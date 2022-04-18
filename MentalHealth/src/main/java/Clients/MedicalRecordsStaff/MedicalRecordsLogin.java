@@ -1,4 +1,4 @@
-package Clients.MedicallRecordsStaff;
+package Clients.MedicalRecordsStaff;
 
 import java.awt.EventQueue;
 
@@ -12,12 +12,13 @@ import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
-import UI.CustomColours;
 import com.google.gson.Gson;
+
 import Clients.Client;
 import Objects.RecordsStaff;
 import Tools.Query;
 import Tools.Viewpoint;
+import UI.CustomColours;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

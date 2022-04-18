@@ -21,7 +21,7 @@ public class CreatePDF {
 
 			// generate a PDF at the specified location
 			PdfWriter writer = PdfWriter.getInstance(doc,
-					new FileOutputStream("Report " + data.getWeek() + " to " + data.getClinic() + ".pdf"));
+					new FileOutputStream("Report " + data.getWeek() + " for " + data.getClinic() + ".pdf"));
 			// opens the PDF
 			doc.open();
 			// adding paragraphs to the PDF

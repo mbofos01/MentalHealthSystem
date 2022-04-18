@@ -1,13 +1,13 @@
-package Clients.MedicallRecordsStaff;
+package Clients.MedicalRecordsStaff;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import Objects.RecordsStaff;
 import javax.swing.JLabel;
 
 import Clients.Client;
+import Objects.RecordsStaff;
 
 public class WelcomeRecordStaff {
 
