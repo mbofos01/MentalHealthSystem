@@ -70,7 +70,7 @@ public class JDBC {
 	 * 
 	 * @param username String the username we enter
 	 * @param password String the password we enter
-	 * @return
+	 * @return RecordsStaff
 	 */
 	public RecordsStaff loginMedicalRecords(String username, String password) {
 		try {
@@ -91,7 +91,9 @@ public class JDBC {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		RecordsStaff rec = new RecordsStaff();
+		rec.setId(-1);
+		return rec;
 
-		return null;
 	}
 }
