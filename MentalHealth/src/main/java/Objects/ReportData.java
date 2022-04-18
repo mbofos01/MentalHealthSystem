@@ -6,6 +6,22 @@ public class ReportData {
 	private String week;
 	private String clinic;
 	private int[] visitors = new int[7];
+	private String[] dates = new String[7];
+
+	/**
+	 * @return the dates
+	 */
+	public String[] getDates() {
+		return dates;
+	}
+
+	/**
+	 * @param dates the dates to set
+	 */
+	public void setDates(String[] dates) {
+		this.dates = dates;
+	}
+
 	private int total_visitors;
 	private ArrayList<Condition> conds = new ArrayList<>();
 	private ArrayList<Prescription> prescr = new ArrayList<>();
@@ -14,6 +30,7 @@ public class ReportData {
 	 * @return the week
 	 */
 	public String getWeek() {
+		week = new String(dates[0] + " to " + dates[6]);
 		return week;
 	}
 

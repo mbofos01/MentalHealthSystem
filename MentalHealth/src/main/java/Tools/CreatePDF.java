@@ -8,10 +8,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 import Objects.ReportData;
 
 public class CreatePDF {
-	public static String[] days = { "Monday", "Tuesday", "Wendnesday", "Thursday", "Friday", "Saturday", "Sunday" };
-	public static String[] spaces = { "            ", "           ", "    ", "          ", "               ",
-			"           ", "             " };
+
 	public static String tab = "                                                              ";
+	public static String space = "                 ";
 
 	public static void createReport(ReportData data) {
 		Document doc = new Document();
@@ -22,17 +21,21 @@ public class CreatePDF {
 
 			// generate a PDF at the specified location
 			PdfWriter writer = PdfWriter.getInstance(doc,
-					new FileOutputStream("Report-" + data.getWeek() + "-" + data.getClinic() + ".pdf"));
+					new FileOutputStream("Report " + data.getWeek() + " to " + data.getClinic() + ".pdf"));
 			// opens the PDF
 			doc.open();
 			// adding paragraphs to the PDF
 
-			doc.add(new Paragraph("Report for week " + data.getWeek() + " for " + data.getClinic() + " Clinic"));
+			doc.add(new Paragraph("Report " + data.getWeek() + " for " + data.getClinic() + " Clinic"));
 			doc.add(new Paragraph("                                       "));
 			doc.add(doted_line);
 			for (int i = 0; i < 7; i++) {
-				doc.add(new Paragraph(
-						"                 " + days[i] + spaces[i] + tab + data.getVisitors()[i] + " visitors"));
+				if (data.getVisitors()[i] < 9)
+					doc.add(new Paragraph("                 " + data.getDates()[i] + space + tab + " "
+							+ data.getVisitors()[i] + " visitors"));
+				else
+					doc.add(new Paragraph("                 " + data.getDates()[i] + space + tab + data.getVisitors()[i]
+							+ " visitors"));
 			}
 			doc.add(doted_line);
 			doc.add(new Paragraph("Total visitors for the week : " + data.getTotal_visitors()));
@@ -56,9 +59,9 @@ public class CreatePDF {
 	public static void main(String args[]) {
 
 		ReportData rep = new ReportData();
-		rep.setWeek("2nd");
 		rep.setClinic("Rosewood");
-		int[] vis = { 1, 2, 3, 4, 5, 6, 7 };
+		rep.setDates(Clock.getLastWeek());
+		int[] vis = { 1, 2, 3, 4, 50, 6, 7 };
 		rep.setVisitors(vis);
 		createReport(rep);
 
