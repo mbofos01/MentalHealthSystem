@@ -84,25 +84,55 @@
 
 			<!-- If you want to make a client jar run build with goal package -->
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>Clients.MedicalRecordsStaff.MedicalRecordsLogin</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>make-assembly</id>
+						<id>build-a</id>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>Clients.MedicalRecordsStaff.MedicalRecordsLogin</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<!-- <appendAssemblyId>false</appendAssemblyId> -->
+							<finalName>MedicalRecords</finalName>
+						</configuration>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>build-b</id>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>Server.MultiThreadedTCPServer</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<!-- <appendAssemblyId>false</appendAssemblyId> -->
+							<finalName>Server</finalName>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+
 				</executions>
 			</plugin>
 
