@@ -1,10 +1,10 @@
 package Database;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import Objects.RecordsStaff;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class LogInTest {
 	/**
@@ -15,7 +15,7 @@ public class LogInTest {
 	public void testFakeMedical() {
 		JDBC database = new JDBC();
 		RecordsStaff r = database.loginMedicalRecords("totallyNotARealUser", "wrongpass");
-		assertEquals("Testing Medical Records Log In", r.getId(), -1);
+		assertEquals(r.getId(), -1);
 
 	}
 
@@ -27,7 +27,7 @@ public class LogInTest {
 	public void testRealMedical() {
 		JDBC database = new JDBC();
 		RecordsStaff r = database.loginMedicalRecords("jwill01", "1234");
-		assertNotEquals("Testing Medical Records Log In", r.getId(), -1);
+		assertNotEquals(r.getId(), -1);
 	}
 
 }

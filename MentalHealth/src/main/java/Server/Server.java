@@ -18,7 +18,7 @@ import Tools.FileResourcesUtils;
 import Tools.Query;
 import Tools.Viewpoint;
 
-public class MultiThreadedTCPServer {
+public class Server {
 
 	private static class TCPWorker implements Runnable {
 
