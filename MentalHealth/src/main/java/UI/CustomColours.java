@@ -223,7 +223,6 @@ public class CustomColours {
 	 *
 	 * @return Cyan color
 	 */
-	 */
 	public static Color Cyan() {
 		if (light)
 			return cyan_light;
