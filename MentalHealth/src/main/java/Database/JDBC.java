@@ -1,8 +1,9 @@
 package Database;
 
 import java.sql.*;
+import java.util.ArrayList;
 
-import Objects.RecordsStaff;
+import Objects.*;
 
 /**
  * This object is the middleware between the server and the SQL Database. Each
@@ -92,8 +93,64 @@ public class JDBC {
 			e.printStackTrace();
 		}
 		RecordsStaff rec = new RecordsStaff();
-		rec.setId(-1);
+		rec.emptyValue();
 		return rec;
 
+	}
+
+	/**
+	 * This method fetches all the drugs in an arraylist
+	 * 
+	 * @return ArrayList of drug objects
+	 */
+	public ArrayList<Drug> getDrugList() {
+		ArrayList<Drug> all_drugs = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getAllDrugs()}");
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Drug rec = new Drug();
+				rec.setId(rs.getInt("id"));
+				rec.setName(rs.getString("name"));
+				rec.setCommercial_name(rs.getString("commercial_name"));
+				rec.setSide_effect(rs.getString("side_effect"));
+				all_drugs.add(rec);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return all_drugs;
+
+	}
+
+	/**
+	 * This method fetches a drug based on its id, this is going to be used after a
+	 * specific drug has been selected on a list.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Drug getDrug(int id) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getDrug(?)}");
+			cs.setInt(1, id);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Drug rec = new Drug();
+				rec.setId(rs.getInt("id"));
+				rec.setName(rs.getString("name"));
+				rec.setCommercial_name(rs.getString("commercial_name"));
+				rec.setSide_effect(rs.getString("side_effect"));
+				return rec;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Drug rec = new Drug();
+		rec.setId(-1);
+		return rec;
 	}
 }

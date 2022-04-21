@@ -1,11 +1,31 @@
 package Objects;
 
+/**
+ * This class is used to model a Medical Records Staff person.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class RecordsStaff {
-
+	/**
+	 * A medical records staff person must have an id.
+	 */
 	private int id;
+	/**
+	 * A medical records staff person must have a name.
+	 */
 	private String name;
+	/**
+	 * A medical records staff person must have a surname.
+	 */
 	private String surname;
+	/**
+	 * A medical records staff person must have an email.
+	 */
 	private String email;
+	/**
+	 * A medical records staff person must have an username.
+	 */
 	private String username;
 
 	/**

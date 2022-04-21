@@ -7,11 +7,24 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import Objects.ReportData;
 
+/**
+ * This tool is used to create a PDF report for the health service management
+ * viewpoint.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class CreatePDF {
 
-	public static String tab = "                                                              ";
-	public static String space = "                 ";
+	private static String tab = "                                                              ";
+	private static String space = "                 ";
 
+	/**
+	 * This function creates a PDF report, based on the ReportData object passed as
+	 * an argument.
+	 * 
+	 * @param data ReportData all the data that are used to create the report
+	 */
 	public static void createReport(ReportData data) {
 		Document doc = new Document();
 		try {
@@ -56,14 +69,4 @@ public class CreatePDF {
 		}
 	}
 
-	public static void main(String args[]) {
-
-		ReportData rep = new ReportData();
-		rep.setClinic("Rosewood");
-		rep.setDates(Clock.getLastWeek());
-		int[] vis = { 1, 2, 3, 4, 50, 6, 7 };
-		rep.setVisitors(vis);
-		createReport(rep);
-
-	}
 }

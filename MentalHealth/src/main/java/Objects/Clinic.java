@@ -1,8 +1,23 @@
 package Objects;
 
+/**
+ * This class is used to model a clinic stored in the database.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class Clinic {
+	/**
+	 * A clinic must have an id.
+	 */
 	private int clinic_id;
+	/**
+	 * A clinic must have a name.
+	 */
 	private String name;
+	/**
+	 * A clinic must have a telephone.
+	 */
 	private String telephone;
 
 	/**

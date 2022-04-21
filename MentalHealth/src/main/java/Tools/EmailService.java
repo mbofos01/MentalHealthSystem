@@ -10,15 +10,31 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * This tool is used to send an email to someone.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class EmailService {
-	// Sender's email ID needs to be mentioned
+	/*
+	 * Sender's email ID needs to be mentioned
+	 */
 	private static String from = "epl441.mentalhealth@gmail.com";
 
-	// Assuming you are sending email from through gmails smtp
+	/*
+	 * Assuming you are sending email from through gmails smtp
+	 */
 	private static String host = "smtp.gmail.com";
 
-	// Get system properties
-
+	/**
+	 * This function sends the actual email to someone.
+	 * 
+	 * @param to      String email address of receiver
+	 * @param subject String subject of the email
+	 * @param body    String email body
+	 * @return true if successful otherwise false
+	 */
 	public static boolean sendEmail(String to, String subject, String body) {
 		Properties properties = System.getProperties();
 		// Setup mail server
@@ -67,9 +83,7 @@ public class EmailService {
 	}
 
 	public static void main(String[] args) {
-
-		EmailService.sendEmail("mbofos@gmail.com", "test", "this is a test");
-
+		sendEmail("mbofos@gmail.com", "test", "as");
 	}
 
 }

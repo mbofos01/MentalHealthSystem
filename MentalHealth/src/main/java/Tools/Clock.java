@@ -1,24 +1,18 @@
 package Tools;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 public class Clock {
-// main method  
-	public static void main(String[] argvs) {
-		String[] s = getLastWeek();
-		for (int i = 0; i < 7; i++)
-			System.out.println(s[i]);
-
-	}
-
 	public static String[] getLastWeek() {
 		Instant now = Instant.now();
+		ZoneId europe = ZoneId.of("Europe/Nicosia");
 		String[] week = new String[7];
-		week[6 - 0] = formater(now.toString());
+		week[6 - 0] = formater(now.atZone(europe).toString());
 		for (int i = 1; i < 7; i++) {
 			now = now.minus(1, ChronoUnit.DAYS);
-			week[6 - i] = new String(formater(now.toString()));
+			week[6 - i] = new String(formater(now.atZone(europe).toString()));
 		}
 		return week;
 	}
@@ -34,4 +28,5 @@ public class Clock {
 		java.sql.Date date = new java.sql.Date(millis);
 		return date.toString();
 	}
+
 }
