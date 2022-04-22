@@ -4,7 +4,18 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * This tool is used to model clock/calendar usage.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class Clock {
+	/**
+	 * This function calculates the last 7 days.
+	 * 
+	 * @return Last week in string format
+	 */
 	public static String[] getLastWeek() {
 		Instant now = Instant.now();
 		ZoneId europe = ZoneId.of("Europe/Nicosia");
@@ -17,11 +28,22 @@ public class Clock {
 		return week;
 	}
 
+	/**
+	 * This function changes the string format to our desired one.
+	 * 
+	 * @param longdate Long form string format of date
+	 * @return short date format yyyy-mm-dd
+	 */
 	private static String formater(String longdate) {
 		int breakpoint = longdate.indexOf('T');
 		return longdate.substring(0, breakpoint);
 	}
 
+	/**
+	 * This function calculates current time in SQL format.
+	 * 
+	 * @return SQL date
+	 */
 	public static String currentSQLTime() {
 		long millis = System.currentTimeMillis();
 		// creating a new object of the class Date

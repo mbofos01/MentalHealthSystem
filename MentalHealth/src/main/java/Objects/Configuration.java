@@ -1,8 +1,20 @@
 package Objects;
 
+/**
+ * This class is used to model the TCP connection info used for client and
+ * server communication.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class Configuration {
-
+	/**
+	 * Each TCP connection must have a valid host IP.
+	 */
 	private String host;
+	/**
+	 * Each TCP connection must have a port number.
+	 */
 	private int port;
 
 	/**
