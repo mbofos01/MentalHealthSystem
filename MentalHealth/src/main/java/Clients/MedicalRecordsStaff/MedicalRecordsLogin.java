@@ -18,7 +18,7 @@ import Clients.Client;
 import Objects.RecordsStaff;
 import Tools.Query;
 import Tools.Viewpoint;
-import UI.CustomColours;
+import Tools.CustomColours;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
