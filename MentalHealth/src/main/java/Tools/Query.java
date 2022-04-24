@@ -13,7 +13,7 @@ public class Query {
 	 * Each query has its Viewpoint the client that created it a function that wants
 	 * to be executed and a list of arguments
 	 * 
-	 * {"client":"MedicalRecords","function":0,"arguments":["jwill01","1234"]}
+	 * {"client":"MedicalRecords","function":"login","arguments":["jwill01","1234"]}
 	 */
 
 	private Viewpoint client;
