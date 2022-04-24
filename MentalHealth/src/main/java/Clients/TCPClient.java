@@ -22,7 +22,7 @@ public class TCPClient {
 			// message = reader.readLine() + System.lineSeparator();
 
 			Query query = new Query(Viewpoint.MedicalRecords);
-			query.setFunction(0);
+			query.setFunction("login");
 			query.addArgument("jwill01");
 			query.addArgument("1234");
 

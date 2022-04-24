@@ -17,7 +17,7 @@ public class Query {
 	 */
 
 	private Viewpoint client;
-	private int function;
+	private String function;
 	private ArrayList<String> arguments = new ArrayList<String>();
 
 	/**
@@ -53,7 +53,7 @@ public class Query {
 	 * 
 	 * @return the function
 	 */
-	public int getFunction() {
+	public String getFunction() {
 		return function;
 	}
 
@@ -62,7 +62,7 @@ public class Query {
 	 * 
 	 * @param function the function to set
 	 */
-	public void setFunction(int function) {
+	public void setFunction(String function) {
 		this.function = function;
 	}
 

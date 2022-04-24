@@ -86,7 +86,7 @@ public class Server {
 		 * @throws IOException
 		 */
 		public void HandleMedicalRecords(Query incoming, DataOutputStream output) throws IOException {
-			if (incoming.getFunction() == 0) {
+			if (incoming.getFunction().equals("login")) {
 				RecordsStaff rec = database.loginMedicalRecords(incoming.getArguments().get(0),
 						incoming.getArguments().get(1));
 				if (rec == null) {

@@ -101,7 +101,7 @@ public class MedicalRecordsLogin {
 				String pass1 = new String(passwordField.getPassword());
 
 				Query query = new Query(Viewpoint.MedicalRecords);
-				query.setFunction(0);
+				query.setFunction("login");
 				query.addArgument(user1);
 				query.addArgument(pass1);
 				client.send(query);
