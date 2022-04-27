@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,6 +14,7 @@ import java.util.concurrent.Executors;
 import com.google.gson.Gson;
 
 import Database.JDBC;
+import Objects.Drug;
 import Objects.RecordsStaff;
 import Tools.FileResourcesUtils;
 import Tools.Query;
@@ -73,8 +75,18 @@ public class Server {
 		}
 
 		private void HandleClinical(Query incoming, DataOutputStream output) {
-			// TODO Auto-generated method stub
-
+			if (incoming.getFunction().equals("getDrugs")) {
+				ArrayList<Drug> rec = database.getDrugList();
+				System.out.println(new Gson().toJson(rec));
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 
 		/**
