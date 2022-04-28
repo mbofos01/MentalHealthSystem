@@ -25,6 +25,8 @@ public class Client {
 	public DataOutputStream output;
 	public BufferedReader server;
 	public BufferedReader reader;
+	public String IP;
+	public int PORT;
 
 	/**
 	 * This constructor creates the TCP connection using a configuration file. This
@@ -37,6 +39,8 @@ public class Client {
 		Configuration con = app.getConfig(filename);
 		String ip = con.getHost();
 		int port = con.getPort();
+		IP = ip;
+		PORT = port;
 		Socket socket = null;
 		try {
 			socket = new Socket(ip, port);
@@ -68,9 +72,35 @@ public class Client {
 	 */
 
 	public Client(String ip, int port) {
+		IP = ip;
+		PORT = port;
 		Socket socket = null;
 		try {
 			socket = new Socket(ip, port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			output = new DataOutputStream(socket.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			server = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		reader = new BufferedReader(new InputStreamReader(System.in));
+	}
+
+	public void reconnect() {
+		this.close();
+		try {
+			socket = new Socket(IP, PORT);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -110,6 +140,7 @@ public class Client {
 	 * @param query Query (see its implementation)
 	 */
 	public void send(Query query) {
+		this.reconnect();
 		try {
 			output.writeBytes(new Gson().toJson(query) + System.lineSeparator());
 		} catch (IOException e) {

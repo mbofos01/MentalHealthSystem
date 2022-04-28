@@ -27,6 +27,11 @@ public class JDBC {
 		}
 	}
 
+	public static void main(String[] args) {
+		JDBC base = new JDBC();
+		base.loginClinical("SAD", "SAD");
+	}
+
 	/**
 	 * A method that returns a connection to MS SQL server DB
 	 *
@@ -64,6 +69,56 @@ public class JDBC {
 			System.exit(1);
 		}
 		return conn;
+	}
+
+	/**
+	 * This function is used to login a Medical Records Staff Person
+	 * 
+	 * @param username String the username we enter
+	 * @param password String the password we enter
+	 * @return RecordsStaff
+	 */
+	public Doctor loginClinical(String username, String password) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call loginClinicalStaff(?,?)}");
+			cs.setString(1, username);
+			cs.setString(2, password);
+			ResultSet rs = cs.executeQuery();
+			Doctor rec = new Doctor();
+			int right = 0;
+
+			while (rs.next()) {
+
+				rec.setId(rs.getInt("id"));
+				rec.setName(rs.getString("name"));
+				rec.setSurname(rs.getString("surname"));
+				rec.setUsername(rs.getString("username"));
+				rec.setClinic_id(rs.getInt("clinic_id"));
+				right++;
+			}
+			if (right == 0) {
+				rec.emptyValue();
+				return rec;
+			}
+			cs = this.conn.prepareCall("{call getClinicName(?)}");
+			cs.setInt(1, rec.getClinic_id());
+			rs = cs.executeQuery();
+			Clinic cli = new Clinic();
+			while (rs.next()) {
+				cli.setClinic_id(rs.getInt("clinic_id"));
+				cli.setName(rs.getString("name"));
+				cli.setTelephone(rs.getString("telephone"));
+			}
+			rec.setClinic(cli);
+			return rec;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Doctor rec = new Doctor();
+		rec.emptyValue();
+		return rec;
+
 	}
 
 	/**
@@ -153,4 +208,5 @@ public class JDBC {
 		rec.setId(-1);
 		return rec;
 	}
+
 }

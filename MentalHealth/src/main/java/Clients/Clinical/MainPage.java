@@ -10,17 +10,16 @@ import javax.swing.table.DefaultTableModel;
 import com.google.gson.Gson;
 
 import Clients.Client;
+import Objects.Doctor;
 import Objects.Drug;
 import Tools.Query;
 import Tools.Viewpoint;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
@@ -30,7 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 
-public class Main {
+public class MainPage {
 
 	private JFrame frame;
 	private static final long serialVersionUID = 1L;
@@ -40,11 +39,14 @@ public class Main {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void openWindow(Client client, Doctor doctor) {
+		Query q = new Query(Viewpoint.Clinical);
+		q.setFunction("see");
+		client.send(q);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Main window = new Main();
+					MainPage window = new MainPage(client, doctor);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -55,15 +57,18 @@ public class Main {
 
 	/**
 	 * Create the application.
+	 * 
+	 * @param doctor
+	 * @param client
 	 */
-	public Main() {
-		initialize();
+	public MainPage(Client client, Doctor doctor) {
+		initialize(client, doctor);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Client client, Doctor doctor) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 703, 508);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,17 +80,6 @@ public class Main {
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JButton btnNewButton = new JButton("Add photo");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("SAD");
-			}
-		});
-		btnNewButton.setFont(new Font("Segoe UI", Font.BOLD, 11));
-		btnNewButton.setBackground(Color.WHITE);
-		btnNewButton.setBounds(482, 259, 102, 23);
-		contentPane.add(btnNewButton);
-		Client client = new Client("clientConf.json");
 		Query q = new Query(Viewpoint.Clinical);
 		q.setFunction("getDrugs");
 		client.send(q);
@@ -130,9 +124,8 @@ public class Main {
 		JButton btnNewButton_1 = new JButton("Log Out");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				// Go back to log in
-				System.out.println("Log out clinical staff");
 				frame.dispose();
+				ClinicalLogin.main(null);
 
 			}
 		});
@@ -140,6 +133,15 @@ public class Main {
 		btnNewButton_1.setBackground(Tools.CustomColours.Red());
 		btnNewButton_1.setBounds(33, 410, 80, 23);
 		contentPane.add(btnNewButton_1);
-	}
 
+		JLabel welcome_label = new JLabel("Welcome Dr. " + doctor.getName());
+		welcome_label.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		welcome_label.setBounds(33, 22, 221, 39);
+		contentPane.add(welcome_label);
+		
+		JLabel drug_label = new JLabel("Drugs List");
+		drug_label.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		drug_label.setBounds(115, 120, 91, 23);
+		contentPane.add(drug_label);
+	}
 }

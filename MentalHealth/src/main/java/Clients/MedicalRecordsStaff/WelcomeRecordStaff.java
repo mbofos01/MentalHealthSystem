@@ -8,6 +8,8 @@ import javax.swing.JLabel;
 
 import Clients.Client;
 import Objects.RecordsStaff;
+import Tools.Query;
+import Tools.Viewpoint;
 
 public class WelcomeRecordStaff {
 
@@ -40,6 +42,9 @@ public class WelcomeRecordStaff {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Client client, RecordsStaff model) {
+		Query q = new Query(Viewpoint.Clinical);
+		q.setFunction("see");
+		client.send(q);
 		frame = new JFrame();
 		frame.setBounds(100, 100, 697, 436);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

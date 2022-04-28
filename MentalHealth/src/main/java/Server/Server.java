@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import com.google.gson.Gson;
 
 import Database.JDBC;
+import Objects.Doctor;
 import Objects.Drug;
 import Objects.RecordsStaff;
 import Tools.FileResourcesUtils;
@@ -74,7 +75,15 @@ public class Server {
 
 		}
 
-		private void HandleClinical(Query incoming, DataOutputStream output) {
+		private void HandleClinical(Query incoming, DataOutputStream output) throws IOException {
+			if (incoming.getFunction().equals("login")) {
+				Doctor doc = database.loginClinical(incoming.getArguments().get(0), incoming.getArguments().get(1));
+				if (doc == null) {
+					doc = new Doctor();
+					doc.emptyValue();
+				}
+				output.writeBytes(new Gson().toJson(doc) + System.lineSeparator());
+			}
 			if (incoming.getFunction().equals("getDrugs")) {
 				ArrayList<Drug> rec = database.getDrugList();
 				System.out.println(new Gson().toJson(rec));

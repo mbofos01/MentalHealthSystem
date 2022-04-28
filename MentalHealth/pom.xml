@@ -120,6 +120,25 @@
 						</goals>
 					</execution>
 					<execution>
+						<id>build-c</id>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>Clients.Clinical.ClinicalLogin</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<!-- <appendAssemblyId>false</appendAssemblyId> -->
+							<finalName>Clinical</finalName>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+					<execution>
 						<id>build-b</id>
 						<configuration>
 							<archive>
