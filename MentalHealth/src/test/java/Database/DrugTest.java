@@ -43,6 +43,6 @@ class DrugTest {
 	@DisplayName("Ensure a correct id fetches the correct drug - Side Effects")
 	public void testRealDrugSideEffects() {
 
-		assertEquals(r.getSide_effect(), "Headackes");
+		assertEquals(r.getSide_effect(), "Headaches");
 	}
 }

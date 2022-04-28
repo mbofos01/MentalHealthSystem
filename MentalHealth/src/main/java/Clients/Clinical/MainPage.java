@@ -70,7 +70,8 @@ public class MainPage {
 	 */
 	private void initialize(Client client, Doctor doctor) {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 703, 508);
+		frame.setResizable(false);
+		frame.setBounds(100, 100, 1181, 523);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setTitle("Clinical Viewpoint");
 
@@ -113,7 +114,6 @@ public class MainPage {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int p = table_1.getSelectedRow();
-				System.out.println(p);
 				showMessageDialog(null,
 						drug_list.get(p).getCommercial_name() + " side effect: " + drug_list.get(p).getSide_effect(),
 						"Possible Side Effects", JOptionPane.INFORMATION_MESSAGE);
@@ -134,11 +134,11 @@ public class MainPage {
 		btnNewButton_1.setBounds(33, 410, 80, 23);
 		contentPane.add(btnNewButton_1);
 
-		JLabel welcome_label = new JLabel("Welcome Dr. " + doctor.getName());
+		JLabel welcome_label = new JLabel("Welcome Dr. " + doctor.getName().charAt(0) + ". " + doctor.getSurname());
 		welcome_label.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		welcome_label.setBounds(33, 22, 221, 39);
 		contentPane.add(welcome_label);
-		
+
 		JLabel drug_label = new JLabel("Drugs List");
 		drug_label.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		drug_label.setBounds(115, 120, 91, 23);
