@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import Database.JDBC;
 import Objects.Doctor;
 import Objects.Drug;
+import Objects.Patient;
 import Objects.RecordsStaff;
 import Tools.FileResourcesUtils;
 import Tools.Query;
@@ -91,6 +92,20 @@ public class Server {
 					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
 					for (int i = 0; i < rec.size(); i++)
 						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (incoming.getFunction().equals("getDoctorsPatient")) {
+				int doc_id = Integer.parseInt(incoming.getArguments().get(0));
+				ArrayList<Patient> patient_list = database.getDoctorsPatient(doc_id);
+				System.out.println(new Gson().toJson(patient_list));
+
+				try {
+					output.writeBytes(new Gson().toJson(patient_list.size()) + System.lineSeparator());
+					for (int i = 0; i < patient_list.size(); i++)
+						output.writeBytes(new Gson().toJson(patient_list.get(i)) + System.lineSeparator());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

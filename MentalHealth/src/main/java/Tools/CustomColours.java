@@ -308,6 +308,7 @@ public class CustomColours {
 	 * @return Black color
 	 */
 	public static Color Black() {
+
 		return black;
 
 	}
@@ -318,6 +319,7 @@ public class CustomColours {
 	 * @return White color
 	 */
 	public static Color White() {
+
 		return white;
 
 	}

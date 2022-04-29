@@ -1,7 +1,6 @@
 package Clients.Clinical;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,6 +11,7 @@ import com.google.gson.Gson;
 import Clients.Client;
 import Objects.Doctor;
 import Objects.Drug;
+import Objects.Patient;
 import Tools.Query;
 import Tools.Viewpoint;
 
@@ -22,7 +22,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,7 +33,8 @@ public class MainPage {
 	private JFrame frame;
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable table_1;
+	private JTable drug_table;
+	private JTable patient_table;
 
 	/**
 	 * Launch the application.
@@ -104,16 +104,16 @@ public class MainPage {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(33, 154, 249, 128);
 		contentPane.add(scrollPane);
-		table_1 = new JTable();
-		scrollPane.setViewportView(table_1);
-		table_1 = new JTable(model);
-		scrollPane.setViewportView(table_1);
-		table_1.setDefaultEditor(Object.class, null);
+		drug_table = new JTable();
+		scrollPane.setViewportView(drug_table);
+		drug_table = new JTable(model);
+		scrollPane.setViewportView(drug_table);
+		drug_table.setDefaultEditor(Object.class, null);
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
-		table_1.addMouseListener(new MouseAdapter() {
+		drug_table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int p = table_1.getSelectedRow();
+				int p = drug_table.getSelectedRow();
 				showMessageDialog(null,
 						drug_list.get(p).getCommercial_name() + " side effect: " + drug_list.get(p).getSide_effect(),
 						"Possible Side Effects", JOptionPane.INFORMATION_MESSAGE);
@@ -143,5 +143,55 @@ public class MainPage {
 		drug_label.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		drug_label.setBounds(115, 120, 91, 23);
 		contentPane.add(drug_label);
+
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(889, 154, 249, 128);
+		contentPane.add(scrollPane_1);
+		/********************************************************/
+
+		q = new Query(Viewpoint.Clinical);
+		q.setFunction("getDoctorsPatient");
+		q.addArgument("" + doctor.getId());
+		client.send(q);
+
+		size = new Gson().fromJson(client.read(), Integer.class);
+		System.out.println(size);
+		ArrayList<Patient> patient_list = new ArrayList<Patient>();
+		for (int i = 0; i < size; i++)
+			patient_list.add(new Gson().fromJson(client.read(), Patient.class));
+		// SHOW
+		String col2[] = { "Name", "Surname", "Birth Day" };
+		index = 0;
+		String data2[][] = new String[patient_list.size()][col2.length];
+		for (Patient pat : patient_list) {
+			data2[index][0] = pat.getName();
+			data2[index][1] = pat.getSurname();
+			data2[index][2] = pat.getDate();
+			index++;
+		}
+
+		DefaultTableModel model2 = new DefaultTableModel(data2, col2);
+		contentPane.add(scrollPane_1);
+		patient_table = new JTable();
+		scrollPane_1.setViewportView(patient_table);
+		patient_table = new JTable(model2);
+		scrollPane_1.setViewportView(patient_table);
+		patient_table.setDefaultEditor(Object.class, null);
+
+		patient_table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int p = patient_table.getSelectedRow();
+				Patient selectedPatient = patient_list.get(p);
+				PatientView.openWindow(selectedPatient);
+
+			}
+		});
+		/*******************************************************/
+
+		JLabel patient_list_label = new JLabel("Patient List");
+		patient_list_label.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		patient_list_label.setBounds(968, 120, 98, 23);
+		contentPane.add(patient_list_label);
 	}
 }

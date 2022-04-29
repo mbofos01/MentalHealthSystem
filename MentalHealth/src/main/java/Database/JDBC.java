@@ -29,7 +29,7 @@ public class JDBC {
 
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		base.loginClinical("SAD", "SAD");
+		base.getDoctorsPatient(0);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class JDBC {
 
 			while (rs.next()) {
 
-				rec.setId(rs.getInt("id"));
+				rec.setId(rs.getInt("doctor_id"));
 				rec.setName(rs.getString("name"));
 				rec.setSurname(rs.getString("surname"));
 				rec.setUsername(rs.getString("username"));
@@ -166,7 +166,7 @@ public class JDBC {
 
 			while (rs.next()) {
 				Drug rec = new Drug();
-				rec.setId(rs.getInt("id"));
+				rec.setId(rs.getInt("drug_id"));
 				rec.setName(rs.getString("name"));
 				rec.setCommercial_name(rs.getString("commercial_name"));
 				rec.setSide_effect(rs.getString("side_effect"));
@@ -195,7 +195,7 @@ public class JDBC {
 
 			while (rs.next()) {
 				Drug rec = new Drug();
-				rec.setId(rs.getInt("id"));
+				rec.setId(rs.getInt("drug_id"));
 				rec.setName(rs.getString("name"));
 				rec.setCommercial_name(rs.getString("commercial_name"));
 				rec.setSide_effect(rs.getString("side_effect"));
@@ -207,6 +207,49 @@ public class JDBC {
 		Drug rec = new Drug();
 		rec.setId(-1);
 		return rec;
+	}
+
+	public Patient getPatient(int patient_id) {
+		Patient patient = new Patient();
+		int flag = 0;
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getPatient(?)}");
+			cs.setInt(1, patient_id);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				patient.setPatient_id(rs.getInt("patient_id"));
+				patient.setDate(rs.getString("birthday"));
+				patient.setEmail(rs.getString("email"));
+				patient.setTelephone(rs.getString("telephone"));
+				patient.setName(rs.getString("name"));
+				patient.setSurname(rs.getString("surname"));
+				flag++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if (flag == 0)
+			patient.setPatient_id(-1);
+		return patient;
+	}
+
+	public ArrayList<Patient> getDoctorsPatient(int doctor_id) {
+		ArrayList<Patient> patient_list = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getDoctorsPatient(?)}");
+			cs.setInt(1, doctor_id);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				patient_list.add(getPatient(rs.getInt("patient_id")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return patient_list;
+
 	}
 
 }
