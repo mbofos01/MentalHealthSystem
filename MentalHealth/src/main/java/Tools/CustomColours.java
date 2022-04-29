@@ -324,4 +324,18 @@ public class CustomColours {
 
 	}
 
+	public static Color interChangableBlack() {
+		if (light)
+			return black;
+		else
+			return white;
+	}
+
+	public static Color interChangableWhite() {
+		if (light)
+			return white;
+		else
+			return black;
+	}
+
 }

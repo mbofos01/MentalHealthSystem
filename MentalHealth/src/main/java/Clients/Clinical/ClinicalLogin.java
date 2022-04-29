@@ -16,7 +16,6 @@ import com.google.gson.Gson;
 
 import Clients.Client;
 import Objects.Doctor;
-import Objects.RecordsStaff;
 import Tools.Query;
 import Tools.Viewpoint;
 import Tools.CustomColours;
@@ -69,7 +68,7 @@ public class ClinicalLogin {
 	 */
 	private void initialize(final Client client) {
 		frmClinicalStaff = new JFrame();
-		frmClinicalStaff.getContentPane().setForeground(CustomColours.Gray());
+		frmClinicalStaff.getContentPane().setBackground(CustomColours.interChangableWhite());
 		frmClinicalStaff.setTitle("Clincal Staff Login Page");
 		frmClinicalStaff.setResizable(false);
 		frmClinicalStaff.setBounds(100, 100, 539, 422);
@@ -86,16 +85,23 @@ public class ClinicalLogin {
 		frmClinicalStaff.getContentPane().add(passwordField);
 
 		JLabel usernameLabel = new JLabel("Username:");
+
+		usernameLabel.setForeground(CustomColours.interChangableBlack());
 		usernameLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		usernameLabel.setBounds(75, 157, 165, 28);
 		frmClinicalStaff.getContentPane().add(usernameLabel);
 
 		JLabel passwordLabel = new JLabel("Password:");
+		passwordLabel.setForeground(CustomColours.interChangableBlack());
 		passwordLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		passwordLabel.setBounds(75, 215, 165, 28);
 		frmClinicalStaff.getContentPane().add(passwordLabel);
 
 		JButton loginbtn = new JButton("Log In");
+		if (CustomColours.isDark())
+			loginbtn.setForeground(CustomColours.Black());
+		else
+			loginbtn.setForeground(CustomColours.White());
 		loginbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String user1 = usernameField.getText();
@@ -126,25 +132,28 @@ public class ClinicalLogin {
 		});
 
 		loginbtn.setBackground(CustomColours.Green());
-		loginbtn.setForeground(CustomColours.White());
 		loginbtn.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		loginbtn.setBounds(102, 295, 138, 38);
 		frmClinicalStaff.getContentPane().add(loginbtn);
 
 		JButton cancelbtn = new JButton("Cancel");
+
+		cancelbtn.setForeground(CustomColours.interChangableWhite());
+
 		cancelbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(1);
 			}
 		});
-		cancelbtn.setForeground(CustomColours.White());
+
 		cancelbtn.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		cancelbtn.setBackground(CustomColours.Red());
 		cancelbtn.setBounds(280, 295, 138, 38);
 		frmClinicalStaff.getContentPane().add(cancelbtn);
 
 		JLabel title = new JLabel("Login to Clinical Staff Viewpoint");
-		title.setForeground(CustomColours.Black());
+
+		title.setForeground(CustomColours.interChangableBlack());
 		title.setVerticalAlignment(SwingConstants.TOP);
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		title.setFont(new Font("Tahoma", Font.PLAIN, 24));

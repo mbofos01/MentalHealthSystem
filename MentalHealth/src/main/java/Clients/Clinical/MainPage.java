@@ -12,6 +12,7 @@ import Clients.Client;
 import Objects.Doctor;
 import Objects.Drug;
 import Objects.Patient;
+import Tools.CustomColours;
 import Tools.Query;
 import Tools.Viewpoint;
 
@@ -27,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import static javax.swing.JOptionPane.showMessageDialog;
+import java.awt.Color;
 
 public class MainPage {
 
@@ -76,7 +78,7 @@ public class MainPage {
 		frame.setTitle("Clinical Viewpoint");
 
 		contentPane = new JPanel();
-		contentPane.setBackground(Tools.CustomColours.White());
+		contentPane.setBackground(CustomColours.interChangableWhite());
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -129,17 +131,19 @@ public class MainPage {
 
 			}
 		});
-		btnNewButton_1.setForeground(Tools.CustomColours.White());
+		btnNewButton_1.setForeground(Tools.CustomColours.interChangableWhite());
 		btnNewButton_1.setBackground(Tools.CustomColours.Red());
 		btnNewButton_1.setBounds(33, 410, 80, 23);
 		contentPane.add(btnNewButton_1);
 
 		JLabel welcome_label = new JLabel("Welcome Dr. " + doctor.getName().charAt(0) + ". " + doctor.getSurname());
+		welcome_label.setForeground(CustomColours.interChangableBlack());
 		welcome_label.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		welcome_label.setBounds(33, 22, 221, 39);
 		contentPane.add(welcome_label);
 
 		JLabel drug_label = new JLabel("Drugs List");
+		drug_label.setForeground(CustomColours.interChangableBlack());
 		drug_label.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		drug_label.setBounds(115, 120, 91, 23);
 		contentPane.add(drug_label);
@@ -190,8 +194,28 @@ public class MainPage {
 		/*******************************************************/
 
 		JLabel patient_list_label = new JLabel("Patient List");
+		patient_list_label.setForeground(CustomColours.interChangableBlack());
 		patient_list_label.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		patient_list_label.setBounds(968, 120, 98, 23);
 		contentPane.add(patient_list_label);
+		String str = null;
+		if (CustomColours.isDark())
+			str = "light ";
+		else
+			str = "dark ";
+		JButton darkTheme = new JButton(str + "theme");
+		darkTheme.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CustomColours.changeTheme();
+				frame.dispose();
+				openWindow(client, doctor);
+
+			}
+		});
+		darkTheme.setBackground(CustomColours.Indigo());
+		darkTheme.setForeground(CustomColours.interChangableWhite());
+
+		darkTheme.setBounds(1035, 11, 120, 23);
+		contentPane.add(darkTheme);
 	}
 }
