@@ -9,6 +9,10 @@ import com.google.gson.Gson;
 
 import Clients.Client;
 import Objects.Condition;
+import Objects.Doctor;
+import Objects.Drug;
+import Objects.Patient;
+import Objects.PatientRecord;
 import Tools.CustomColours;
 import Tools.Query;
 import Tools.Viewpoint;
@@ -20,6 +24,9 @@ import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
+import javax.swing.JCheckBox;
+import javax.swing.SwingConstants;
 
 public class Diagnosis {
 
@@ -28,11 +35,12 @@ public class Diagnosis {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void openWindow(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs,
+			PatientRecord last) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Diagnosis window = new Diagnosis();
+					Diagnosis window = new Diagnosis(client, doctor, patient, drugs, last);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,15 +52,16 @@ public class Diagnosis {
 	/**
 	 * Create the application.
 	 */
-	public Diagnosis() {
-		initialize();
+	public Diagnosis(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs, PatientRecord last) {
+		initialize(client, doctor, patient, drugs, last);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs, PatientRecord last) {
 		frame = new JFrame();
+		frame.setResizable(false);
 		frame.getContentPane().setBackground(CustomColours.interChangableWhite());
 		frame.setTitle("Create a diagnosis");
 		frame.setBounds(100, 100, 602, 603);
@@ -60,12 +69,13 @@ public class Diagnosis {
 		frame.getContentPane().setLayout(null);
 
 		JLabel condition = new JLabel("Condition:");
+		condition.setForeground(CustomColours.interChangableBlack());
 		condition.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		condition.setBounds(49, 180, 97, 22);
 		frame.getContentPane().add(condition);
 
 		JComboBox<String> conditionDropdown = new JComboBox<String>();
-		Client client = new Client("127.0.0.1", 8082);
+
 		Query q = new Query(Viewpoint.Clinical);
 		q.setFunction("getConditions");
 		client.send(q);
@@ -75,19 +85,103 @@ public class Diagnosis {
 
 		for (int i = 0; i < size; i++)
 			conds.add(new Gson().fromJson(client.read(), Condition.class));
-		for (Condition con : conds)
+
+		int selected = -1;
+
+		for (int i = 0; i < size; i++) {
+			Condition con = conds.get(i);
 			conditionDropdown.addItem(con.getName());
+			if (con.getCondition_id() == last.getCondition_id())
+				selected = i;
+		}
+
+		conditionDropdown.setSelectedIndex(selected);
 		conditionDropdown.setBounds(156, 183, 245, 22);
 		frame.getContentPane().add(conditionDropdown);
+
+		JLabel Treatment = new JLabel("Treatment:");
+		Treatment.setForeground(new Color(29, 29, 30));
+		Treatment.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		Treatment.setBounds(49, 237, 97, 22);
+		frame.getContentPane().add(Treatment);
+
+		JComboBox<String> treatmentDropdown = new JComboBox<String>();
+		treatmentDropdown.addItem("No Treatment");
+		int selected_drug = 0;
+		for (int i = 0; i < size; i++) {
+			Drug dr = drugs.get(i);
+			treatmentDropdown.addItem(dr.getCommercial_name());
+			if (last.getTreatment_id() == dr.getId())
+				selected_drug = i + 1;
+		}
+		treatmentDropdown.setSelectedIndex(selected_drug);
+		treatmentDropdown.setBounds(156, 240, 245, 22);
+		frame.getContentPane().add(treatmentDropdown);
 
 		JButton btnNewButton = new JButton("New button");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = conditionDropdown.getSelectedIndex();
-				System.out.println(conds.get(index).getCondition_id());
+				System.out.println(conds.get(index).getName());
+				int index2 = treatmentDropdown.getSelectedIndex();
+				if (index2 != 0) {
+					System.out.println(drugs.get(index2 - 1).getCommercial_name());
+				} else {
+
+				}
 			}
 		});
 		btnNewButton.setBounds(424, 492, 117, 29);
 		frame.getContentPane().add(btnNewButton);
+
+		JLabel name = new JLabel(patient.getName() + " " + patient.getSurname());
+		name.setFont(new Font("Tahoma", Font.PLAIN, 29));
+		if (last.isThreat())
+			name.setForeground(CustomColours.Red());
+		else
+			name.setForeground(CustomColours.interChangableBlack());
+		name.setBounds(49, 28, 245, 61);
+		frame.getContentPane().add(name);
+
+		JCheckBox selfharm = new JCheckBox("Self Harm");
+		if (last.isSelf_harm())
+			selfharm.setSelected(true);
+		selfharm.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		selfharm.setForeground(Color.BLACK);
+		selfharm.setBackground(Color.WHITE);
+		selfharm.setHorizontalAlignment(SwingConstants.CENTER);
+		selfharm.setBounds(392, 53, 156, 23);
+		frame.getContentPane().add(selfharm);
+
+		JCheckBox threat = new JCheckBox("Possible Threat");
+		if (last.isThreat())
+			threat.setSelected(true);
+		threat.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		threat.setHorizontalAlignment(SwingConstants.CENTER);
+		threat.setForeground(Color.BLACK);
+		threat.setBackground(Color.WHITE);
+		threat.setBounds(410, 92, 156, 23);
+		frame.getContentPane().add(threat);
+
+		JLabel abuseLabel = new JLabel("Abuse:");
+		abuseLabel.setForeground(new Color(29, 29, 30));
+		abuseLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		abuseLabel.setBounds(49, 290, 97, 22);
+		frame.getContentPane().add(abuseLabel);
+
+		JComboBox<String> abuseDropdown = new JComboBox<String>();
+
+		abuseDropdown.addItem("None");
+		abuseDropdown.addItem("Overdose");
+		abuseDropdown.addItem("Underdose");
+		if (last.isOverdose() && !last.isUnderdose())
+			abuseDropdown.setSelectedIndex(1);
+		else if (!last.isOverdose() && last.isUnderdose())
+			abuseDropdown.setSelectedIndex(2);
+		else
+			abuseDropdown.setSelectedIndex(0);
+		abuseDropdown.setBounds(156, 293, 245, 22);
+		frame.getContentPane().add(abuseDropdown);
+
 	}
 }

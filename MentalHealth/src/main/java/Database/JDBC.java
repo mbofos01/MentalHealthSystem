@@ -347,6 +347,11 @@ public class JDBC {
 				else if (rs.getInt("overdose") == 1)
 					c.setOverdose(true);
 
+				if (rs.getInt("threat") == 0)
+					c.setThreat(false);
+				else if (rs.getInt("threat") == 1)
+					c.setThreat(true);
+
 				if (rs.getInt("underdose") == 0)
 					c.setUnderdose(false);
 				else if (rs.getInt("underdose") == 1)

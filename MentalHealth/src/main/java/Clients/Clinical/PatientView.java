@@ -36,6 +36,7 @@ import java.awt.Color;
 public class PatientView {
 
 	private JFrame frmPatientView;
+	private PatientRecord last = new PatientRecord();
 
 	/**
 	 * Launch the application.
@@ -77,7 +78,7 @@ public class PatientView {
 		for (int i = 0; i < size; i++)
 			patient_records.add(new Gson().fromJson(client.read(), PatientRecord.class));
 
-		PatientRecord last = new PatientRecord();
+		;
 		last.setSelf_harm(false);
 		if (patient_records.size() != 0)
 			last = patient_records.get(patient_records.size() - 1);
@@ -106,7 +107,7 @@ public class PatientView {
 		JLabel patientName = new JLabel(patient.getName() + " " + patient.getSurname());
 		patientName.setHorizontalAlignment(SwingConstants.CENTER);
 
-		if (last.isSelf_harm())
+		if (last.isThreat())
 			patientName.setForeground(Tools.CustomColours.Red());
 		else
 			patientName.setForeground(Tools.CustomColours.interChangableBlack());
@@ -209,9 +210,18 @@ public class PatientView {
 				RecordReport.create(patient_records, patient, drugs, conds);
 			}
 		});
-		export.setForeground(Color.WHITE);
-		export.setBackground(Color.BLUE);
+		export.setForeground(CustomColours.interChangableWhite());
+		export.setBackground(CustomColours.Pink());
 		export.setBounds(930, 171, 133, 23);
 		frmPatientView.getContentPane().add(export);
+
+		JButton btnNewButton = new JButton("Add Diagnosis");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Diagnosis.openWindow(client, doctor, patient, drugs, last);
+			}
+		});
+		btnNewButton.setBounds(866, 313, 197, 68);
+		frmPatientView.getContentPane().add(btnNewButton);
 	}
 }
