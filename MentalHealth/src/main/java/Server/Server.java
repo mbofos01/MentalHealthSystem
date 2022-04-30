@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import com.google.gson.Gson;
 
 import Database.JDBC;
+import Objects.Comment;
 import Objects.Doctor;
 import Objects.Drug;
 import Objects.Patient;
@@ -110,6 +111,30 @@ public class Server {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}
+			if (incoming.getFunction().equals("getPatientComments")) {
+				int pat_id = Integer.parseInt(incoming.getArguments().get(0));
+				ArrayList<Comment> comment_list = database.getComments(pat_id);
+				System.out.println(new Gson().toJson(comment_list));
+
+				try {
+					output.writeBytes(new Gson().toJson(comment_list.size()) + System.lineSeparator());
+					for (int i = 0; i < comment_list.size(); i++)
+						output.writeBytes(new Gson().toJson(comment_list.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (incoming.getFunction().equals("addComment")) {
+				int doc_id = Integer.parseInt(incoming.getArguments().get(0));
+				int pat_id = Integer.parseInt(incoming.getArguments().get(1));
+				String com = incoming.getArguments().get(2);
+				boolean flag = database.insertComment(doc_id, pat_id, com);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
 			}
 		}
 

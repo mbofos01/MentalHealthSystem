@@ -29,7 +29,9 @@ public class JDBC {
 
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		base.getDoctorsPatient(0);
+		ArrayList<Comment> c = base.getComments(2);
+		for (Comment s : c)
+			System.out.println(s.getDoctor_name() + " " + s.getComment());
 	}
 
 	/**
@@ -250,6 +252,52 @@ public class JDBC {
 
 		return patient_list;
 
+	}
+
+	public boolean insertComment(int doctor_id, int patient_id, String comment) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertComment(?,?,?)}");
+			cs.setInt(1, doctor_id);
+			cs.setInt(2, patient_id);
+			cs.setString(3, comment);
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public ArrayList<Comment> getComments(int patient_id) {
+		ArrayList<Comment> comment_list = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getPatientComments(?)}");
+			cs.setInt(1, patient_id);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Comment c = new Comment();
+				c.setComment(rs.getString("comment"));
+				c.setPatient_id(rs.getInt("patient_id"));
+				c.setDoctor_id(rs.getInt("doctor_id"));
+				c.setComment_id(rs.getInt("comment_id"));
+				PreparedStatement cs2 = this.conn.prepareCall("{call getDoctor(?)}");
+				cs2.setInt(1, c.getDoctor_id());
+				ResultSet rs2 = cs2.executeQuery();
+				while (rs2.next()) {
+					c.setDoctor_name(rs2.getString("name"));
+					c.setDoctor_surname(rs2.getString("surname"));
+				}
+
+				comment_list.add(c);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return comment_list;
 	}
 
 }

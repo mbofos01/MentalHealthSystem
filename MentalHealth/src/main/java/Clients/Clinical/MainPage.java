@@ -28,12 +28,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import static javax.swing.JOptionPane.showMessageDialog;
-import java.awt.Color;
 
 public class MainPage {
 
 	private JFrame frame;
-	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable drug_table;
 	private JTable patient_table;
@@ -187,7 +185,7 @@ public class MainPage {
 			public void mouseClicked(MouseEvent e) {
 				int p = patient_table.getSelectedRow();
 				Patient selectedPatient = patient_list.get(p);
-				PatientView.openWindow(selectedPatient);
+				PatientView.openWindow(client, doctor, selectedPatient);
 
 			}
 		});
