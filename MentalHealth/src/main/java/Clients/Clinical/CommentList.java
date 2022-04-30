@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 public class CommentList {
 

@@ -14,7 +14,8 @@ public class RecordReport {
 
 	public static void create(ArrayList<PatientRecord> patient_records, Patient patient, ArrayList<Drug> drugs,
 			ArrayList<Condition> conditions) {
-		File file = new File("records" + patient.getSurname() + "_" + patient.getPatient_id() + ".txt");
+		File file = new File(
+				"records_" + patient.getName() + "_" + patient.getSurname() + "_" + Clock.currentSQLTime() + ".txt");
 		// Instantiating the PrintStream class
 		PrintStream stream = null;
 		try {
