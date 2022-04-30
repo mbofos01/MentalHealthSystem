@@ -4,25 +4,34 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import Objects.Condition;
 import Objects.Doctor;
+import Objects.Drug;
 import Objects.Patient;
+import Objects.PatientRecord;
 import Tools.CustomColours;
 import Tools.Query;
+import Tools.RecordReport;
 import Tools.Viewpoint;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import javax.swing.border.Border;
+
+import com.google.gson.Gson;
 
 import Clients.Client;
 
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
+import java.awt.Color;
 
 public class PatientView {
 
@@ -31,11 +40,11 @@ public class PatientView {
 	/**
 	 * Launch the application.
 	 */
-	public static void openWindow(Client client, Doctor doctor, Patient patient) {
+	public static void openWindow(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PatientView window = new PatientView(client, doctor, patient);
+					PatientView window = new PatientView(client, doctor, patient, drugs);
 					window.frmPatientView.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -47,14 +56,31 @@ public class PatientView {
 	/**
 	 * Create the application.
 	 */
-	public PatientView(Client client, Doctor doctor, Patient patient) {
-		initialize(client, doctor, patient);
+	public PatientView(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs) {
+		initialize(client, doctor, patient, drugs);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Client client, Doctor doctor, Patient patient) {
+	private void initialize(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs) {
+		ArrayList<PatientRecord> patient_records = new ArrayList<>();
+
+		Query q = new Query(Viewpoint.Clinical);
+		q.setFunction("getPatientRecords");
+		q.addArgument("" + patient.getPatient_id());
+		q.addArgument("" + doctor.getId());
+		client.send(q);
+
+		Integer size = new Gson().fromJson(client.read(), Integer.class);
+		System.out.println(size);
+		for (int i = 0; i < size; i++)
+			patient_records.add(new Gson().fromJson(client.read(), PatientRecord.class));
+
+		PatientRecord last = new PatientRecord();
+		last.setSelf_harm(false);
+		if (patient_records.size() != 0)
+			last = patient_records.get(patient_records.size() - 1);
 
 		frmPatientView = new JFrame();
 
@@ -80,7 +106,10 @@ public class PatientView {
 		JLabel patientName = new JLabel(patient.getName() + " " + patient.getSurname());
 		patientName.setHorizontalAlignment(SwingConstants.CENTER);
 
-		patientName.setForeground(Tools.CustomColours.interChangableBlack());
+		if (last.isSelf_harm())
+			patientName.setForeground(Tools.CustomColours.Red());
+		else
+			patientName.setForeground(Tools.CustomColours.interChangableBlack());
 		patientName.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		patientName.setBounds(397, 21, 319, 37);
 		frmPatientView.getContentPane().add(patientName);
@@ -106,7 +135,17 @@ public class PatientView {
 					q.addArgument("" + patient.getPatient_id());
 					q.addArgument(commentsText.getText());
 					client.send(q);
+					String answer = client.read();
+					System.out.println(answer);
+					if (answer.equals("SUCCESS")) {
+						JOptionPane.showMessageDialog(null, "          Comment Submitted!" + '\n', "Submitted Comment",
+								JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(null, "          Something went wrong!" + '\n', "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
 				}
+				commentsText.setText("");
 			}
 		});
 		addComment.setBackground(CustomColours.Mint());
@@ -154,5 +193,25 @@ public class PatientView {
 		telephone.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		telephone.setBounds(10, 281, 176, 27);
 		frmPatientView.getContentPane().add(telephone);
+
+		JButton export = new JButton("Export Records");
+		export.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Query q = new Query(Viewpoint.Clinical);
+				q.setFunction("getConditions");
+				client.send(q);
+				Integer size = new Gson().fromJson(client.read(), Integer.class);
+				System.out.println(size);
+				ArrayList<Condition> conds = new ArrayList<>();
+
+				for (int i = 0; i < size; i++)
+					conds.add(new Gson().fromJson(client.read(), Condition.class));
+				RecordReport.create(patient_records, patient, drugs, conds);
+			}
+		});
+		export.setForeground(Color.WHITE);
+		export.setBackground(Color.BLUE);
+		export.setBounds(930, 171, 133, 23);
+		frmPatientView.getContentPane().add(export);
 	}
 }

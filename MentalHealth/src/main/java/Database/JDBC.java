@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import Objects.*;
+import Objects.PatientRecord;
 
 /**
  * This object is the middleware between the server and the SQL Database. Each
@@ -29,9 +30,9 @@ public class JDBC {
 
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		ArrayList<Comment> c = base.getComments(2);
-		for (Comment s : c)
-			System.out.println(s.getDoctor_name() + " " + s.getComment());
+		ArrayList<PatientRecord> c = base.getPatientRecords(1, 0);
+		for (PatientRecord s : c)
+			System.out.println(s.isOverdose());
 	}
 
 	/**
@@ -256,10 +257,11 @@ public class JDBC {
 
 	public boolean insertComment(int doctor_id, int patient_id, String comment) {
 		try {
-			PreparedStatement cs = this.conn.prepareCall("{call insertComment(?,?,?)}");
+			PreparedStatement cs = this.conn.prepareCall("{call insertComment(?,?,?,?)}");
 			cs.setInt(1, doctor_id);
 			cs.setInt(2, patient_id);
 			cs.setString(3, comment);
+			cs.setString(4, Tools.Clock.currentSQLTime());
 			cs.execute();
 
 			return true;
@@ -283,6 +285,7 @@ public class JDBC {
 				c.setPatient_id(rs.getInt("patient_id"));
 				c.setDoctor_id(rs.getInt("doctor_id"));
 				c.setComment_id(rs.getInt("comment_id"));
+				c.setDate(rs.getString("date"));
 				PreparedStatement cs2 = this.conn.prepareCall("{call getDoctor(?)}");
 				cs2.setInt(1, c.getDoctor_id());
 				ResultSet rs2 = cs2.executeQuery();
@@ -298,6 +301,99 @@ public class JDBC {
 		}
 
 		return comment_list;
+	}
+
+	public ArrayList<Condition> getConditions() {
+		ArrayList<Condition> condition_list = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getAllConditions()}");
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Condition c = new Condition();
+				c.setCondition_id(rs.getInt("condition_id"));
+				c.setName(rs.getString("name"));
+
+				condition_list.add(c);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return condition_list;
+	}
+
+	public ArrayList<PatientRecord> getPatientRecords(int patient_id, int doctor_id) {
+		ArrayList<PatientRecord> records = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getPatientRecords(?,?)}");
+			cs.setInt(1, patient_id);
+			cs.setInt(2, doctor_id);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				PatientRecord c = new PatientRecord();
+				c.setRecord_id(rs.getInt("record_id"));
+				c.setDoctor_id(rs.getInt("doctor_id"));
+				c.setDate(rs.getString("date"));
+				boolean flag;
+				if (rs.getInt("selfharm") == 0)
+					flag = false;
+				else
+					flag = true;
+				c.setSelf_harm(flag);
+
+				if (rs.getInt("overdose") == 0)
+					c.setOverdose(false);
+				else if (rs.getInt("overdose") == 1)
+					c.setOverdose(true);
+
+				if (rs.getInt("underdose") == 0)
+					c.setUnderdose(false);
+				else if (rs.getInt("underdose") == 1)
+					c.setUnderdose(true);
+
+				c.setCondition_id(rs.getInt("condition_id"));
+				c.setLast_update(rs.getString("last_update"));
+				c.setTreatment_id(rs.getInt("treatment_id"));
+				c.setPatient_id(rs.getInt("patient_id"));
+				if (rs.getInt("accepted") == 0)
+					flag = false;
+				else
+					flag = true;
+				c.setAccepted(flag);
+
+				PreparedStatement treat = this.conn.prepareCall("{call getTreatment(?)}");
+				treat.setInt(1, c.getTreatment_id());
+				ResultSet treat_rs = treat.executeQuery();
+				Treatment t = new Treatment();
+				while (treat_rs.next()) {
+					if (treat_rs.getInt("accepted") == 0)
+						flag = false;
+					else
+						flag = true;
+					t.setAccepted(flag);
+					t.setComments(treat_rs.getString("comments"));
+					t.setDoctor_id(treat_rs.getInt("doctor_id"));
+					t.setDose(treat_rs.getInt("dose"));
+					t.setDrug_id(treat_rs.getInt("drug_id"));
+					t.setPatient_id(treat_rs.getInt("patient_id"));
+					if (treat_rs.getInt("warning") == 0)
+						flag = false;
+					else
+						flag = true;
+					t.setWarning(flag);
+					t.setTreatment_id(treat_rs.getInt("treatment_id"));
+				}
+				c.setTreatment(t);
+
+				records.add(c);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return records;
+
 	}
 
 }

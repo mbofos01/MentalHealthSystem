@@ -3,6 +3,22 @@ package Objects;
 public class Comment {
 	private int patient_id;
 	private int doctor_id;
+	private String date;
+
+	/**
+	 * @return the date
+	 */
+	public String getDate() {
+		return date;
+	}
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(String date) {
+		this.date = date;
+	}
+
 	private String doctor_name;
 	private String doctor_surname;
 

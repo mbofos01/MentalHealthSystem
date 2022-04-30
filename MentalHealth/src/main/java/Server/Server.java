@@ -12,12 +12,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.google.gson.Gson;
+import com.jgoodies.common.base.Objects;
 
 import Database.JDBC;
 import Objects.Comment;
+import Objects.Condition;
 import Objects.Doctor;
 import Objects.Drug;
 import Objects.Patient;
+import Objects.PatientRecord;
 import Objects.RecordsStaff;
 import Tools.FileResourcesUtils;
 import Tools.Query;
@@ -98,6 +101,18 @@ public class Server {
 					e.printStackTrace();
 				}
 			}
+			if (incoming.getFunction().equals("getConditions")) {
+				ArrayList<Condition> cond = database.getConditions();
+				System.out.println(new Gson().toJson(cond));
+				try {
+					output.writeBytes(new Gson().toJson(cond.size()) + System.lineSeparator());
+					for (int i = 0; i < cond.size(); i++)
+						output.writeBytes(new Gson().toJson(cond.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if (incoming.getFunction().equals("getDoctorsPatient")) {
 				int doc_id = Integer.parseInt(incoming.getArguments().get(0));
 				ArrayList<Patient> patient_list = database.getDoctorsPatient(doc_id);
@@ -121,6 +136,21 @@ public class Server {
 					output.writeBytes(new Gson().toJson(comment_list.size()) + System.lineSeparator());
 					for (int i = 0; i < comment_list.size(); i++)
 						output.writeBytes(new Gson().toJson(comment_list.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (incoming.getFunction().equals("getPatientRecords")) {
+				int pat_id = Integer.parseInt(incoming.getArguments().get(0));
+				int doc_id = Integer.parseInt(incoming.getArguments().get(1));
+				ArrayList<PatientRecord> record_list = database.getPatientRecords(pat_id, doc_id);
+				System.out.println(new Gson().toJson(record_list));
+
+				try {
+					output.writeBytes(new Gson().toJson(record_list.size()) + System.lineSeparator());
+					for (int i = 0; i < record_list.size(); i++)
+						output.writeBytes(new Gson().toJson(record_list.get(i)) + System.lineSeparator());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

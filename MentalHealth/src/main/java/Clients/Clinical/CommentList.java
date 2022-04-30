@@ -92,12 +92,13 @@ public class CommentList {
 		for (int i = 0; i < size; i++)
 			comm_list.add(new Gson().fromJson(client.read(), Comment.class));
 		// SHOW
-		String col[] = { "Doctor", "Comment" };
+		String col[] = { "Doctor", "Date", "Comment" };
 		int index = 0;
 		String data[][] = new String[comm_list.size()][col.length];
 		for (Comment co : comm_list) {
 			data[index][0] = co.getDoctor_name().charAt(0) + ". " + co.getDoctor_surname();
-			data[index][1] = co.getComment();
+			data[index][1] = co.getDate();
+			data[index][2] = co.getComment();
 			index++;
 		}
 

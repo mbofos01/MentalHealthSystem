@@ -185,7 +185,7 @@ public class MainPage {
 			public void mouseClicked(MouseEvent e) {
 				int p = patient_table.getSelectedRow();
 				Patient selectedPatient = patient_list.get(p);
-				PatientView.openWindow(client, doctor, selectedPatient);
+				PatientView.openWindow(client, doctor, selectedPatient, drug_list);
 
 			}
 		});
