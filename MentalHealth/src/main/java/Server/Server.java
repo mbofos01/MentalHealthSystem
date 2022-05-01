@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.jgoodies.common.base.Objects;
 
 import Database.JDBC;
+import Objects.Allergy;
 import Objects.Comment;
 import Objects.Condition;
 import Objects.Doctor;
@@ -22,6 +23,7 @@ import Objects.Drug;
 import Objects.Patient;
 import Objects.PatientRecord;
 import Objects.RecordsStaff;
+import Objects.Treatment;
 import Tools.FileResourcesUtils;
 import Tools.Query;
 import Tools.Viewpoint;
@@ -156,6 +158,20 @@ public class Server {
 					e.printStackTrace();
 				}
 			}
+			if (incoming.getFunction().equals("getPatientAllergies")) {
+				int pat_id = Integer.parseInt(incoming.getArguments().get(0));
+				ArrayList<Allergy> allergy_list = database.getPatientAllergies(pat_id);
+				System.out.println(new Gson().toJson(allergy_list));
+
+				try {
+					output.writeBytes(new Gson().toJson(allergy_list.size()) + System.lineSeparator());
+					for (int i = 0; i < allergy_list.size(); i++)
+						output.writeBytes(new Gson().toJson(allergy_list.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if (incoming.getFunction().equals("addComment")) {
 				int doc_id = Integer.parseInt(incoming.getArguments().get(0));
 				int pat_id = Integer.parseInt(incoming.getArguments().get(1));
@@ -165,6 +181,10 @@ public class Server {
 					output.writeBytes("SUCCESS" + System.lineSeparator());
 				else
 					output.writeBytes("FAILURE" + System.lineSeparator());
+			}
+			if (incoming.getFunction().equals("addTreatment")) {
+				Treatment tr = new Gson().fromJson(incoming.getArguments().get(0), Treatment.class);
+				System.out.println(tr.toString());
 			}
 		}
 

@@ -28,13 +28,6 @@ public class JDBC {
 		}
 	}
 
-	public static void main(String[] args) {
-		JDBC base = new JDBC();
-		ArrayList<PatientRecord> c = base.getPatientRecords(1, 0);
-		for (PatientRecord s : c)
-			System.out.println(s.isOverdose());
-	}
-
 	/**
 	 * A method that returns a connection to MS SQL server DB
 	 *
@@ -399,6 +392,33 @@ public class JDBC {
 
 		return records;
 
+	}
+
+	public ArrayList<Allergy> getPatientAllergies(int patient_id) {
+		ArrayList<Allergy> allergies = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getPatientAllegies(?)}");
+			cs.setInt(1, patient_id);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Allergy c = new Allergy();
+				c.setAllergy_id(rs.getInt("allergy_id"));
+				c.setDrug_id(rs.getInt("drug_id"));
+				c.setPatient_id(rs.getInt("patient_id"));
+				allergies.add(c);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return allergies;
+	}
+
+	public static void main(String[] args) {
+		JDBC base = new JDBC();
+		ArrayList<Allergy> c = base.getPatientAllergies(1);
+		for (Allergy s : c)
+			System.out.println(s.getAllergy_id());
 	}
 
 }

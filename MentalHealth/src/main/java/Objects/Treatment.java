@@ -126,4 +126,11 @@ public class Treatment {
 		this.accepted = accepted;
 	}
 
+	@Override
+	public String toString() {
+		return "Treatment [treatment_id=" + treatment_id + ", patient_id=" + patient_id + ", doctor_id=" + doctor_id
+				+ ", dose=" + dose + ", comments=" + comments + ", warning=" + warning + ", drug_id=" + drug_id
+				+ ", accepted=" + accepted + "]";
+	}
+
 }

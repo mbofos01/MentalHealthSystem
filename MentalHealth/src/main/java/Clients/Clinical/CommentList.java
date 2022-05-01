@@ -88,7 +88,6 @@ public class CommentList {
 		client.send(q);
 
 		Integer size = new Gson().fromJson(client.read(), Integer.class);
-		System.out.println(size);
 		ArrayList<Comment> comm_list = new ArrayList<Comment>();
 		for (int i = 0; i < size; i++)
 			comm_list.add(new Gson().fromJson(client.read(), Comment.class));

@@ -4,15 +4,19 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
 
 import Clients.Client;
+import Objects.Allergy;
 import Objects.Condition;
 import Objects.Doctor;
 import Objects.Drug;
 import Objects.Patient;
 import Objects.PatientRecord;
+import Objects.Treatment;
+import Tools.Clock;
 import Tools.CustomColours;
 import Tools.Query;
 import Tools.Viewpoint;
@@ -21,12 +25,16 @@ import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.JComboBox;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Color;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JTextPane;
 
 public class Diagnosis {
 
@@ -80,7 +88,6 @@ public class Diagnosis {
 		q.setFunction("getConditions");
 		client.send(q);
 		Integer size = new Gson().fromJson(client.read(), Integer.class);
-		System.out.println(size);
 		ArrayList<Condition> conds = new ArrayList<>();
 
 		for (int i = 0; i < size; i++)
@@ -100,7 +107,7 @@ public class Diagnosis {
 		frame.getContentPane().add(conditionDropdown);
 
 		JLabel Treatment = new JLabel("Treatment:");
-		Treatment.setForeground(new Color(29, 29, 30));
+		Treatment.setForeground(CustomColours.interChangableBlack());
 		Treatment.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		Treatment.setBounds(49, 237, 97, 22);
 		frame.getContentPane().add(Treatment);
@@ -118,22 +125,6 @@ public class Diagnosis {
 		treatmentDropdown.setBounds(156, 240, 245, 22);
 		frame.getContentPane().add(treatmentDropdown);
 
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int index = conditionDropdown.getSelectedIndex();
-				System.out.println(conds.get(index).getName());
-				int index2 = treatmentDropdown.getSelectedIndex();
-				if (index2 != 0) {
-					System.out.println(drugs.get(index2 - 1).getCommercial_name());
-				} else {
-
-				}
-			}
-		});
-		btnNewButton.setBounds(424, 492, 117, 29);
-		frame.getContentPane().add(btnNewButton);
-
 		JLabel name = new JLabel(patient.getName() + " " + patient.getSurname());
 		name.setFont(new Font("Tahoma", Font.PLAIN, 29));
 		if (last.isThreat())
@@ -147,8 +138,8 @@ public class Diagnosis {
 		if (last.isSelf_harm())
 			selfharm.setSelected(true);
 		selfharm.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		selfharm.setForeground(Color.BLACK);
-		selfharm.setBackground(Color.WHITE);
+		selfharm.setForeground(CustomColours.interChangableBlack());
+		selfharm.setBackground(CustomColours.interChangableWhite());
 		selfharm.setHorizontalAlignment(SwingConstants.CENTER);
 		selfharm.setBounds(392, 53, 156, 23);
 		frame.getContentPane().add(selfharm);
@@ -158,13 +149,13 @@ public class Diagnosis {
 			threat.setSelected(true);
 		threat.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		threat.setHorizontalAlignment(SwingConstants.CENTER);
-		threat.setForeground(Color.BLACK);
-		threat.setBackground(Color.WHITE);
+		threat.setForeground(CustomColours.interChangableBlack());
+		threat.setBackground(CustomColours.interChangableWhite());
 		threat.setBounds(410, 92, 156, 23);
 		frame.getContentPane().add(threat);
 
 		JLabel abuseLabel = new JLabel("Abuse:");
-		abuseLabel.setForeground(new Color(29, 29, 30));
+		abuseLabel.setForeground(CustomColours.interChangableBlack());
 		abuseLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		abuseLabel.setBounds(49, 290, 97, 22);
 		frame.getContentPane().add(abuseLabel);
@@ -182,6 +173,117 @@ public class Diagnosis {
 			abuseDropdown.setSelectedIndex(0);
 		abuseDropdown.setBounds(156, 293, 245, 22);
 		frame.getContentPane().add(abuseDropdown);
+
+		JSpinner doseCounter = new JSpinner();
+		doseCounter.setModel(new SpinnerNumberModel(0, 0, 7, 1));
+		doseCounter.setBounds(411, 241, 40, 20);
+		frame.getContentPane().add(doseCounter);
+
+		JLabel commentLabel = new JLabel("Comments:");
+		commentLabel.setForeground(CustomColours.interChangableBlack());
+		commentLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		commentLabel.setBounds(49, 357, 97, 22);
+		frame.getContentPane().add(commentLabel);
+
+		JTextPane textPane = new JTextPane();
+		Border border = BorderFactory.createLineBorder(CustomColours.interChangableBlack(), 1);
+
+		// set the border of this component
+		textPane.setBorder(border);
+		textPane.setBounds(156, 357, 245, 101);
+		frame.getContentPane().add(textPane);
+
+		JButton submitBtn = new JButton("Submit");
+		q = new Query(Viewpoint.Clinical);
+		q.setFunction("getPatientAllergies");
+		q.addArgument("" + patient.getPatient_id());
+		client.send(q);
+		size = new Gson().fromJson(client.read(), Integer.class);
+		ArrayList<Allergy> getPatientAllergies = new ArrayList<>();
+		for (int i = 0; i < size; i++) {
+			getPatientAllergies.add(new Gson().fromJson(client.read(), Allergy.class));
+			System.out.println(getPatientAllergies.get(i).getDrug_id());
+		}
+
+		submitBtn.setForeground(CustomColours.interChangableWhite());
+		submitBtn.setBackground(CustomColours.Green());
+		submitBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index2 = treatmentDropdown.getSelectedIndex() - 1;
+				boolean warned = false, addTreament = false;
+				int treat_id = -1;
+				if (index2 != -1) {
+					for (Allergy allergy_drug : getPatientAllergies) {
+						System.out.println(drugs.get(index2).getId() + " " + allergy_drug.getDrug_id());
+						if (drugs.get(index2).getId() == allergy_drug.getDrug_id()) {
+
+							System.out.println("ALLERGY");
+							int option = JOptionPane.showConfirmDialog(null,
+									"          " + patient.getName() + " " + patient.getSurname() + " is allergic to "
+											+ drugs.get(index2).getCommercial_name()
+											+ "! \n Do you real want to prescribe them "
+											+ drugs.get(index2).getCommercial_name() + "?",
+									"Allergy", JOptionPane.YES_NO_OPTION);
+
+							if (option == 0) { // The ISSUE is here
+								warned = true;
+							} else {
+								return;
+							}
+						}
+					}
+					Treatment treat = new Treatment();
+					treat.setComments(textPane.getText());
+					treat.setDoctor_id(doctor.getClinic_id());
+					treat.setDose(Integer.parseInt(doseCounter.getValue().toString()));
+					treat.setDrug_id(drugs.get(index2).getId());
+					treat.setWarning(warned);
+					treat.setPatient_id(patient.getPatient_id());
+					/**
+					 * insert treatment and fetch its id
+					 */
+					Query addTreatmentQuery = new Query(Viewpoint.Clinical);
+					addTreatmentQuery.setFunction("addTreatment");
+					addTreatmentQuery.addArgument(new Gson().toJson(treat));
+					client.send(addTreatmentQuery);
+					addTreament = true;
+
+				} else {
+					addTreament = false;
+				}
+
+				int index = conditionDropdown.getSelectedIndex();
+				PatientRecord record = new PatientRecord();
+				record.setCondition_id(index);
+				record.setDoctor_id(doctor.getId());
+				record.setDate(Clock.currentSQLTime());
+				record.setPatient_id(patient.getPatient_id());
+				record.setThreat(threat.isSelected());
+				record.setSelf_harm(selfharm.isSelected());
+
+				int index3 = abuseDropdown.getSelectedIndex();
+				if (index3 == 0) {
+					record.setOverdose(false);
+					record.setUnderdose(false);
+				} else if (index3 == 1) {
+					record.setOverdose(true);
+					record.setUnderdose(false);
+				} else if (index3 == 2) {
+					record.setOverdose(false);
+					record.setUnderdose(true);
+				}
+
+				if (addTreament) {
+					record.setTreatment_id(treat_id);
+				}
+				/**
+				 * insert patient record
+				 */
+
+			}
+		});
+		submitBtn.setBounds(424, 492, 117, 29);
+		frame.getContentPane().add(submitBtn);
 
 	}
 }

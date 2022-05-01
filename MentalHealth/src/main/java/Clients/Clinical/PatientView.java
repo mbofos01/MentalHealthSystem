@@ -74,7 +74,7 @@ public class PatientView {
 		client.send(q);
 
 		Integer size = new Gson().fromJson(client.read(), Integer.class);
-		System.out.println(size);
+		// System.out.println(size);
 		for (int i = 0; i < size; i++)
 			patient_records.add(new Gson().fromJson(client.read(), PatientRecord.class));
 
@@ -128,7 +128,7 @@ public class PatientView {
 		JButton addComment = new JButton("Add Comment");
 		addComment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(commentsText.getText());
+				// System.out.println(commentsText.getText());
 				if (commentsText.getText().length() > 0) {
 					Query q = new Query(Viewpoint.Clinical);
 					q.setFunction("addComment");
@@ -137,7 +137,7 @@ public class PatientView {
 					q.addArgument(commentsText.getText());
 					client.send(q);
 					String answer = client.read();
-					System.out.println(answer);
+					// System.out.println(answer);
 					if (answer.equals("SUCCESS")) {
 						JOptionPane.showMessageDialog(null, "          Comment Submitted!" + '\n', "Submitted Comment",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -202,7 +202,7 @@ public class PatientView {
 				q.setFunction("getConditions");
 				client.send(q);
 				Integer size = new Gson().fromJson(client.read(), Integer.class);
-				System.out.println(size);
+				// System.out.println(size);
 				ArrayList<Condition> conds = new ArrayList<>();
 
 				for (int i = 0; i < size; i++)

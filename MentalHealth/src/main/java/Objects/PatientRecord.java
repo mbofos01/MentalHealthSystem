@@ -15,6 +15,10 @@ public class PatientRecord {
 	private boolean accepted;
 	private Treatment treatment;
 
+	public PatientRecord() {
+		accepted = false;
+	}
+
 	/**
 	 * @return the treatment
 	 */
