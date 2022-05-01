@@ -74,14 +74,19 @@ public class PatientView {
 		client.send(q);
 
 		Integer size = new Gson().fromJson(client.read(), Integer.class);
-		// System.out.println(size);
-		for (int i = 0; i < size; i++)
-			patient_records.add(new Gson().fromJson(client.read(), PatientRecord.class));
+		if (size == 0) {
+			System.out.println("STOP");
+			last = new PatientRecord();
+			last.setTreatment_id(-1);
 
-		;
-		last.setSelf_harm(false);
-		if (patient_records.size() != 0)
-			last = patient_records.get(patient_records.size() - 1);
+		} else {
+			for (int i = 0; i < size; i++)
+				patient_records.add(new Gson().fromJson(client.read(), PatientRecord.class));
+
+			// System.out.println(size);
+			if (patient_records.size() != 0)
+				last = patient_records.get(patient_records.size() - 1);
+		}
 
 		frmPatientView = new JFrame();
 
@@ -219,6 +224,7 @@ public class PatientView {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Diagnosis.openWindow(client, doctor, patient, drugs, last);
+				frmPatientView.dispose();
 			}
 		});
 		btnNewButton.setBounds(866, 313, 197, 68);

@@ -137,7 +137,7 @@ public class MainPage {
 		JLabel welcome_label = new JLabel("Welcome Dr. " + doctor.getName().charAt(0) + ". " + doctor.getSurname());
 		welcome_label.setForeground(CustomColours.interChangableBlack());
 		welcome_label.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		welcome_label.setBounds(33, 22, 221, 39);
+		welcome_label.setBounds(33, 22, 331, 39);
 		contentPane.add(welcome_label);
 
 		JLabel drug_label = new JLabel("Drugs List");

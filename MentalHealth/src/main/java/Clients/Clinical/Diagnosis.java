@@ -35,6 +35,7 @@ import javax.swing.border.Border;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JTextPane;
+import java.awt.Color;
 
 public class Diagnosis {
 
@@ -68,6 +69,7 @@ public class Diagnosis {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs, PatientRecord last) {
+		System.out.println(last.getTreatment_id());
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(CustomColours.interChangableWhite());
@@ -114,12 +116,15 @@ public class Diagnosis {
 
 		JComboBox<String> treatmentDropdown = new JComboBox<String>();
 		treatmentDropdown.addItem("No Treatment");
+		System.out.println("TR: " + last.getTreatment_id());
 		int selected_drug = 0;
 		for (int i = 0; i < size; i++) {
 			Drug dr = drugs.get(i);
 			treatmentDropdown.addItem(dr.getCommercial_name());
-			if (last.getTreatment_id() == dr.getId())
+			if (last.getTreatment() != null && last.getTreatment().getDrug_id() == dr.getId()) {
+				System.out.println("selectd: " + i + " " + drugs.get(i).getCommercial_name());
 				selected_drug = i + 1;
+			}
 		}
 		treatmentDropdown.setSelectedIndex(selected_drug);
 		treatmentDropdown.setBounds(156, 240, 245, 22);
@@ -175,7 +180,12 @@ public class Diagnosis {
 		frame.getContentPane().add(abuseDropdown);
 
 		JSpinner doseCounter = new JSpinner();
-		doseCounter.setModel(new SpinnerNumberModel(0, 0, 7, 1));
+		int start;
+		if (last.getTreatment_id() == -1)
+			start = 0;
+		else
+			start = last.getTreatment().getDose();
+		doseCounter.setModel(new SpinnerNumberModel(start, 0, 7, 1));
 		doseCounter.setBounds(411, 241, 40, 20);
 		frame.getContentPane().add(doseCounter);
 
@@ -202,7 +212,7 @@ public class Diagnosis {
 		ArrayList<Allergy> getPatientAllergies = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
 			getPatientAllergies.add(new Gson().fromJson(client.read(), Allergy.class));
-			System.out.println(getPatientAllergies.get(i).getDrug_id());
+			// System.out.println(getPatientAllergies.get(i).getDrug_id());
 		}
 
 		submitBtn.setForeground(CustomColours.interChangableWhite());
@@ -211,13 +221,14 @@ public class Diagnosis {
 			public void actionPerformed(ActionEvent e) {
 				int index2 = treatmentDropdown.getSelectedIndex() - 1;
 				boolean warned = false, addTreament = false;
-				int treat_id = -1;
+				Integer treat_id = -1;
 				if (index2 != -1) {
 					for (Allergy allergy_drug : getPatientAllergies) {
-						System.out.println(drugs.get(index2).getId() + " " + allergy_drug.getDrug_id());
+						// System.out.println(drugs.get(index2).getId() + " " +
+						// allergy_drug.getDrug_id());
 						if (drugs.get(index2).getId() == allergy_drug.getDrug_id()) {
 
-							System.out.println("ALLERGY");
+							// System.out.println("ALLERGY");
 							int option = JOptionPane.showConfirmDialog(null,
 									"          " + patient.getName() + " " + patient.getSurname() + " is allergic to "
 											+ drugs.get(index2).getCommercial_name()
@@ -234,7 +245,7 @@ public class Diagnosis {
 					}
 					Treatment treat = new Treatment();
 					treat.setComments(textPane.getText());
-					treat.setDoctor_id(doctor.getClinic_id());
+					treat.setDoctor_id(doctor.getId());
 					treat.setDose(Integer.parseInt(doseCounter.getValue().toString()));
 					treat.setDrug_id(drugs.get(index2).getId());
 					treat.setWarning(warned);
@@ -246,6 +257,7 @@ public class Diagnosis {
 					addTreatmentQuery.setFunction("addTreatment");
 					addTreatmentQuery.addArgument(new Gson().toJson(treat));
 					client.send(addTreatmentQuery);
+					treat_id = new Gson().fromJson(client.read(), Integer.class);
 					addTreament = true;
 
 				} else {
@@ -274,16 +286,33 @@ public class Diagnosis {
 				}
 
 				if (addTreament) {
+					System.out.println("New treatment id: " + treat_id);
 					record.setTreatment_id(treat_id);
+				} else {
+					record.setTreatment_id(-1);
 				}
-				/**
-				 * insert patient record
-				 */
-
+				Query addRecordQuery = new Query(Viewpoint.Clinical);
+				addRecordQuery.setFunction("addRecord");
+				addRecordQuery.addArgument(new Gson().toJson(record));
+				client.send(addRecordQuery);
+				frame.dispose();
+				PatientView.openWindow(client, doctor, patient, drugs);
 			}
 		});
 		submitBtn.setBounds(424, 492, 117, 29);
 		frame.getContentPane().add(submitBtn);
+
+		JButton cancel = new JButton("Cancel");
+		cancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				PatientView.openWindow(client, doctor, patient, drugs);
+			}
+		});
+		cancel.setForeground(CustomColours.interChangableWhite());
+		cancel.setBackground(CustomColours.Red());
+		cancel.setBounds(49, 495, 117, 29);
+		frame.getContentPane().add(cancel);
 
 	}
 }

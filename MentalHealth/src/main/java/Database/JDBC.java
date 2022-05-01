@@ -352,38 +352,44 @@ public class JDBC {
 
 				c.setCondition_id(rs.getInt("condition_id"));
 				c.setLast_update(rs.getString("last_update"));
-				c.setTreatment_id(rs.getInt("treatment_id"));
+				if (rs.getInt("treatment_id") == 0)
+					c.setTreatment_id(-1);
+				else
+					c.setTreatment_id(rs.getInt("treatment_id"));
 				c.setPatient_id(rs.getInt("patient_id"));
+
 				if (rs.getInt("accepted") == 0)
 					flag = false;
 				else
 					flag = true;
 				c.setAccepted(flag);
 
-				PreparedStatement treat = this.conn.prepareCall("{call getTreatment(?)}");
-				treat.setInt(1, c.getTreatment_id());
-				ResultSet treat_rs = treat.executeQuery();
-				Treatment t = new Treatment();
-				while (treat_rs.next()) {
-					if (treat_rs.getInt("accepted") == 0)
-						flag = false;
-					else
-						flag = true;
-					t.setAccepted(flag);
-					t.setComments(treat_rs.getString("comments"));
-					t.setDoctor_id(treat_rs.getInt("doctor_id"));
-					t.setDose(treat_rs.getInt("dose"));
-					t.setDrug_id(treat_rs.getInt("drug_id"));
-					t.setPatient_id(treat_rs.getInt("patient_id"));
-					if (treat_rs.getInt("warning") == 0)
-						flag = false;
-					else
-						flag = true;
-					t.setWarning(flag);
-					t.setTreatment_id(treat_rs.getInt("treatment_id"));
-				}
-				c.setTreatment(t);
+				if (c.getTreatment_id() != -1) {
+					PreparedStatement treat = this.conn.prepareCall("{call getTreatment(?)}");
+					treat.setInt(1, c.getTreatment_id());
+					ResultSet treat_rs = treat.executeQuery();
+					Treatment t = new Treatment();
+					while (treat_rs.next()) {
+						if (treat_rs.getInt("accepted") == 0)
+							flag = false;
+						else
+							flag = true;
+						t.setAccepted(flag);
+						t.setComments(treat_rs.getString("comments"));
+						t.setDoctor_id(treat_rs.getInt("doctor_id"));
+						t.setDose(treat_rs.getInt("dose"));
+						t.setDrug_id(treat_rs.getInt("drug_id"));
+						t.setPatient_id(treat_rs.getInt("patient_id"));
+						if (treat_rs.getInt("warning") == 0)
+							flag = false;
+						else
+							flag = true;
+						t.setWarning(flag);
+						t.setTreatment_id(treat_rs.getInt("treatment_id"));
 
+					}
+					c.setTreatment(t);
+				}
 				records.add(c);
 			}
 		} catch (SQLException e) {
@@ -414,11 +420,59 @@ public class JDBC {
 		return allergies;
 	}
 
+	public int insertTreatment(Treatment treat) {
+		try {
+			CallableStatement cs = this.conn.prepareCall("{ ? = call  insertTreatment(?,?,?,?,?,?,?)}");
+
+			cs.registerOutParameter(1, java.sql.Types.INTEGER);
+			cs.setInt(2, treat.getPatient_id());
+			cs.setInt(3, treat.getDoctor_id());
+			cs.setInt(4, treat.getDose());
+			cs.setString(5, treat.getComments());
+			cs.setBoolean(6, treat.isWarning());
+			cs.setInt(7, treat.getDrug_id());
+			cs.setBoolean(8, treat.isAccepted());
+			cs.execute();
+			System.out.println(cs.getInt(1));
+			return cs.getInt(1);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	public boolean insertRecord(PatientRecord re) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertRecord(?,?,?,?,?,?,?,?,?,?,?)}");
+			cs.setInt(1, re.getDoctor_id());
+			cs.setString(2, re.getDate());
+			cs.setBoolean(3, re.isSelf_harm());
+			cs.setBoolean(4, re.isThreat());
+			cs.setInt(5, re.getCondition_id());
+			cs.setString(6, re.getDate());
+			if (re.getTreatment_id() != -1)
+				cs.setInt(7, re.getTreatment_id());
+			else
+				cs.setNull(7, 0);
+			cs.setInt(8, re.getPatient_id());
+			cs.setBoolean(9, re.isAccepted());
+			cs.setBoolean(10, re.isOverdose());
+			cs.setBoolean(11, re.isUnderdose());
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		ArrayList<Allergy> c = base.getPatientAllergies(1);
-		for (Allergy s : c)
-			System.out.println(s.getAllergy_id());
+		base.getPatientRecords(1, 0);
 	}
 
 }

@@ -184,7 +184,16 @@ public class Server {
 			}
 			if (incoming.getFunction().equals("addTreatment")) {
 				Treatment tr = new Gson().fromJson(incoming.getArguments().get(0), Treatment.class);
-				System.out.println(tr.toString());
+				int row = database.insertTreatment(tr);
+				output.writeBytes(new Gson().toJson(row) + System.lineSeparator());
+			}
+			if (incoming.getFunction().equals("addRecord")) {
+				PatientRecord re = new Gson().fromJson(incoming.getArguments().get(0), PatientRecord.class);
+				boolean flag = database.insertRecord(re);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
 			}
 		}
 

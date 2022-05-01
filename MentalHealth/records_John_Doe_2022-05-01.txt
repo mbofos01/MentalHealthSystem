@@ -2,4 +2,14 @@
 Record ID Patient Name  Surname Record Date Condition Treatment   Dosage Comments Overdose Underdose Self Harm Accepted Last Update
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
     4       John        Doe 2022-04-30     Autism Fluoxetine          2   not much      false      false       true      false 2022-04-30
+    5       John        Doe 1999-02-12 Depression Citalopram          2 new comment      false      false      false      false 1999-02-12
+    6       John        Doe 1999-02-12 Depression Citalopram          2 new comment      false      false      false      false 1999-02-12
+    7       John        Doe 1999-02-12 Depression Citalopram          2 new comment      false      false      false      false 1999-02-12
+    8       John        Doe 1999-02-12 Depression Citalopram          2 new comment      false      false      false      false 1999-02-12
+   25       John        Doe 2022-05-01 Obsessive-compulsive disorder  Fluoxetine          5 saddsaasdas      false       true      false      false 2022-05-01
+   26       John        Doe 2022-05-01 Obsessive-compulsive disorder  Fluoxetine          2   not much      false       true      false      false 2022-05-01
+   27       John        Doe 2022-05-01 Obsessive-compulsive disorder  Vortioxetine          2                 false       true      false      false 2022-05-01
+   28       John        Doe 2022-05-01 Obsessive-compulsive disorder  Escitalopram Oxalate          2                 false       true      false      false 2022-05-01
+   29       John        Doe 2022-05-01 Obsessive-compulsive disorder  Escitalopram Oxalate          3                 false       true      false      false 2022-05-01
+   30       John        Doe 2022-05-01 Obsessive-compulsive disorder  Escitalopram Oxalate          4                 false       true      false      false 2022-05-01
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
