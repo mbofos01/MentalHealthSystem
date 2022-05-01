@@ -6,7 +6,9 @@ import java.util.ArrayList;
  * This object is used to exchange messages between client and server.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class Query {
 	/**

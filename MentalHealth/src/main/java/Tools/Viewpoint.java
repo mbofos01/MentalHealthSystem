@@ -5,7 +5,9 @@ package Tools;
  * communicates with the server.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public enum Viewpoint {
 	Clinical, Receptionist, MedicalRecords, HealthService;

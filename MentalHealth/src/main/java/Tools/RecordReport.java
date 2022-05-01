@@ -10,6 +10,13 @@ import Objects.Drug;
 import Objects.Patient;
 import Objects.PatientRecord;
 
+/**
+ * 
+ * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
+ */
 public class RecordReport {
 
 	public static void create(ArrayList<PatientRecord> patient_records, Patient patient, ArrayList<Drug> drugs,

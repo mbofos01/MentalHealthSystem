@@ -5,7 +5,9 @@ package Objects;
  * server communication.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class Configuration {
 	/**

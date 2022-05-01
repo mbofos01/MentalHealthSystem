@@ -75,7 +75,6 @@ public class PatientView {
 
 		Integer size = new Gson().fromJson(client.read(), Integer.class);
 		if (size == 0) {
-			System.out.println("STOP");
 			last = new PatientRecord();
 			last.setTreatment_id(-1);
 
@@ -245,5 +244,16 @@ public class PatientView {
 		death.setBackground(CustomColours.interChangableBlack());
 		death.setBounds(918, 22, 145, 25);
 		frmPatientView.getContentPane().add(death);
+
+		JButton allergiesBtn = new JButton("Allergies");
+		allergiesBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AllergyWindow.openWindow(client, patient, drugs);
+			}
+		});
+		allergiesBtn.setForeground(CustomColours.interChangableWhite());
+		allergiesBtn.setBackground(CustomColours.Brown());
+		allergiesBtn.setBounds(43, 336, 89, 23);
+		frmPatientView.getContentPane().add(allergiesBtn);
 	}
 }

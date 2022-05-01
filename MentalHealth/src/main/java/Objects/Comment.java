@@ -1,9 +1,42 @@
 package Objects;
 
+/**
+ * This class is used to model a comment stored in the database.
+ * 
+ * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
+ */
 public class Comment {
+	/**
+	 * Each comment must have a patient id.
+	 */
 	private int patient_id;
+	/**
+	 * Each comment must have a doctor id.
+	 */
 	private int doctor_id;
+	/**
+	 * Each comment must have a issued date.
+	 */
 	private String date;
+	/**
+	 * Each comment could have the doctors name
+	 */
+	private String doctor_name;
+	/**
+	 * Each comment could have the doctors surname
+	 */
+	private String doctor_surname;
+	/**
+	 * Each comment must have an id
+	 */
+	private int comment_id;
+	/**
+	 * Each comment must have the comments body
+	 */
+	private String comment;
 
 	/**
 	 * @return the date
@@ -19,9 +52,6 @@ public class Comment {
 		this.date = date;
 	}
 
-	private String doctor_name;
-	private String doctor_surname;
-
 	/**
 	 * @return the doctor_surname
 	 */
@@ -35,9 +65,6 @@ public class Comment {
 	public void setDoctor_surname(String doctor_surname) {
 		this.doctor_surname = doctor_surname;
 	}
-
-	private int comment_id;
-	private String comment;
 
 	/**
 	 * @return the patient_id

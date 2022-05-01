@@ -14,7 +14,9 @@ import javax.mail.internet.MimeMessage;
  * This tool is used to send an email to someone.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class EmailService {
 	/*

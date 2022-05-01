@@ -4,7 +4,9 @@ package Objects;
  * This class is used to model a Medical Records Staff person.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class RecordsStaff {
 	/**

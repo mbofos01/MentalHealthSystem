@@ -1,20 +1,70 @@
 package Objects;
 
+/**
+ * This class is used to model a patient record stored in the database.
+ * 
+ * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
+ */
 public class PatientRecord {
+	/**
+	 * Each record must have an id
+	 */
 	private int record_id;
+	/**
+	 * Each record must have a doctor id
+	 */
 	private int doctor_id;
+	/**
+	 * Each record must have an issued date
+	 */
 	private String date;
+	/**
+	 * Each record must have a self harm flag
+	 */
 	private boolean self_harm;
+	/**
+	 * Each record must have a threat flag
+	 */
 	private boolean threat;
+	/**
+	 * Each record must have an overdose flag
+	 */
 	private boolean overdose;
+	/**
+	 * Each record must have an underdose flag
+	 */
 	private boolean underdose;
+	/**
+	 * Each record must have a condition id
+	 */
 	private int condition_id;
+	/**
+	 * Each record must have a last update date
+	 */
 	private String last_update;
+	/**
+	 * Each record must have a treatment id
+	 */
 	private int treatment_id;
+	/**
+	 * Each record must have a patient id
+	 */
 	private int patient_id;
+	/**
+	 * Each record must have an accepted flag
+	 */
 	private boolean accepted;
+	/**
+	 * Help field, we could fetch the treatment object to reduce server calls
+	 */
 	private Treatment treatment;
 
+	/**
+	 * Each records starts as not accepted.
+	 */
 	public PatientRecord() {
 		accepted = false;
 	}

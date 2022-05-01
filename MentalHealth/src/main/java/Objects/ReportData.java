@@ -24,7 +24,6 @@ public class ReportData {
 
 	private int total_visitors;
 	private ArrayList<Condition> conds = new ArrayList<>();
-	private ArrayList<Prescription> prescr = new ArrayList<>();
 
 	/**
 	 * @return the week
@@ -99,20 +98,6 @@ public class ReportData {
 	 */
 	public void setConds(ArrayList<Condition> conds) {
 		this.conds = conds;
-	}
-
-	/**
-	 * @return the prescr
-	 */
-	public ArrayList<Prescription> getPrescr() {
-		return prescr;
-	}
-
-	/**
-	 * @param prescr the prescr to set
-	 */
-	public void setPrescr(ArrayList<Prescription> prescr) {
-		this.prescr = prescr;
 	}
 
 }

@@ -10,7 +10,9 @@ import Tools.Viewpoint;
  * Demo class for a tcp connection NOT IN USE
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class TCPClient {
 

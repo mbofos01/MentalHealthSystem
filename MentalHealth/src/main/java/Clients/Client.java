@@ -18,6 +18,9 @@ import Tools.Query;
  * to screen).
  * 
  * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  *
  */
 public class Client {

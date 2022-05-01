@@ -1,15 +1,50 @@
 package Objects;
 
+/**
+ * This object is used to model the treatment table stored in the database.
+ * 
+ * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
+ */
 public class Treatment {
+	/**
+	 * Each treatment must have an id
+	 */
 	private int treatment_id;
+	/**
+	 * Each treatment must have a patient id
+	 */
 	private int patient_id;
+	/**
+	 * Each treatment must have a doctor id
+	 */
 	private int doctor_id;
+	/**
+	 * Each treatment must have a dose(per week)
+	 */
 	private int dose;
+	/**
+	 * Each treatment could have a comment
+	 */
 	private String comments;
+	/**
+	 * Each treatment must a warning flag
+	 */
 	private boolean warning;
+	/**
+	 * Each treatment must have a drug id
+	 */
 	private int drug_id;
+	/**
+	 * Each treatment must have an accepted flag
+	 */
 	private boolean accepted;
 
+	/**
+	 * Each treatment starts as not accepted.
+	 */
 	public Treatment() {
 		accepted = false;
 	}

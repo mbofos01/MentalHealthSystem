@@ -7,7 +7,9 @@ import java.awt.Color;
  * for software development.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class CustomColours {
 	/**

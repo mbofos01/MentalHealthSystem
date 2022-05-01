@@ -12,7 +12,9 @@ import Objects.ReportData;
  * viewpoint.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class CreatePDF {
 

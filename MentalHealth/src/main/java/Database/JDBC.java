@@ -14,6 +14,9 @@ import Objects.PatientRecord;
  * 
  * 
  * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  *
  */
 public class JDBC {
@@ -180,8 +183,8 @@ public class JDBC {
 	 * This method fetches a drug based on its id, this is going to be used after a
 	 * specific drug has been selected on a list.
 	 * 
-	 * @param id
-	 * @return
+	 * @param id Integer drug id
+	 * @return Drug in object
 	 */
 	public Drug getDrug(int id) {
 		try {
@@ -205,6 +208,12 @@ public class JDBC {
 		return rec;
 	}
 
+	/**
+	 * This method fetched a patient based on their id.
+	 * 
+	 * @param patient_id Integer patients id
+	 * @return Patient in object
+	 */
 	public Patient getPatient(int patient_id) {
 		Patient patient = new Patient();
 		int flag = 0;
@@ -230,6 +239,12 @@ public class JDBC {
 		return patient;
 	}
 
+	/**
+	 * This method fetches all the patients of a specific doctor.
+	 * 
+	 * @param doctor_id Integer id of a doctor
+	 * @return An ArrayList of Patients
+	 */
 	public ArrayList<Patient> getDoctorsPatient(int doctor_id) {
 		ArrayList<Patient> patient_list = new ArrayList<>();
 		try {
@@ -248,6 +263,14 @@ public class JDBC {
 
 	}
 
+	/**
+	 * This method inserts a comment in the database.
+	 * 
+	 * @param doctor_id  Intger id of a doctor
+	 * @param patient_id Integer id of a patient
+	 * @param comment    String comment body
+	 * @return true if successful otherwise false
+	 */
 	public boolean insertComment(int doctor_id, int patient_id, String comment) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call insertComment(?,?,?,?)}");
@@ -265,6 +288,12 @@ public class JDBC {
 		return false;
 	}
 
+	/**
+	 * This method gets all comments created for a specific patient.
+	 * 
+	 * @param patient_id Integer id of a patient
+	 * @return An ArrayList of comments
+	 */
 	public ArrayList<Comment> getComments(int patient_id) {
 		ArrayList<Comment> comment_list = new ArrayList<>();
 		try {
@@ -296,6 +325,11 @@ public class JDBC {
 		return comment_list;
 	}
 
+	/**
+	 * This method fetches all the conditions all the database.
+	 * 
+	 * @return An ArrayList of conditions
+	 */
 	public ArrayList<Condition> getConditions() {
 		ArrayList<Condition> condition_list = new ArrayList<>();
 		try {
@@ -315,6 +349,13 @@ public class JDBC {
 		return condition_list;
 	}
 
+	/**
+	 * This method fetches all the records of a specific patient.
+	 * 
+	 * @param patient_id Integer id of a patient
+	 * @param doctor_id  Integer id of a doctor
+	 * @return An ArrayList of Records
+	 */
 	public ArrayList<PatientRecord> getPatientRecords(int patient_id, int doctor_id) {
 		ArrayList<PatientRecord> records = new ArrayList<>();
 		try {
@@ -400,6 +441,12 @@ public class JDBC {
 
 	}
 
+	/**
+	 * This method fetches all the allergies of a specific patient.
+	 * 
+	 * @param patient_id Integer id of a patient
+	 * @return An ArrayList of allergies
+	 */
 	public ArrayList<Allergy> getPatientAllergies(int patient_id) {
 		ArrayList<Allergy> allergies = new ArrayList<>();
 		try {
@@ -412,7 +459,11 @@ public class JDBC {
 				c.setAllergy_id(rs.getInt("allergy_id"));
 				c.setDrug_id(rs.getInt("drug_id"));
 				c.setPatient_id(rs.getInt("patient_id"));
-				allergies.add(c);
+				c.setAccepted(rs.getBoolean("accepted"));
+				c.setDate(rs.getString("date"));
+				c.setLast_updated(rs.getString("last_updated"));
+				if (c.isAccepted())
+					allergies.add(c);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -420,6 +471,12 @@ public class JDBC {
 		return allergies;
 	}
 
+	/**
+	 * This method inserts a treatment to the database.
+	 * 
+	 * @param treat Treatment object
+	 * @return the id of the new treatment
+	 */
 	public int insertTreatment(Treatment treat) {
 		try {
 			CallableStatement cs = this.conn.prepareCall("{ ? = call  insertTreatment(?,?,?,?,?,?,?)}");
@@ -442,6 +499,12 @@ public class JDBC {
 		return -1;
 	}
 
+	/**
+	 * This method inserts a record to the database.
+	 * 
+	 * @param re PatientRecord object
+	 * @return true if successful otherwise false
+	 */
 	public boolean insertRecord(PatientRecord re) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call insertRecord(?,?,?,?,?,?,?,?,?,?,?)}");
@@ -470,12 +533,46 @@ public class JDBC {
 
 	}
 
+	/**
+	 * This method inserts a death of a patient request.
+	 * 
+	 * @param patient     Patient object
+	 * @param doctor      Integer doctor id
+	 * @param dateOfDeath String SQL date
+	 * @return true if successful otherwise false
+	 */
 	public boolean insertPendingDeath(int patient, int doctor, String dateOfDeath) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call requestDeathOfPatient(?,?,?)}");
 			cs.setInt(1, patient);
 			cs.setInt(2, doctor);
 			cs.setString(3, dateOfDeath);
+
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+
+	/**
+	 * This method inserts an allergy to the database.
+	 * 
+	 * @param allergy Allergy object
+	 * @return true if successful otherwise false
+	 */
+	public boolean insertAllergy(Allergy allergy) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertAllergy(?,?,?,?,?)}");
+			cs.setInt(1, allergy.getPatient_id());
+			cs.setInt(2, allergy.getDrug_id());
+			cs.setBoolean(3, allergy.isAccepted());
+			cs.setString(4, allergy.getDate());
+			cs.setString(5, allergy.getLast_updated());
 
 			cs.execute();
 

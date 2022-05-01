@@ -26,6 +26,16 @@ import Tools.FileResourcesUtils;
 import Tools.Query;
 import Tools.Viewpoint;
 
+/**
+ * This is the server class. Our server communicates with all the clients and
+ * then passes each request to the JDBC object whom then communicates with the
+ * MSSQL Database to actually execute the stored procedures.
+ * 
+ * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
+ */
 public class Server {
 
 	private static class TCPWorker implements Runnable {
@@ -70,16 +80,34 @@ public class Server {
 
 		}
 
+		/**
+		 * This method is used to handle requests from the Health Service Viewpoint.
+		 * 
+		 * @param incoming Actual Query object
+		 * @param output   Output Stream
+		 */
 		private void HandleHealthService(Query incoming, DataOutputStream output) {
 			// TODO Auto-generated method stub
 
 		}
 
+		/**
+		 * This method is used to handle requests from the Receptionist Viewpoint.
+		 * 
+		 * @param incoming Actual Query object
+		 * @param output   Output Stream
+		 */
 		private void HandleReceptionist(Query incoming, DataOutputStream output) {
 			// TODO Auto-generated method stub
 
 		}
 
+		/**
+		 * This method is used to handle requests from the Clinical Viewpoint.
+		 * 
+		 * @param incoming Actual Query object
+		 * @param output   Output Stream
+		 */
 		private void HandleClinical(Query incoming, DataOutputStream output) throws IOException {
 			if (incoming.getFunction().equals("login")) {
 				Doctor doc = database.loginClinical(incoming.getArguments().get(0), incoming.getArguments().get(1));
@@ -198,6 +226,14 @@ public class Server {
 				int doc = new Gson().fromJson(incoming.getArguments().get(1), Integer.class);
 				String date = new Gson().fromJson(incoming.getArguments().get(2), String.class);
 				boolean flag = database.insertPendingDeath(pat, doc, date);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
+			}
+			if (incoming.getFunction().equals("insertAllergy")) {
+				Allergy all = new Gson().fromJson(incoming.getArguments().get(0), Allergy.class);
+				boolean flag = database.insertAllergy(all);
 				if (flag)
 					output.writeBytes("SUCCESS" + System.lineSeparator());
 				else

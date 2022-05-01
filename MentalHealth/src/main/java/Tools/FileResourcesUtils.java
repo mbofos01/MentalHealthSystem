@@ -14,7 +14,9 @@ import Objects.Configuration;
  * we save all the resources to the resources directory.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class FileResourcesUtils {
 

@@ -8,7 +8,9 @@ import java.time.temporal.ChronoUnit;
  * This tool is used to model clock/calendar usage.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class Clock {
 	/**
