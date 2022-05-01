@@ -35,7 +35,6 @@ import javax.swing.border.Border;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JTextPane;
-import java.awt.Color;
 
 public class Diagnosis {
 
