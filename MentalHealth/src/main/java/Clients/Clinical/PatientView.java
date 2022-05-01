@@ -9,6 +9,7 @@ import Objects.Doctor;
 import Objects.Drug;
 import Objects.Patient;
 import Objects.PatientRecord;
+import Tools.Clock;
 import Tools.CustomColours;
 import Tools.Query;
 import Tools.RecordReport;
@@ -31,6 +32,7 @@ import Clients.Client;
 
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
+import java.awt.Color;
 
 public class PatientView {
 
@@ -228,5 +230,21 @@ public class PatientView {
 		});
 		btnNewButton.setBounds(866, 313, 197, 68);
 		frmPatientView.getContentPane().add(btnNewButton);
+
+		JButton death = new JButton("Death Of Patient");
+		death.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Query q = new Query(Viewpoint.Clinical);
+				q.setFunction("requestDeath");
+				q.addArgument("" + patient.getPatient_id());
+				q.addArgument("" + doctor.getId());
+				q.addArgument(Clock.currentSQLTime());
+				client.send(q);
+			}
+		});
+		death.setForeground(CustomColours.interChangableWhite());
+		death.setBackground(CustomColours.interChangableBlack());
+		death.setBounds(918, 22, 145, 25);
+		frmPatientView.getContentPane().add(death);
 	}
 }

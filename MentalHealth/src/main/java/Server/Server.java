@@ -193,6 +193,16 @@ public class Server {
 				else
 					output.writeBytes("FAILURE" + System.lineSeparator());
 			}
+			if (incoming.getFunction().equals("requestDeath")) {
+				int pat = new Gson().fromJson(incoming.getArguments().get(0), Integer.class);
+				int doc = new Gson().fromJson(incoming.getArguments().get(1), Integer.class);
+				String date = new Gson().fromJson(incoming.getArguments().get(2), String.class);
+				boolean flag = database.insertPendingDeath(pat, doc, date);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
+			}
 		}
 
 		/**

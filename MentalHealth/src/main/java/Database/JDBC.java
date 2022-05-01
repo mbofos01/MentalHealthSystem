@@ -470,6 +470,24 @@ public class JDBC {
 
 	}
 
+	public boolean insertPendingDeath(int patient, int doctor, String dateOfDeath) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call requestDeathOfPatient(?,?,?)}");
+			cs.setInt(1, patient);
+			cs.setInt(2, doctor);
+			cs.setString(3, dateOfDeath);
+
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
 		base.getPatientRecords(1, 0);
