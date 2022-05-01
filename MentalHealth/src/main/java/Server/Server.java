@@ -12,8 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.google.gson.Gson;
-import com.jgoodies.common.base.Objects;
-
 import Database.JDBC;
 import Objects.Allergy;
 import Objects.Comment;
