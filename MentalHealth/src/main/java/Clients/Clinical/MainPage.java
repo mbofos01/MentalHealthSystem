@@ -40,9 +40,6 @@ public class MainPage {
 	 * Launch the application.
 	 */
 	public static void openWindow(Client client, Doctor doctor) {
-		Query q = new Query(Viewpoint.Clinical);
-		q.setFunction("see");
-		client.send(q);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

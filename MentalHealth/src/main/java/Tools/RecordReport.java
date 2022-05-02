@@ -46,12 +46,21 @@ public class RecordReport {
 		for (
 
 		PatientRecord pr : patient_records) {
-			System.out.format("%5s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s", pr.getRecord_id(),
-					patient.getName(), patient.getSurname(), pr.getDate(),
-					conditions.get(pr.getCondition_id()).getName(), drugs.get(pr.getTreatment().getDrug_id()).getName(),
-					pr.getTreatment().getDose(), pr.getTreatment().getComments(), pr.isOverdose(), pr.isUnderdose(),
-					pr.isSelf_harm(), pr.isAccepted(), pr.getLast_update());
-			System.out.println();
+			if (pr.getTreatment() == null) {
+				System.out.format("%5s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s", pr.getRecord_id(),
+						patient.getName(), patient.getSurname(), pr.getDate(),
+						conditions.get(pr.getCondition_id()).getName(), "-", "-", "-", pr.isOverdose(),
+						pr.isUnderdose(), pr.isSelf_harm(), pr.isAccepted(), pr.getLast_update());
+				System.out.println();
+			} else {
+				System.out.format("%5s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s", pr.getRecord_id(),
+						patient.getName(), patient.getSurname(), pr.getDate(),
+						conditions.get(pr.getCondition_id()).getName(),
+						drugs.get(pr.getTreatment().getDrug_id()).getName(), pr.getTreatment().getDose(),
+						pr.getTreatment().getComments(), pr.isOverdose(), pr.isUnderdose(), pr.isSelf_harm(),
+						pr.isAccepted(), pr.getLast_update());
+				System.out.println();
+			}
 		}
 		System.out.println(
 				"---------------------------------------------------------------------------------------------------------------------------------------------------------");
