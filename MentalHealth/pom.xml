@@ -75,12 +75,15 @@
 		<finalName>Server</finalName>
 
 		<plugins>
-			<!-- If you want to run something run exec:java -->
-			<!-- <plugin> <artifactId>maven-compiler-plugin</artifactId> <version>3.3</version> 
-				<configuration> <source>1.8</source> <target>1.8</target> </configuration> 
-				</plugin> <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>exec-maven-plugin</artifactId> 
-				<version>1.2.1</version> <configuration> <mainClass>Clients.MedicalRecordsStaff.MedicalRecordsLogin</mainClass> 
-				</configuration> </plugin> -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<configuration>
+					<mainClass>Clients.MedicalRecordsStaff.MedicalRecordsLogin</mainClass>
+				</configuration>
+			</plugin>
+
 
 			<!-- If you want to make a client jar run build with goal package -->
 			<plugin>
