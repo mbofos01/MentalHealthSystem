@@ -2,6 +2,8 @@ package Objects;
 
 import java.util.ArrayList;
 
+import Tools.Counter;
+
 /**
  * This tool is used to create a PDF report for a clinic.
  * 
@@ -18,7 +20,8 @@ public class ReportData {
 	/**
 	 * Each report must have a clinic to be based on
 	 */
-	private String clinic;
+	private Clinic clinic;
+
 	/**
 	 * Each report must have a visitors count
 	 */
@@ -27,6 +30,14 @@ public class ReportData {
 	 * Each report must have a week in an array (dates)
 	 */
 	private String[] dates = new String[7];
+	/**
+	 * Each report must have a list of condition case counter
+	 */
+	private ArrayList<Counter> conditionCounter;
+	/**
+	 * Each report must have a list of treatment case counter
+	 */
+	private ArrayList<Counter> treatmentCounter;
 
 	/**
 	 * @return the dates
@@ -63,14 +74,14 @@ public class ReportData {
 	/**
 	 * @return the clinic
 	 */
-	public String getClinic() {
+	public Clinic getClinic() {
 		return clinic;
 	}
 
 	/**
 	 * @param clinic the clinic to set
 	 */
-	public void setClinic(String clinic) {
+	public void setClinic(Clinic clinic) {
 		this.clinic = clinic;
 	}
 
@@ -118,6 +129,34 @@ public class ReportData {
 	 */
 	public void setConds(ArrayList<Condition> conds) {
 		this.conds = conds;
+	}
+
+	/**
+	 * @return the conditionCounter
+	 */
+	public ArrayList<Counter> getConditionCounter() {
+		return conditionCounter;
+	}
+
+	/**
+	 * @param conditionCounter the conditionCounter to set
+	 */
+	public void setConditionCounter(ArrayList<Counter> conditionCounter) {
+		this.conditionCounter = conditionCounter;
+	}
+
+	/**
+	 * @return the treatmentCounter
+	 */
+	public ArrayList<Counter> getTreatmentCounter() {
+		return treatmentCounter;
+	}
+
+	/**
+	 * @param treatmentCounter the treatmentCounter to set
+	 */
+	public void setTreatmentCounter(ArrayList<Counter> treatmentCounter) {
+		this.treatmentCounter = treatmentCounter;
 	}
 
 }

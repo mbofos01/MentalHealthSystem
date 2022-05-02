@@ -279,6 +279,7 @@ public class Diagnosis {
 					treat.setDrug_id(drugs.get(index2).getId());
 					treat.setWarning(warned);
 					treat.setPatient_id(patient.getPatient_id());
+					treat.setDate(Clock.currentSQLTime());
 					/**
 					 * insert treatment and fetch its id
 					 */

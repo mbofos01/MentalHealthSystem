@@ -41,12 +41,48 @@ public class Treatment {
 	 * Each treatment must have an accepted flag
 	 */
 	private boolean accepted;
+	/**
+	 * 
+	 */
+	private String date;
+	/**
+	 * 
+	 */
+	private String last_updated;
 
 	/**
 	 * Each treatment starts as not accepted.
 	 */
 	public Treatment() {
 		accepted = false;
+	}
+
+	/**
+	 * @return the date
+	 */
+	public String getDate() {
+		return date;
+	}
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	/**
+	 * @return the last_updated
+	 */
+	public String getLast_updated() {
+		return last_updated;
+	}
+
+	/**
+	 * @param last_updated the last_updated to set
+	 */
+	public void setLast_updated(String last_updated) {
+		this.last_updated = last_updated;
 	}
 
 	/**
