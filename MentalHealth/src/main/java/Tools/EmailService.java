@@ -25,7 +25,7 @@ public class EmailService {
 	private static String from = "epl441.mentalhealth@gmail.com";
 
 	/*
-	 * Assuming you are sending email from through gmails smtp
+	 * Assuming you are sending email from through gmail's SMTP
 	 */
 	private static String host = "smtp.gmail.com";
 
@@ -35,9 +35,10 @@ public class EmailService {
 	 * @param to      String email address of receiver
 	 * @param subject String subject of the email
 	 * @param body    String email body
+	 * @param verbose Boolean flag to print SMTP messages
 	 * @return true if successful otherwise false
 	 */
-	public static boolean sendEmail(String to, String subject, String body) {
+	public static boolean sendEmail(String to, String subject, String body, boolean verbose) {
 		Properties properties = System.getProperties();
 		// Setup mail server
 		properties.put("mail.smtp.host", host);
@@ -55,9 +56,9 @@ public class EmailService {
 			}
 
 		});
-
-		// Used to debug SMTP issues
-		session.setDebug(true);
+		if (verbose)
+			// Used to debug SMTP issues
+			session.setDebug(true);
 
 		try {
 			// Create a default MimeMessage object.
@@ -84,8 +85,13 @@ public class EmailService {
 		return true;
 	}
 
+	/**
+	 * Example usage of mail sending tool.
+	 * 
+	 * @param args No arguments needed
+	 */
 	public static void main(String[] args) {
-		sendEmail("mbofos@gmail.com", "test", "as");
+		sendEmail("mbofos@gmail.com", "test", "as", true);
 	}
 
 }

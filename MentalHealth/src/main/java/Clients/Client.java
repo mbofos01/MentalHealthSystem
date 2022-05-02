@@ -9,7 +9,7 @@ import java.net.UnknownHostException;
 
 import com.google.gson.Gson;
 
-import Objects.Configuration;
+import Tools.Configuration;
 import Tools.FileResourcesUtils;
 import Tools.Query;
 
@@ -24,11 +24,29 @@ import Tools.Query;
  *
  */
 public class Client {
+	/**
+	 * Each TCP connection must have a socket object to communicate
+	 */
 	public Socket socket;
+	/**
+	 * Each TCP connection must have output stream to write
+	 */
 	public DataOutputStream output;
+	/**
+	 * Each TCP connection must have a server to write to
+	 */
 	public BufferedReader server;
+	/**
+	 * Each TCP connection must have a reader to listen to
+	 */
 	public BufferedReader reader;
+	/**
+	 * Each TCP connection must have a valid IP address
+	 */
 	public String IP;
+	/**
+	 * Each TCP connection must have a valid Port number
+	 */
 	public int PORT;
 
 	/**
@@ -100,6 +118,9 @@ public class Client {
 		reader = new BufferedReader(new InputStreamReader(System.in));
 	}
 
+	/**
+	 * This method is used to reconnect the client to the server.
+	 */
 	public void reconnect() {
 		this.close();
 		try {

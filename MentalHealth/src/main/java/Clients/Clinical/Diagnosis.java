@@ -36,12 +36,28 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JTextPane;
 
+/**
+ * This application window is used in order to provide doctors a form to add a
+ * diagnosis for a patient.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class Diagnosis {
-
+	/**
+	 * JFrame that creates the window
+	 */
 	private JFrame frame;
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
+	 * @param last    PatientRecord object last patients diagnosis
 	 */
 	public static void openWindow(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs,
 			PatientRecord last) {
@@ -59,6 +75,13 @@ public class Diagnosis {
 
 	/**
 	 * Create the application.
+	 *
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
+	 * @param last    PatientRecord object last patients diagnosis
 	 */
 	public Diagnosis(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs, PatientRecord last) {
 		initialize(client, doctor, patient, drugs, last);
@@ -66,6 +89,13 @@ public class Diagnosis {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
+	 * @param last    PatientRecord object last patients diagnosis
 	 */
 	private void initialize(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs, PatientRecord last) {
 		System.out.println(last.getTreatment_id());

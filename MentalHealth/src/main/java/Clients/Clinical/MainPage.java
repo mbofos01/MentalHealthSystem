@@ -29,15 +29,36 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 
+/**
+ * This application window is used to provide the doctors a main page to select
+ * their actions
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class MainPage {
-
+	/**
+	 * JFrame that creates the window
+	 */
 	private JFrame frame;
+	/**
+	 * JPanel for the table to be inserted
+	 */
 	private JPanel contentPane;
+	/**
+	 * JTable for the drugs to be stored
+	 */
 	private JTable drug_table;
+	/**
+	 * JTable for the doctors patient to be stored
+	 */
 	private JTable patient_table;
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @param client Client object for server client communication
+	 * @param doctor Doctor object - the one how is logged in
 	 */
 	public static void openWindow(Client client, Doctor doctor) {
 		EventQueue.invokeLater(new Runnable() {
@@ -55,8 +76,8 @@ public class MainPage {
 	/**
 	 * Create the application.
 	 * 
-	 * @param doctor
-	 * @param client
+	 * @param client Client object for server client communication
+	 * @param doctor Doctor object - the one how is logged in
 	 */
 	public MainPage(Client client, Doctor doctor) {
 		initialize(client, doctor);
@@ -64,6 +85,9 @@ public class MainPage {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client Client object for server client communication
+	 * @param doctor Doctor object - the one how is logged in
 	 */
 	private void initialize(Client client, Doctor doctor) {
 		frame = new JFrame();

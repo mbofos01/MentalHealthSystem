@@ -119,6 +119,9 @@ public class Doctor {
 		this.clinic = clinic;
 	}
 
+	/**
+	 * This method is used to create a non existent doctor object.
+	 */
 	public void emptyValue() {
 		id = -1;
 

@@ -20,9 +20,18 @@ import Objects.PatientRecord;
  *
  */
 public class JDBC {
+	/**
+	 * Each JDBC connection must have a database driver loader.
+	 */
 	private boolean dbDriverLoaded = false;
+	/**
+	 * Each JDBC connection must have an actual connection object.
+	 */
 	private Connection conn = null;
 
+	/**
+	 * Empty constructor. Halt on failure.
+	 */
 	public JDBC() {
 		getDBConnection();
 		if (conn == null) {
@@ -282,7 +291,6 @@ public class JDBC {
 
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -526,7 +534,6 @@ public class JDBC {
 
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -552,7 +559,6 @@ public class JDBC {
 
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -578,13 +584,17 @@ public class JDBC {
 
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 
 	}
 
+	/**
+	 * Main function for the JDBC, used for testing.
+	 * 
+	 * @param args No arguments needed
+	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
 		base.getPatientRecords(1, 0);

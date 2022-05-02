@@ -1,7 +1,7 @@
 package Objects;
 
 /**
- * This object is used to model the treatment table stored in the database.
+ * This class is used to model a treatment stored in the database.
  * 
  * @author Michail Panagiotis Bofos
  * @author Demetra Hadjicosti

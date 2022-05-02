@@ -1,4 +1,4 @@
-package Objects;
+package Tools;
 
 /**
  * This class is used to model the TCP connection info used for client and

@@ -2,10 +2,30 @@ package Objects;
 
 import java.util.ArrayList;
 
+/**
+ * This tool is used to create a PDF report for a clinic.
+ * 
+ * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
+ */
 public class ReportData {
+	/**
+	 * Each report must have a week to be based on
+	 */
 	private String week;
+	/**
+	 * Each report must have a clinic to be based on
+	 */
 	private String clinic;
+	/**
+	 * Each report must have a visitors count
+	 */
 	private int[] visitors = new int[7];
+	/**
+	 * Each report must have a week in an array (dates)
+	 */
 	private String[] dates = new String[7];
 
 	/**

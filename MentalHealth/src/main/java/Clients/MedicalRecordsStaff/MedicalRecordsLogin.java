@@ -38,6 +38,8 @@ public class MedicalRecordsLogin {
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @param args No arguments needed
 	 */
 	public static void main(String[] args) {
 
@@ -58,6 +60,9 @@ public class MedicalRecordsLogin {
 
 	/**
 	 * Create the application.
+	 * 
+	 * @param client Client object must be passed in order to communicate with the
+	 *               server
 	 */
 	public MedicalRecordsLogin(Client client) {
 		initialize(client);
@@ -65,6 +70,9 @@ public class MedicalRecordsLogin {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client Client object must be passed in order to communicate with the
+	 *               server
 	 */
 	private void initialize(final Client client) {
 		frmMedicalRecordsStaff = new JFrame();

@@ -33,13 +33,30 @@ import Clients.Client;
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
 
+/**
+ * This application window presents the patient info to a doctor.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class PatientView {
-
+	/**
+	 * JFrame that creates the window
+	 */
 	private JFrame frmPatientView;
+	/**
+	 * Last patient record
+	 */
 	private PatientRecord last = new PatientRecord();
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
 	 */
 	public static void openWindow(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs) {
 		EventQueue.invokeLater(new Runnable() {
@@ -56,6 +73,12 @@ public class PatientView {
 
 	/**
 	 * Create the application.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
 	 */
 	public PatientView(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs) {
 		initialize(client, doctor, patient, drugs);
@@ -63,6 +86,12 @@ public class PatientView {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
 	 */
 	private void initialize(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs) {
 		ArrayList<PatientRecord> patient_records = new ArrayList<>();

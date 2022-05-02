@@ -326,6 +326,11 @@ public class CustomColours {
 
 	}
 
+	/**
+	 * Get black in light theme and white in the dark theme.
+	 * 
+	 * @return black in light - white in dark
+	 */
 	public static Color interChangableBlack() {
 		if (light)
 			return black;
@@ -333,6 +338,11 @@ public class CustomColours {
 			return white;
 	}
 
+	/**
+	 * Get black in dark theme and white in the light theme.
+	 * 
+	 * @return black in dark - white in light
+	 */
 	public static Color interChangableWhite() {
 		if (light)
 			return white;

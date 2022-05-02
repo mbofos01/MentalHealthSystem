@@ -31,22 +31,53 @@ import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * This application window is used to add new allergies to a patient
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class AllergyWindow {
-
+	/**
+	 * JFrame that creates the window
+	 */
 	private JFrame frame;
+	/**
+	 * JPanel for the table to be inserted
+	 */
 	private JPanel contentPane;
+	/**
+	 * JTable for drugs that do not cause an allergic episode to the patient
+	 */
 	private JTable getAllergy;
+	/**
+	 * JTable for new allergies
+	 */
 	private JTable addAllergy;
+	/**
+	 * Model for the table handler
+	 */
 	private DefaultTableModel new_allergies;
+	/**
+	 * Model for the table handler
+	 */
 	private DefaultTableModel allergy_list;
+	/**
+	 * JButton for allergy addition function
+	 */
 	private JButton btnNewButton;
+	/**
+	 * JButton for cancel function
+	 */
 	private JButton cancel;
 
 	/**
 	 * Launch the application.
 	 * 
-	 * @param Clientpatient
-	 * @param client
+	 * @param client  Client object for server client communication
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
 	 */
 	public static void openWindow(Client client, Patient patient, ArrayList<Drug> drugs) {
 		EventQueue.invokeLater(new Runnable() {
@@ -63,6 +94,11 @@ public class AllergyWindow {
 
 	/**
 	 * Create the application.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
 	 */
 	public AllergyWindow(Client client, Patient patient, ArrayList<Drug> drugs) {
 		initialize(client, patient, drugs);
@@ -70,6 +106,11 @@ public class AllergyWindow {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
 	 */
 	private void initialize(Client client, Patient patient, ArrayList<Drug> general_list) {
 		frame = new JFrame();

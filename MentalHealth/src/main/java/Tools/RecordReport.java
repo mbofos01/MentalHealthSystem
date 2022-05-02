@@ -11,6 +11,7 @@ import Objects.Patient;
 import Objects.PatientRecord;
 
 /**
+ * This class is used to export record data for a patient.
  * 
  * @author Michail Panagiotis Bofos
  * @author Demetra Hadjicosti
@@ -18,7 +19,14 @@ import Objects.PatientRecord;
  * @author Lucía Jiménez García
  */
 public class RecordReport {
-
+	/**
+	 * This function exports records to a txt file.
+	 * 
+	 * @param patient_records An ArrayList of PatientRecords
+	 * @param patient         Patient object
+	 * @param drugs           An ArrayList of Drugs prescribed
+	 * @param conditions      An ArrayList of Conditions
+	 */
 	public static void create(ArrayList<PatientRecord> patient_records, Patient patient, ArrayList<Drug> drugs,
 			ArrayList<Condition> conditions) {
 		File file = new File(

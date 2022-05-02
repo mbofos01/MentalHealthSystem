@@ -325,8 +325,16 @@ public class Server {
 		}
 	}
 
+	/**
+	 * Here we define the thread capacity of our server.
+	 */
 	public static ExecutorService TCP_WORKER_SERVICE = Executors.newFixedThreadPool(10);
 
+	/**
+	 * This is the main start point of the server program.
+	 * 
+	 * @param args No arguments needed
+	 */
 	public static void main(String args[]) {
 		try {
 			FileResourcesUtils app = new FileResourcesUtils();
