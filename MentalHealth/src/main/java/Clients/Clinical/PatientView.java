@@ -4,11 +4,13 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import Objects.Appointment;
 import Objects.Condition;
 import Objects.Doctor;
 import Objects.Drug;
 import Objects.Patient;
 import Objects.PatientRecord;
+import Tools.Clock;
 import Tools.CustomColours;
 import Tools.Query;
 import Tools.RecordReport;
@@ -17,13 +19,18 @@ import Tools.Viewpoint;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 
 import com.google.gson.Gson;
 
@@ -32,13 +39,34 @@ import Clients.Client;
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
 
+/**
+ * This application window presents the patient info to a doctor.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class PatientView {
-
+	/**
+	 * JFrame that creates the window
+	 */
 	private JFrame frmPatientView;
+	/**
+	 * Last patient record
+	 */
 	private PatientRecord last = new PatientRecord();
+	/**
+	 * JTable for patient appointments
+	 */
+	private JTable appointTable;
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
 	 */
 	public static void openWindow(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs) {
 		EventQueue.invokeLater(new Runnable() {
@@ -55,6 +83,12 @@ public class PatientView {
 
 	/**
 	 * Create the application.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
 	 */
 	public PatientView(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs) {
 		initialize(client, doctor, patient, drugs);
@@ -62,6 +96,12 @@ public class PatientView {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
+	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
 	 */
 	private void initialize(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs) {
 		ArrayList<PatientRecord> patient_records = new ArrayList<>();
@@ -74,7 +114,6 @@ public class PatientView {
 
 		Integer size = new Gson().fromJson(client.read(), Integer.class);
 		if (size == 0) {
-			System.out.println("STOP");
 			last = new PatientRecord();
 			last.setTreatment_id(-1);
 
@@ -216,17 +255,86 @@ public class PatientView {
 		});
 		export.setForeground(CustomColours.interChangableWhite());
 		export.setBackground(CustomColours.Pink());
-		export.setBounds(930, 171, 133, 23);
+		export.setBounds(916, 114, 145, 23);
 		frmPatientView.getContentPane().add(export);
 
-		JButton btnNewButton = new JButton("Add Diagnosis");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton death = new JButton("Death Of Patient");
+		death.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Diagnosis.openWindow(client, doctor, patient, drugs, last);
-				frmPatientView.dispose();
+				Query q = new Query(Viewpoint.Clinical);
+				q.setFunction("requestDeath");
+				q.addArgument("" + patient.getPatient_id());
+				q.addArgument("" + doctor.getId());
+				q.addArgument(Clock.currentSQLTime());
+				client.send(q);
 			}
 		});
-		btnNewButton.setBounds(866, 313, 197, 68);
-		frmPatientView.getContentPane().add(btnNewButton);
+		death.setForeground(CustomColours.interChangableWhite());
+		death.setBackground(CustomColours.interChangableBlack());
+		death.setBounds(916, 33, 145, 25);
+		frmPatientView.getContentPane().add(death);
+
+		JButton allergiesBtn = new JButton("Allergies");
+		allergiesBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AllergyWindow.openWindow(client, patient, drugs);
+			}
+		});
+		allergiesBtn.setForeground(CustomColours.interChangableWhite());
+		allergiesBtn.setBackground(CustomColours.Brown());
+		allergiesBtn.setBounds(43, 336, 89, 23);
+		frmPatientView.getContentPane().add(allergiesBtn);
+		/***********************************************/
+		Query getApps = new Query(Viewpoint.Clinical);
+		getApps.setFunction("getAppointmentsOfDoctorAndPatient");
+		getApps.addArgument("" + doctor.getId());
+		getApps.addArgument("" + patient.getPatient_id());
+		client.send(getApps);
+
+		Integer size_ap = new Gson().fromJson(client.read(), Integer.class);
+		// System.out.println(size);
+		ArrayList<Appointment> list = new ArrayList<Appointment>();
+		for (int i = 0; i < size_ap; i++)
+			list.add(new Gson().fromJson(client.read(), Appointment.class));
+		String col[] = { "Patient", "Time", "Type", "Updated" };
+		int index = 0;
+		String data[][] = new String[list.size()][col.length];
+		for (Appointment ap : list) {
+			data[index][0] = patient.getName() + " " + patient.getSurname();
+			data[index][1] = ap.getTime();
+			data[index][2] = ap.getType();
+
+			if (ap.getRecord_id() == -1)
+				data[index][3] = "NO";
+			else
+				data[index][3] = "YES";
+
+			index++;
+		}
+		DefaultTableModel model = new DefaultTableModel(data, col);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(294, 79, 524, 128);
+		frmPatientView.getContentPane().add(scrollPane);
+		appointTable = new JTable();
+		scrollPane.setViewportView(appointTable);
+		appointTable = new JTable(model);
+		scrollPane.setViewportView(appointTable);
+		appointTable.setDefaultEditor(Object.class, null);
+		//////////////////////////////////////////////////////////////////////////////////////////////////////
+		appointTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int p = appointTable.getSelectedRow();
+				PatientRecord specific = last;
+				for (PatientRecord s : patient_records)
+					if (s.getRecord_id() == list.get(p).getRecord_id())
+						specific = s;
+				Diagnosis.openWindow(client, doctor, patient, drugs, specific);
+				frmPatientView.dispose();
+
+			}
+		});
+
 	}
 }

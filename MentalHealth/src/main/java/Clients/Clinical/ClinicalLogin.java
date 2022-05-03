@@ -31,13 +31,23 @@ import java.awt.event.ActionEvent;
  *
  */
 public class ClinicalLogin {
-
+	/**
+	 * JFrame that creates the window
+	 */
 	private JFrame frmClinicalStaff;
+	/**
+	 * Input field for the username
+	 */
 	private JTextField usernameField;
+	/**
+	 * Input field for user password
+	 */
 	private JPasswordField passwordField;
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @param args No arguments needed
 	 */
 	public static void main(String[] args) {
 
@@ -58,6 +68,9 @@ public class ClinicalLogin {
 
 	/**
 	 * Create the application.
+	 * 
+	 * @param client Client object must be passed in order to communicate with the
+	 *               server
 	 */
 	public ClinicalLogin(Client client) {
 		initialize(client);
@@ -65,6 +78,9 @@ public class ClinicalLogin {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client Client object must be passed in order to communicate with the
+	 *               server
 	 */
 	private void initialize(final Client client) {
 		frmClinicalStaff = new JFrame();

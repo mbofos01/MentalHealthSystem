@@ -1,17 +1,88 @@
 package Objects;
 
+/**
+ * This class is used to model a treatment stored in the database.
+ * 
+ * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
+ */
 public class Treatment {
+	/**
+	 * Each treatment must have an id
+	 */
 	private int treatment_id;
+	/**
+	 * Each treatment must have a patient id
+	 */
 	private int patient_id;
+	/**
+	 * Each treatment must have a doctor id
+	 */
 	private int doctor_id;
+	/**
+	 * Each treatment must have a dose(per week)
+	 */
 	private int dose;
+	/**
+	 * Each treatment could have a comment
+	 */
 	private String comments;
+	/**
+	 * Each treatment must a warning flag
+	 */
 	private boolean warning;
+	/**
+	 * Each treatment must have a drug id
+	 */
 	private int drug_id;
+	/**
+	 * Each treatment must have an accepted flag
+	 */
 	private boolean accepted;
+	/**
+	 * 
+	 */
+	private String date;
+	/**
+	 * 
+	 */
+	private String last_updated;
 
+	/**
+	 * Each treatment starts as not accepted.
+	 */
 	public Treatment() {
 		accepted = false;
+	}
+
+	/**
+	 * @return the date
+	 */
+	public String getDate() {
+		return date;
+	}
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	/**
+	 * @return the last_updated
+	 */
+	public String getLast_updated() {
+		return last_updated;
+	}
+
+	/**
+	 * @param last_updated the last_updated to set
+	 */
+	public void setLast_updated(String last_updated) {
+		this.last_updated = last_updated;
 	}
 
 	/**

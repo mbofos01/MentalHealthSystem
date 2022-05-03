@@ -1,11 +1,13 @@
-package Objects;
+package Tools;
 
 /**
  * This class is used to model the TCP connection info used for client and
  * server communication.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class Configuration {
 	/**

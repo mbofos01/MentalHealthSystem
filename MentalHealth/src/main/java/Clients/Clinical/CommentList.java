@@ -34,15 +34,37 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * This application window is used to provide a comment view for a doctor.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class CommentList {
-
+	/**
+	 * JFrame that creates the window
+	 */
 	private JFrame frame;
+	/**
+	 * JPanel for the table to be in
+	 */
 	private JPanel contentPane;
+	/**
+	 * JTable for the table of the comments
+	 */
 	private JTable commentTable;
+	/**
+	 * JButton for the back function
+	 */
 	private JButton back;
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
 	 */
 	public static void openWindow(Client client, Doctor doctor, Patient patient) {
 		EventQueue.invokeLater(new Runnable() {
@@ -59,6 +81,11 @@ public class CommentList {
 
 	/**
 	 * Create the application.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
 	 */
 	public CommentList(Client client, Doctor doctor, Patient patient) {
 		initialize(client, doctor, patient);
@@ -66,6 +93,11 @@ public class CommentList {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client  Client object for server client communication
+	 * @param doctor  Doctor object - the one how is logged in
+	 * @param patient Patient object - the patient whom we want to create a
+	 *                diagnosis
 	 */
 	private void initialize(Client client, Doctor doctor, Patient patient) {
 		frame = new JFrame();

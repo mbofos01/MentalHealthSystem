@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import Objects.Configuration;
-
 class FetchFromResourcesTest {
 	static FileResourcesUtils fr = new FileResourcesUtils();
 	static String HOST = "127.0.0.1";

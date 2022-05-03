@@ -4,7 +4,9 @@ package Objects;
  * This class is used to model a drug stored in the Database.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class Drug {
 	/**

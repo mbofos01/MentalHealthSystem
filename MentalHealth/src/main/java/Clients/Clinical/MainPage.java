@@ -9,9 +9,11 @@ import javax.swing.table.DefaultTableModel;
 import com.google.gson.Gson;
 
 import Clients.Client;
+import Objects.Appointment;
 import Objects.Doctor;
 import Objects.Drug;
 import Objects.Patient;
+import Tools.Clock;
 import Tools.CustomColours;
 import Tools.Query;
 import Tools.Viewpoint;
@@ -29,20 +31,42 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 
+/**
+ * This application window is used to provide the doctors a main page to select
+ * their actions
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class MainPage {
-
+	/**
+	 * JFrame that creates the window
+	 */
 	private JFrame frame;
+	/**
+	 * JPanel for the table to be inserted
+	 */
 	private JPanel contentPane;
+	/**
+	 * JTable for the drugs to be stored
+	 */
 	private JTable drug_table;
+	/**
+	 * JTable for the doctors patient to be stored
+	 */
 	private JTable patient_table;
+	/**
+	 * JTable for the appointments to be shown
+	 */
+	private JTable appointTable;
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @param client Client object for server client communication
+	 * @param doctor Doctor object - the one how is logged in
 	 */
 	public static void openWindow(Client client, Doctor doctor) {
-		Query q = new Query(Viewpoint.Clinical);
-		q.setFunction("see");
-		client.send(q);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -58,8 +82,8 @@ public class MainPage {
 	/**
 	 * Create the application.
 	 * 
-	 * @param doctor
-	 * @param client
+	 * @param client Client object for server client communication
+	 * @param doctor Doctor object - the one how is logged in
 	 */
 	public MainPage(Client client, Doctor doctor) {
 		initialize(client, doctor);
@@ -67,6 +91,9 @@ public class MainPage {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client Client object for server client communication
+	 * @param doctor Doctor object - the one how is logged in
 	 */
 	private void initialize(Client client, Doctor doctor) {
 		frame = new JFrame();
@@ -215,5 +242,68 @@ public class MainPage {
 
 		darkTheme.setBounds(1035, 11, 120, 23);
 		contentPane.add(darkTheme);
+
+		JLabel title = new JLabel("Today's Appointments");
+		title.setForeground(CustomColours.interChangableBlack());
+		title.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		title.setBounds(445, 35, 322, 88);
+		contentPane.add(title);
+		/***********************************************************/
+		Query getApps = new Query(Viewpoint.Clinical);
+		getApps.setFunction("getAppointmentsOfADoctorsDay");
+		getApps.addArgument("" + doctor.getId());
+		getApps.addArgument(Clock.currentSQLTime());
+		client.send(getApps);
+
+		Integer size_ap = new Gson().fromJson(client.read(), Integer.class);
+		// System.out.println(size);
+		ArrayList<Appointment> list = new ArrayList<Appointment>();
+		for (int i = 0; i < size_ap; i++)
+			list.add(new Gson().fromJson(client.read(), Appointment.class));
+		String col3[] = { "Patient", "Time", "Type", "Updated" };
+		int index3 = 0;
+		String data3[][] = new String[list.size()][col3.length];
+		for (Appointment ap : list) {
+			data3[index3][0] = getPatientFullNameByID(ap.getPatient_id(), patient_list);
+			data3[index3][1] = ap.getTime();
+			data3[index3][2] = ap.getType();
+
+			if (ap.getRecord_id() == -1)
+				data3[index3][3] = "NO";
+			else
+				data3[index3][3] = "YES";
+
+			index3++;
+		}
+
+		DefaultTableModel model3 = new DefaultTableModel(data3, col3);
+		JScrollPane scrollPane3 = new JScrollPane();
+		scrollPane3.setBounds(356, 133, 472, 286);
+		contentPane.add(scrollPane3);
+		appointTable = new JTable();
+		scrollPane3.setViewportView(appointTable);
+		appointTable = new JTable(model3);
+		scrollPane3.setViewportView(appointTable);
+		appointTable.setDefaultEditor(Object.class, null);
+		//////////////////////////////////////////////////////////////////////////////////////////////////////
+		appointTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int p = appointTable.getSelectedRow();
+				Patient selectedPatient = null;
+				for (Patient s : patient_list)
+					if (s.getPatient_id() == list.get(p).getPatient_id())
+						selectedPatient = s;
+
+				PatientView.openWindow(client, doctor, selectedPatient, drug_list);
+			}
+		});
+	}
+
+	private String getPatientFullNameByID(int patient_id, ArrayList<Patient> patient_list) {
+		for (Patient s : patient_list)
+			if (s.getPatient_id() == patient_id)
+				return s.getName() + " " + s.getSurname();
+		return "null";
 	}
 }

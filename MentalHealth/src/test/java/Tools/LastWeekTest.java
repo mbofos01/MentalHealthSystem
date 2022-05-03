@@ -14,7 +14,7 @@ public class LastWeekTest {
 	static LocalDate currentdate = LocalDate.now();
 	static int today = currentdate.getDayOfMonth();
 	static String[] test_week = Clock.getLastWeek();
-	static int i = 0;
+	static int i = 0, pointer = 0, secondPointer = 6;
 	static boolean flag = true;
 	static String[] calendar = { "2022-04-25", "2022-04-26", "2022-04-27", "2022-04-28", "2022-04-29", "2022-04-30",
 			"2022-05-01", "2022-05-02", "2022-05-03", "2022-05-04", "2022-05-05", "2022-05-06", "2022-05-07",
@@ -25,6 +25,7 @@ public class LastWeekTest {
 		for (i = 0; i < calendar.length; i++) {
 			if (currentdate.toString().equals(calendar[i])) {
 				flag = false;
+				pointer = i;
 				break;
 			}
 		}
@@ -37,7 +38,8 @@ public class LastWeekTest {
 		if (flag)
 			return;
 		else
-			assertEquals(calendar[i], test_week[i]);
-		i--;
+			assertEquals(calendar[pointer], test_week[secondPointer]);
+		pointer--;
+		secondPointer--;
 	}
 }

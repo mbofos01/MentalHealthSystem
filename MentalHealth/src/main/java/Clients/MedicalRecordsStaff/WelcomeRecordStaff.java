@@ -11,12 +11,23 @@ import Objects.RecordsStaff;
 import Tools.Query;
 import Tools.Viewpoint;
 
+/**
+ * This application windows is used (as of now) just for displaying some info
+ * about the record management staff.
+ * 
+ * @author Michail Panagiotis Bofos
+ *
+ */
 public class WelcomeRecordStaff {
 
 	private JFrame frame;
 
 	/**
 	 * Launch the application.
+	 * 
+	 * @param client Client object must be passed in order to communicate with the
+	 *               server
+	 * @param model  RecordStaff object for the person logged in
 	 */
 	public static void openWindow(final Client client, final RecordsStaff model) {
 		EventQueue.invokeLater(new Runnable() {
@@ -33,6 +44,10 @@ public class WelcomeRecordStaff {
 
 	/**
 	 * Create the application.
+	 * 
+	 * @param client Client object must be passed in order to communicate with the
+	 *               server
+	 * @param model  RecordStaff object for the person logged in
 	 */
 	public WelcomeRecordStaff(Client client, RecordsStaff model) {
 		initialize(client, model);
@@ -40,6 +55,10 @@ public class WelcomeRecordStaff {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client Client object must be passed in order to communicate with the
+	 *               server
+	 * @param model  RecordStaff object for the person logged in
 	 */
 	private void initialize(Client client, RecordsStaff model) {
 		Query q = new Query(Viewpoint.Clinical);

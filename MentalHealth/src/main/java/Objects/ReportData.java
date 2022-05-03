@@ -2,11 +2,42 @@ package Objects;
 
 import java.util.ArrayList;
 
+import Tools.Counter;
+
+/**
+ * This tool is used to create a PDF report for a clinic.
+ * 
+ * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
+ */
 public class ReportData {
+	/**
+	 * Each report must have a week to be based on
+	 */
 	private String week;
-	private String clinic;
+	/**
+	 * Each report must have a clinic to be based on
+	 */
+	private Clinic clinic;
+
+	/**
+	 * Each report must have a visitors count
+	 */
 	private int[] visitors = new int[7];
+	/**
+	 * Each report must have a week in an array (dates)
+	 */
 	private String[] dates = new String[7];
+	/**
+	 * Each report must have a list of condition case counter
+	 */
+	private ArrayList<Counter> conditionCounter;
+	/**
+	 * Each report must have a list of treatment case counter
+	 */
+	private ArrayList<Counter> treatmentCounter;
 
 	/**
 	 * @return the dates
@@ -24,7 +55,6 @@ public class ReportData {
 
 	private int total_visitors;
 	private ArrayList<Condition> conds = new ArrayList<>();
-	private ArrayList<Prescription> prescr = new ArrayList<>();
 
 	/**
 	 * @return the week
@@ -44,14 +74,14 @@ public class ReportData {
 	/**
 	 * @return the clinic
 	 */
-	public String getClinic() {
+	public Clinic getClinic() {
 		return clinic;
 	}
 
 	/**
 	 * @param clinic the clinic to set
 	 */
-	public void setClinic(String clinic) {
+	public void setClinic(Clinic clinic) {
 		this.clinic = clinic;
 	}
 
@@ -102,17 +132,31 @@ public class ReportData {
 	}
 
 	/**
-	 * @return the prescr
+	 * @return the conditionCounter
 	 */
-	public ArrayList<Prescription> getPrescr() {
-		return prescr;
+	public ArrayList<Counter> getConditionCounter() {
+		return conditionCounter;
 	}
 
 	/**
-	 * @param prescr the prescr to set
+	 * @param conditionCounter the conditionCounter to set
 	 */
-	public void setPrescr(ArrayList<Prescription> prescr) {
-		this.prescr = prescr;
+	public void setConditionCounter(ArrayList<Counter> conditionCounter) {
+		this.conditionCounter = conditionCounter;
+	}
+
+	/**
+	 * @return the treatmentCounter
+	 */
+	public ArrayList<Counter> getTreatmentCounter() {
+		return treatmentCounter;
+	}
+
+	/**
+	 * @param treatmentCounter the treatmentCounter to set
+	 */
+	public void setTreatmentCounter(ArrayList<Counter> treatmentCounter) {
+		this.treatmentCounter = treatmentCounter;
 	}
 
 }

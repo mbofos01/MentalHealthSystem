@@ -4,7 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import Objects.*;
-import Objects.PatientRecord;
+import Tools.Clock;
+import Tools.Counter;
 
 /**
  * This object is the middleware between the server and the SQL Database. Each
@@ -14,12 +15,24 @@ import Objects.PatientRecord;
  * 
  * 
  * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  *
  */
 public class JDBC {
+	/**
+	 * Each JDBC connection must have a database driver loader.
+	 */
 	private boolean dbDriverLoaded = false;
+	/**
+	 * Each JDBC connection must have an actual connection object.
+	 */
 	private Connection conn = null;
 
+	/**
+	 * Empty constructor. Halt on failure.
+	 */
 	public JDBC() {
 		getDBConnection();
 		if (conn == null) {
@@ -118,6 +131,33 @@ public class JDBC {
 	}
 
 	/**
+	 * This method fetches the data of a clinic based on an id.
+	 * 
+	 * @param clinic_id Integer clinics id
+	 * @return Clinic object
+	 */
+	public Clinic getClinic(int clinic_id) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getClinicName(?)}");
+			cs.setInt(1, clinic_id);
+			ResultSet rs = cs.executeQuery();
+
+			Clinic cli = new Clinic();
+			while (rs.next()) {
+				cli.setClinic_id(rs.getInt("clinic_id"));
+				cli.setName(rs.getString("name"));
+				cli.setTelephone(rs.getString("telephone"));
+			}
+
+			return cli;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
 	 * This function is used to login a Medical Records Staff Person
 	 * 
 	 * @param username String the username we enter
@@ -180,8 +220,8 @@ public class JDBC {
 	 * This method fetches a drug based on its id, this is going to be used after a
 	 * specific drug has been selected on a list.
 	 * 
-	 * @param id
-	 * @return
+	 * @param id Integer drug id
+	 * @return Drug in object
 	 */
 	public Drug getDrug(int id) {
 		try {
@@ -205,6 +245,12 @@ public class JDBC {
 		return rec;
 	}
 
+	/**
+	 * This method fetched a patient based on their id.
+	 * 
+	 * @param patient_id Integer patients id
+	 * @return Patient in object
+	 */
 	public Patient getPatient(int patient_id) {
 		Patient patient = new Patient();
 		int flag = 0;
@@ -230,6 +276,12 @@ public class JDBC {
 		return patient;
 	}
 
+	/**
+	 * This method fetches all the patients of a specific doctor.
+	 * 
+	 * @param doctor_id Integer id of a doctor
+	 * @return An ArrayList of Patients
+	 */
 	public ArrayList<Patient> getDoctorsPatient(int doctor_id) {
 		ArrayList<Patient> patient_list = new ArrayList<>();
 		try {
@@ -248,6 +300,14 @@ public class JDBC {
 
 	}
 
+	/**
+	 * This method inserts a comment in the database.
+	 * 
+	 * @param doctor_id  Intger id of a doctor
+	 * @param patient_id Integer id of a patient
+	 * @param comment    String comment body
+	 * @return true if successful otherwise false
+	 */
 	public boolean insertComment(int doctor_id, int patient_id, String comment) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call insertComment(?,?,?,?)}");
@@ -259,12 +319,17 @@ public class JDBC {
 
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 	}
 
+	/**
+	 * This method gets all comments created for a specific patient.
+	 * 
+	 * @param patient_id Integer id of a patient
+	 * @return An ArrayList of comments
+	 */
 	public ArrayList<Comment> getComments(int patient_id) {
 		ArrayList<Comment> comment_list = new ArrayList<>();
 		try {
@@ -296,6 +361,11 @@ public class JDBC {
 		return comment_list;
 	}
 
+	/**
+	 * This method fetches all the conditions all the database.
+	 * 
+	 * @return An ArrayList of conditions
+	 */
 	public ArrayList<Condition> getConditions() {
 		ArrayList<Condition> condition_list = new ArrayList<>();
 		try {
@@ -315,6 +385,13 @@ public class JDBC {
 		return condition_list;
 	}
 
+	/**
+	 * This method fetches all the records of a specific patient.
+	 * 
+	 * @param patient_id Integer id of a patient
+	 * @param doctor_id  Integer id of a doctor
+	 * @return An ArrayList of Records
+	 */
 	public ArrayList<PatientRecord> getPatientRecords(int patient_id, int doctor_id) {
 		ArrayList<PatientRecord> records = new ArrayList<>();
 		try {
@@ -380,6 +457,8 @@ public class JDBC {
 						t.setDose(treat_rs.getInt("dose"));
 						t.setDrug_id(treat_rs.getInt("drug_id"));
 						t.setPatient_id(treat_rs.getInt("patient_id"));
+						t.setDate(rs.getString("date"));
+						t.setLast_updated(rs.getString("last_update"));
 						if (treat_rs.getInt("warning") == 0)
 							flag = false;
 						else
@@ -400,6 +479,12 @@ public class JDBC {
 
 	}
 
+	/**
+	 * This method fetches all the allergies of a specific patient.
+	 * 
+	 * @param patient_id Integer id of a patient
+	 * @return An ArrayList of allergies
+	 */
 	public ArrayList<Allergy> getPatientAllergies(int patient_id) {
 		ArrayList<Allergy> allergies = new ArrayList<>();
 		try {
@@ -412,7 +497,11 @@ public class JDBC {
 				c.setAllergy_id(rs.getInt("allergy_id"));
 				c.setDrug_id(rs.getInt("drug_id"));
 				c.setPatient_id(rs.getInt("patient_id"));
-				allergies.add(c);
+				c.setAccepted(rs.getBoolean("accepted"));
+				c.setDate(rs.getString("date"));
+				c.setLast_updated(rs.getString("last_updated"));
+				if (c.isAccepted())
+					allergies.add(c);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -420,9 +509,15 @@ public class JDBC {
 		return allergies;
 	}
 
+	/**
+	 * This method inserts a treatment to the database.
+	 * 
+	 * @param treat Treatment object
+	 * @return the id of the new treatment
+	 */
 	public int insertTreatment(Treatment treat) {
 		try {
-			CallableStatement cs = this.conn.prepareCall("{ ? = call  insertTreatment(?,?,?,?,?,?,?)}");
+			CallableStatement cs = this.conn.prepareCall("{ ? = call  insertTreatment(?,?,?,?,?,?,?,?)}");
 
 			cs.registerOutParameter(1, java.sql.Types.INTEGER);
 			cs.setInt(2, treat.getPatient_id());
@@ -432,6 +527,7 @@ public class JDBC {
 			cs.setBoolean(6, treat.isWarning());
 			cs.setInt(7, treat.getDrug_id());
 			cs.setBoolean(8, treat.isAccepted());
+			cs.setString(9, treat.getDate());
 			cs.execute();
 			System.out.println(cs.getInt(1));
 			return cs.getInt(1);
@@ -442,6 +538,12 @@ public class JDBC {
 		return -1;
 	}
 
+	/**
+	 * This method inserts a record to the database.
+	 * 
+	 * @param re PatientRecord object
+	 * @return true if successful otherwise false
+	 */
 	public boolean insertRecord(PatientRecord re) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call insertRecord(?,?,?,?,?,?,?,?,?,?,?)}");
@@ -463,16 +565,379 @@ public class JDBC {
 
 			return true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
 
 	}
 
+	/**
+	 * This method inserts a death of a patient request.
+	 * 
+	 * @param patient     Patient object
+	 * @param doctor      Integer doctor id
+	 * @param dateOfDeath String SQL date
+	 * @return true if successful otherwise false
+	 */
+	public boolean insertPendingDeath(int patient, int doctor, String dateOfDeath) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call requestDeathOfPatient(?,?,?)}");
+			cs.setInt(1, patient);
+			cs.setInt(2, doctor);
+			cs.setString(3, dateOfDeath);
+
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+
+	/**
+	 * This method inserts an allergy to the database.
+	 * 
+	 * @param allergy Allergy object
+	 * @return true if successful otherwise false
+	 */
+	public boolean insertAllergy(Allergy allergy) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertAllergy(?,?,?,?,?)}");
+			cs.setInt(1, allergy.getPatient_id());
+			cs.setInt(2, allergy.getDrug_id());
+			cs.setBoolean(3, allergy.isAccepted());
+			cs.setString(4, allergy.getDate());
+			cs.setString(5, allergy.getLast_updated());
+
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+
+	/**
+	 * This method fetches all the doctors of a specific clinic.
+	 * 
+	 * @param clinic_id Integer id of a clinic
+	 * @return An ArrayList of doctors
+	 */
+	public ArrayList<Doctor> getDoctorsOfAClinic(int clinic_id) {
+		ArrayList<Doctor> doctors = new ArrayList<Doctor>();
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call getDoctorsOfAClinic(?)}");
+			cs.setInt(1, clinic_id);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Doctor rec = new Doctor();
+				rec.setId(rs.getInt("doctor_id"));
+				rec.setName(rs.getString("name"));
+				rec.setSurname(rs.getString("surname"));
+				rec.setUsername(rs.getString("username"));
+				rec.setClinic_id(rs.getInt("clinic_id"));
+				doctors.add(rec);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return doctors;
+
+	}
+
+	/**
+	 * This method calculates how many patients have each condition in a specific
+	 * clinic.
+	 * 
+	 * @param clinic_id Integer id of a clinic
+	 * @return An ArrayList of counters
+	 */
+	public ArrayList<Counter> getPatientsOfEachCondition(int clinic_id) {
+		ArrayList<Counter> counters = new ArrayList<Counter>();
+		ArrayList<Counter> merged = new ArrayList<>();
+		ArrayList<Doctor> doctors_of_a_clinic = this.getDoctorsOfAClinic(clinic_id);
+		String week[] = Clock.getLastWeek();
+		for (String week_day : week)
+			System.out.println(week_day);
+		try {
+			for (String day : week) {
+				ArrayList<Condition> conds = this.getConditions();
+				for (int i = 0; i < conds.size(); i++) {
+					Condition one = conds.get(i);
+					PreparedStatement cs = this.conn.prepareCall("{call getNumberOfCondition(?,?,?)}");
+					cs.setInt(1, one.getCondition_id());
+					cs.setBoolean(2, true);
+					cs.setString(3, day);
+					ResultSet rs = cs.executeQuery();
+					ArrayList<PatientRecord> recs = new ArrayList<>();
+					while (rs.next()) {
+						PatientRecord in = new PatientRecord();
+						in.setPatient_id(rs.getInt("patient_id"));
+						in.setDoctor_id(rs.getInt("doctor_id"));
+						in.setDate(rs.getString("date"));
+						if (!idDoesExist(recs, in) && clinicsDoctor(doctors_of_a_clinic, in.getDoctor_id()))
+							recs.add(in);
+					}
+					counters.add(new Counter(one.getName(), recs.size()));
+				}
+			}
+			ArrayList<Condition> conds = this.getConditions();
+			for (int c = 0; c < conds.size(); c++) {
+				Counter inse = new Counter(conds.get(c).getName(), 0);
+				for (Counter i : counters) {
+					if (i.getName().equals(conds.get(c).getName())) {
+						inse.addValue(i.getValue());
+					}
+				}
+				merged.add(inse);
+
+			}
+			for (Counter m : merged)
+				System.out.println(m.getName() + " " + m.getValue());
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return merged;
+	}
+
+	/**
+	 * This method calculates how many patients are prescribed each drug in a
+	 * specific clinic.
+	 * 
+	 * @param clinic_id Integer id of a clinic
+	 * @return An ArrayList of counters
+	 */
+	public ArrayList<Counter> getPatientsOfEachTreatment(int clinic_id) {
+		ArrayList<Counter> counters = new ArrayList<Counter>();
+		ArrayList<Counter> merged = new ArrayList<>();
+		ArrayList<Doctor> doctors_of_a_clinic = this.getDoctorsOfAClinic(clinic_id);
+		String week[] = Clock.getLastWeek();
+		for (String week_day : week)
+			System.out.println(week_day);
+		try {
+			for (String day : week) {
+				ArrayList<Drug> drugs = this.getDrugList();
+				for (int i = 0; i < drugs.size(); i++) {
+					Drug one = drugs.get(i);
+					PreparedStatement cs = this.conn.prepareCall("{call getNumberOfTreatment(?,?,?)}");
+					cs.setInt(1, one.getId());
+					cs.setBoolean(2, true);
+					cs.setString(3, day);
+					ResultSet rs = cs.executeQuery();
+					ArrayList<Treatment> recs = new ArrayList<>();
+					while (rs.next()) {
+						Treatment in = new Treatment();
+						in.setPatient_id(rs.getInt("patient_id"));
+						in.setDoctor_id(rs.getInt("doctor_id"));
+						in.setDate(rs.getString("date"));
+						if (!idDoesExist(recs, in) && clinicsDoctor(doctors_of_a_clinic, in.getDoctor_id()))
+							recs.add(in);
+					}
+					counters.add(new Counter(one.getCommercial_name(), recs.size()));
+				}
+			}
+
+			ArrayList<Drug> drugs = this.getDrugList();
+			for (int c = 0; c < drugs.size(); c++) {
+				Counter inse = new Counter(drugs.get(c).getCommercial_name(), 0);
+				for (Counter i : counters) {
+					if (i.getName().equals(drugs.get(c).getCommercial_name())) {
+						inse.addValue(i.getValue());
+					}
+				}
+				merged.add(inse);
+
+			}
+			for (Counter m : merged)
+				System.out.println(m.getName() + " " + m.getValue());
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return merged;
+	}
+
+	/**
+	 * Helper function checks if a doctor belongs to a list.
+	 * 
+	 * @param doctors_of_a_clinic An ArrayList of doctors
+	 * @param in                  Integer id of a doctor
+	 * @return true if the doctor is on the list, otherwise false
+	 */
+	private boolean clinicsDoctor(ArrayList<Doctor> doctors_of_a_clinic, int in) {
+		for (Doctor doc : doctors_of_a_clinic)
+			if (in == doc.getId())
+				return true;
+		return false;
+	}
+
+	/**
+	 * Helper function checks if a patient record exists in a list of records.
+	 * 
+	 * @param recs An ArrayList of records
+	 * @param in   PatientRecord record
+	 * @return true if the doctor is on the list, otherwise false
+	 */
+	private boolean idDoesExist(ArrayList<PatientRecord> recs, PatientRecord in) {
+		for (PatientRecord records : recs)
+			if (records.getPatient_id() == in.getPatient_id())
+				return true;
+		return false;
+	}
+
+	/**
+	 * Helper function checks if a treatment exists in a list of treatments.
+	 * 
+	 * @param recs An ArrayList of treatments
+	 * @param in   Treatment treatment
+	 * @return true if the doctor is on the list, otherwise false
+	 */
+	private boolean idDoesExist(ArrayList<Treatment> recs, Treatment in) {
+		for (Treatment records : recs)
+			if (records.getPatient_id() == in.getPatient_id())
+				return true;
+		return false;
+	}
+
+	/**
+	 * This method fetches the appointments for a day of a doctor, based on their
+	 * id.
+	 * 
+	 * @param doctor Doctor doctor id
+	 * @param date   String the day in question
+	 * @return An ArrayList of appointments
+	 */
+	public ArrayList<Appointment> getDoctorsAppointments(int doctor, String date) {
+		ArrayList<Appointment> rendez = new ArrayList<>();
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call getDoctorsAppointmentsForADay(?,?)}");
+			cs.setInt(1, doctor);
+			cs.setString(2, date);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Appointment rec = new Appointment();
+				rec.setDoctor_id(rs.getInt("doctor_id"));
+				rec.setAppoint_id(rs.getInt("appoint_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+				rec.setDate(rs.getString("date"));
+				rec.setTime(rs.getString("time"));
+				rec.setDropIn(rs.getBoolean("dropIn"));
+
+				PreparedStatement cs2 = this.conn.prepareCall("{call getAppointmentRecords(?)}");
+				cs2.setInt(1, rs.getInt("appoint_id"));
+				ResultSet rs2 = cs2.executeQuery();
+				boolean doesItExist = false;
+				while (rs2.next()) {
+					rec.setRecord_id(rs2.getInt("record_id"));
+					doesItExist = true;
+				}
+				if (doesItExist == false)
+					rec.setRecord_id(-1);
+
+				rendez.add(rec);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rendez;
+	}
+
+	/**
+	 * This method fetches the appointments of a patient with a doctor, based on
+	 * their id.
+	 * 
+	 * @param doctor  Doctor doctor id
+	 * @param patient Patient patient id
+	 * @return An ArrayList of appointments
+	 */
+	public ArrayList<Appointment> getPatientAppointmentsWithDoctor(int doctor, int patient) {
+		ArrayList<Appointment> rendez = new ArrayList<>();
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call getPatientAppointmentWithADoctor(?,?)}");
+			cs.setInt(1, doctor);
+			cs.setInt(2, patient);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Appointment rec = new Appointment();
+				rec.setDoctor_id(rs.getInt("doctor_id"));
+				rec.setAppoint_id(rs.getInt("appoint_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+				rec.setDate(rs.getString("date"));
+				rec.setTime(rs.getString("time"));
+				rec.setDropIn(rs.getBoolean("dropIn"));
+
+				PreparedStatement cs2 = this.conn.prepareCall("{call getAppointmentRecords(?)}");
+				cs2.setInt(1, rs.getInt("appoint_id"));
+				ResultSet rs2 = cs2.executeQuery();
+				boolean doesItExist = false;
+				while (rs2.next()) {
+					rec.setRecord_id(rs2.getInt("record_id"));
+					doesItExist = true;
+				}
+				if (doesItExist == false)
+					rec.setRecord_id(-1);
+
+				rendez.add(rec);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rendez;
+	}
+
+	/**
+	 * This method gets the appointment count of a clinic for a week.
+	 * 
+	 * @param clinic Integer id
+	 * @return Integer array with the patient count
+	 */
+	public int[] getWeeksAppointments(int clinic) {
+		int week[] = new int[7];
+		String dates[] = Clock.getLastWeek();
+		for (int i = 0; i < 7; i++) {
+			try {
+				CallableStatement cs = this.conn.prepareCall("{ ? = call  getDaysAppointments(?,?)}");
+				cs.registerOutParameter(1, java.sql.Types.INTEGER);
+				cs.setString(2, dates[i]);
+				cs.setInt(3, clinic);
+				cs.execute();
+
+				week[i] = cs.getInt(1);
+				System.out.println(dates[i] + " " + week[i]);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return week;
+	}
+
+	/**
+	 * Main function for the JDBC, used for testing.
+	 * 
+	 * @param args No arguments needed
+	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		base.getPatientRecords(1, 0);
+		base.getWeeksAppointments(0);
 	}
 
 }

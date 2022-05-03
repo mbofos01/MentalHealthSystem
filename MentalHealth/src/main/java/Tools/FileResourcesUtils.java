@@ -7,17 +7,23 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import Objects.Configuration;
-
 /**
  * This class supports IO fetch and usage. Due to the nature of a Maven project
  * we save all the resources to the resources directory.
  * 
  * @author Michail Panagiotis Bofos
- *
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
  */
 public class FileResourcesUtils {
-
+	/**
+	 * This method gets the client or server configuration from a file located in
+	 * the resources directory.
+	 * 
+	 * @param filename String the name of the json file with the configuration
+	 * @return Configuration object
+	 */
 	public Configuration getConfig(String filename) {
 		InputStream is = this.getFileFromResourceAsStream(filename);
 		return new Gson().fromJson(this.getInputStream(is), Configuration.class);

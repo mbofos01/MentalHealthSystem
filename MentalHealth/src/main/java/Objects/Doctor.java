@@ -1,12 +1,38 @@
 package Objects;
 
+/**
+ * This class is used to model a doctor stored in the database.
+ * 
+ * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
+ * @author Ioanna Theofilou
+ * @author Lucía Jiménez García
+ */
 public class Doctor {
+	/**
+	 * Each doctor must have an id.
+	 */
 	private int id;
+	/**
+	 * Each doctor must have a username;
+	 */
 	private String username;
+	/**
+	 * Each doctor must have a clinic where they work;
+	 */
 	private int clinic_id;
+	/**
+	 * Each doctor must have a name;
+	 */
 	private String name;
+	/**
+	 * Each doctor must have a surname;
+	 */
 	private String surname;
 
+	/**
+	 * Help field, we can fetch the clinic of the doctor.
+	 */
 	private Clinic clinic;
 
 	/**
@@ -93,6 +119,9 @@ public class Doctor {
 		this.clinic = clinic;
 	}
 
+	/**
+	 * This method is used to create a non existent doctor object.
+	 */
 	public void emptyValue() {
 		id = -1;
 
