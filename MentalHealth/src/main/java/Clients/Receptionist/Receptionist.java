@@ -17,8 +17,9 @@ import javax.swing.JLabel;
 public class Receptionist {
 
 	private JFrame frmReceptionist;
-	private JTable table;
-	private JTextField txtSearchPatientBy;
+	private JTable tblAppointment;
+	private JTextField txtSearch;
+	private JTable tblPatient;
 
 	/**
 	 * Launch the application.
@@ -58,24 +59,24 @@ public class Receptionist {
 		scrollPane.setBounds(86, 43, 476, 153);
 		frmReceptionist.getContentPane().add(scrollPane);
 		
-		table = new JTable();
-		scrollPane.setViewportView(table);
+		tblAppointment = new JTable();
+		scrollPane.setViewportView(tblAppointment);
 		
-		JButton btnNewButton = new JButton("Generate Last Perscription for selected patient");
-		btnNewButton.setBackground(new Color(0, 204, 102));
-		btnNewButton.setBounds(86, 459, 251, 34);
-		frmReceptionist.getContentPane().add(btnNewButton);
+		JButton btnPresc = new JButton("Generate Last Perscription for selected patient");
+		btnPresc.setBackground(new Color(0, 204, 102));
+		btnPresc.setBounds(86, 459, 251, 34);
+		frmReceptionist.getContentPane().add(btnPresc);
 		
-		txtSearchPatientBy = new JTextField();
-		txtSearchPatientBy.setText("Search patient by name");
-		txtSearchPatientBy.setBounds(86, 264, 162, 19);
-		frmReceptionist.getContentPane().add(txtSearchPatientBy);
-		txtSearchPatientBy.setColumns(10);
+		txtSearch = new JTextField();
+		txtSearch.setText("Search patient by name");
+		txtSearch.setBounds(86, 264, 162, 19);
+		frmReceptionist.getContentPane().add(txtSearch);
+		txtSearch.setColumns(10);
 		
-		JButton btnNewButton_1 = new JButton("Search");
-		btnNewButton_1.setBackground(new Color(0, 153, 255));
-		btnNewButton_1.setBounds(477, 263, 85, 21);
-		frmReceptionist.getContentPane().add(btnNewButton_1);
+		JButton btnSearch = new JButton("Search");
+		btnSearch.setBackground(new Color(0, 153, 255));
+		btnSearch.setBounds(477, 263, 85, 21);
+		frmReceptionist.getContentPane().add(btnSearch);
 		
 		JButton btnNewAppointment = new JButton("New Appointment");
 		btnNewAppointment.setBackground(new Color(0, 204, 102));
@@ -93,5 +94,13 @@ public class Receptionist {
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(86, 296, 476, 153);
 		frmReceptionist.getContentPane().add(scrollPane_1);
+		
+		tblPatient = new JTable();
+		scrollPane_1.setViewportView(tblPatient);
+		
+		JButton btnReset = new JButton("Reset Table");
+		btnReset.setBackground(new Color(0, 153, 255));
+		btnReset.setBounds(454, 466, 108, 21);
+		frmReceptionist.getContentPane().add(btnReset);
 	}
 }
