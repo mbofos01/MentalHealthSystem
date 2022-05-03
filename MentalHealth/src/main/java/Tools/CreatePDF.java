@@ -75,6 +75,7 @@ public class CreatePDF {
 				// Add content to the document using Table objects.
 				doc.add(pdfPTable);
 			}
+			doc.add(new Paragraph(space));
 			doc.add(doted_line);
 			doc.add(new Paragraph("Prescriptions per drug"));
 			doc.add(doted_line);
@@ -94,6 +95,7 @@ public class CreatePDF {
 				// Add content to the document using Table objects.
 				doc.add(pdfPTable);
 			}
+			doc.add(new Paragraph(space));
 			doc.add(doted_line);
 
 			doc.close();

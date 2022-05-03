@@ -20,7 +20,7 @@ class DoctorTest {
 	@Test
 	@DisplayName("Ensure doctor clinic id is fetched correctly")
 	void testClinicID() {
-		assertEquals(d.getClinic_id(), 2);
+		assertEquals(d.getClinic_id(), 3);
 	}
 
 	@Test

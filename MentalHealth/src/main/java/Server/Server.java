@@ -22,7 +22,9 @@ import Objects.Drug;
 import Objects.Patient;
 import Objects.PatientRecord;
 import Objects.RecordsStaff;
+import Objects.ReportData;
 import Objects.Treatment;
+import Tools.Clock;
 import Tools.FileResourcesUtils;
 import Tools.Query;
 import Tools.Viewpoint;
@@ -88,8 +90,24 @@ public class Server {
 		 * @param output   Output Stream
 		 */
 		private void HandleHealthService(Query incoming, DataOutputStream output) {
-			// TODO Auto-generated method stub
-
+			/**
+			 * generateWeeklyReport - Health Service viewpoint may request the creation of a
+			 * weekly report on a specific clinic.
+			 */
+			if (incoming.getFunction().equals("generateWeeklyReport")) {
+				int clinic_id = Integer.parseInt(incoming.getArguments().get(0));
+				ReportData rp = new ReportData();
+				rp.setVisitors(database.getWeeksAppointments(clinic_id));
+				rp.setClinic(database.getClinic(clinic_id));
+				rp.setDates(Clock.getLastWeek());
+				rp.setConditionCounter(database.getPatientsOfEachCondition(clinic_id));
+				rp.setTreatmentCounter(database.getPatientsOfEachTreatment(clinic_id));
+				try {
+					output.writeBytes(new Gson().toJson(rp) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		/**
@@ -97,10 +115,10 @@ public class Server {
 		 * 
 		 * @param incoming Actual Query object
 		 * @param output   Output Stream
+		 * @throws IOException
 		 */
-		private void HandleReceptionist(Query incoming, DataOutputStream output) {
-			// TODO Auto-generated method stub
-
+		private void HandleReceptionist(Query incoming, DataOutputStream output) throws IOException {
+			// TODO:
 		}
 
 		/**

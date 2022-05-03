@@ -902,15 +902,42 @@ public class JDBC {
 	}
 
 	/**
+	 * This method gets the appointment count of a clinic for a week.
+	 * 
+	 * @param clinic Integer id
+	 * @return Integer array with the patient count
+	 */
+	public int[] getWeeksAppointments(int clinic) {
+		int week[] = new int[7];
+		String dates[] = Clock.getLastWeek();
+		for (int i = 0; i < 7; i++) {
+			try {
+				CallableStatement cs = this.conn.prepareCall("{ ? = call  getDaysAppointments(?,?)}");
+				cs.registerOutParameter(1, java.sql.Types.INTEGER);
+				cs.setString(2, dates[i]);
+				cs.setInt(3, clinic);
+				cs.execute();
+
+				week[i] = cs.getInt(1);
+				System.out.println(dates[i] + " " + week[i]);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		return week;
+	}
+
+	/**
 	 * Main function for the JDBC, used for testing.
 	 * 
 	 * @param args No arguments needed
 	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		for (Appointment s : base.getPatientAppointmentsWithDoctor(0, 1)) {
-			System.out.println(s.getAppoint_id());
-		}
+		base.getWeeksAppointments(0);
 	}
 
 }

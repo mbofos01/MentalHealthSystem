@@ -1,9 +1,12 @@
 package Clients.HealthService;
 
-import Database.JDBC;
+import com.google.gson.Gson;
+
+import Clients.Client;
 import Objects.ReportData;
-import Tools.Clock;
 import Tools.CreatePDF;
+import Tools.Query;
+import Tools.Viewpoint;
 
 /**
  * @author Demetra Hadjicosti this one's for your viewpoint a lot of work is
@@ -20,15 +23,15 @@ public class CreateReportDemo {
 	 * @param args No args needed.
 	 */
 	public static void main(String[] args) {
-		int clinic_id = 0;
-
-		JDBC base = new JDBC();
-		ReportData rp = new ReportData();
-		rp.setClinic(base.getClinic(clinic_id));
-		rp.setDates(Clock.getLastWeek());
-		rp.setConditionCounter(base.getPatientsOfEachCondition(clinic_id));
-		rp.setTreatmentCounter(base.getPatientsOfEachTreatment(clinic_id));
-		CreatePDF.createReport(rp);
+		Client client = new Client("clientConf.json");
+		for (int i = 0; i < 3; i++) {
+			Query q = new Query(Viewpoint.HealthService);
+			q.setFunction("generateWeeklyReport");
+			q.addArgument("" + i);
+			client.send(q);
+			ReportData rp = new Gson().fromJson(client.read(), ReportData.class);
+			CreatePDF.createReport(rp);
+		}
 
 	}
 }
