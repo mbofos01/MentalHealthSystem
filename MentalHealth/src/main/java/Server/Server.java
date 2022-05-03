@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import com.google.gson.Gson;
 import Database.JDBC;
 import Objects.Allergy;
+import Objects.Appointment;
 import Objects.Comment;
 import Objects.Condition;
 import Objects.Doctor;
@@ -293,6 +294,42 @@ public class Server {
 					output.writeBytes("SUCCESS" + System.lineSeparator());
 				else
 					output.writeBytes("FAILURE" + System.lineSeparator());
+			}
+			/**
+			 * getAppointmentsOfDoctorAndPatient - Clinical Viewpoint may request the
+			 * appointment of a patient with a doctor.
+			 * 
+			 * Parameters: Doctor's ID and patient's ID
+			 */
+			else if (incoming.getFunction().equals("getAppointmentsOfDoctorAndPatient")) {
+				int doc = new Gson().fromJson(incoming.getArguments().get(0), Integer.class);
+				int pat = new Gson().fromJson(incoming.getArguments().get(1), Integer.class);
+				ArrayList<Appointment> app_list = database.getPatientAppointmentsWithDoctor(doc, pat);
+				try {
+					output.writeBytes(new Gson().toJson(app_list.size()) + System.lineSeparator());
+					for (int i = 0; i < app_list.size(); i++)
+						output.writeBytes(new Gson().toJson(app_list.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getAppointmentsOfADoctorsDay - Clinical Viewpoint may request the list of
+			 * appointments of a doctor, for a day.
+			 * 
+			 * Parameters: Doctor's ID and patient's ID
+			 */
+			else if (incoming.getFunction().equals("getAppointmentsOfADoctorsDay")) {
+				int doc = new Gson().fromJson(incoming.getArguments().get(0), Integer.class);
+				String day = new Gson().fromJson(incoming.getArguments().get(1), String.class);
+				ArrayList<Appointment> app_list = database.getDoctorsAppointments(doc, day);
+				try {
+					output.writeBytes(new Gson().toJson(app_list.size()) + System.lineSeparator());
+					for (int i = 0; i < app_list.size(); i++)
+						output.writeBytes(new Gson().toJson(app_list.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			/**
 			 * If no correct function is called a message should be printed in server side.

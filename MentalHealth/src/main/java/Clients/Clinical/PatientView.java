@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import Objects.Appointment;
 import Objects.Condition;
 import Objects.Doctor;
 import Objects.Drug;
@@ -18,13 +19,18 @@ import Tools.Viewpoint;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 
 import com.google.gson.Gson;
 
@@ -48,6 +54,10 @@ public class PatientView {
 	 * Last patient record
 	 */
 	private PatientRecord last = new PatientRecord();
+	/**
+	 * JTable for patient appointments
+	 */
+	private JTable appointTable;
 
 	/**
 	 * Launch the application.
@@ -245,18 +255,8 @@ public class PatientView {
 		});
 		export.setForeground(CustomColours.interChangableWhite());
 		export.setBackground(CustomColours.Pink());
-		export.setBounds(930, 171, 133, 23);
+		export.setBounds(916, 114, 145, 23);
 		frmPatientView.getContentPane().add(export);
-
-		JButton btnNewButton = new JButton("Add Diagnosis");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Diagnosis.openWindow(client, doctor, patient, drugs, last);
-				frmPatientView.dispose();
-			}
-		});
-		btnNewButton.setBounds(866, 313, 197, 68);
-		frmPatientView.getContentPane().add(btnNewButton);
 
 		JButton death = new JButton("Death Of Patient");
 		death.addActionListener(new ActionListener() {
@@ -271,7 +271,7 @@ public class PatientView {
 		});
 		death.setForeground(CustomColours.interChangableWhite());
 		death.setBackground(CustomColours.interChangableBlack());
-		death.setBounds(918, 22, 145, 25);
+		death.setBounds(916, 33, 145, 25);
 		frmPatientView.getContentPane().add(death);
 
 		JButton allergiesBtn = new JButton("Allergies");
@@ -284,5 +284,57 @@ public class PatientView {
 		allergiesBtn.setBackground(CustomColours.Brown());
 		allergiesBtn.setBounds(43, 336, 89, 23);
 		frmPatientView.getContentPane().add(allergiesBtn);
+		/***********************************************/
+		Query getApps = new Query(Viewpoint.Clinical);
+		getApps.setFunction("getAppointmentsOfDoctorAndPatient");
+		getApps.addArgument("" + doctor.getId());
+		getApps.addArgument("" + patient.getPatient_id());
+		client.send(getApps);
+
+		Integer size_ap = new Gson().fromJson(client.read(), Integer.class);
+		// System.out.println(size);
+		ArrayList<Appointment> list = new ArrayList<Appointment>();
+		for (int i = 0; i < size_ap; i++)
+			list.add(new Gson().fromJson(client.read(), Appointment.class));
+		String col[] = { "Patient", "Time", "Type", "Updated" };
+		int index = 0;
+		String data[][] = new String[list.size()][col.length];
+		for (Appointment ap : list) {
+			data[index][0] = patient.getName() + " " + patient.getSurname();
+			data[index][1] = ap.getTime();
+			data[index][2] = ap.getType();
+
+			if (ap.getRecord_id() == -1)
+				data[index][3] = "NO";
+			else
+				data[index][3] = "YES";
+
+			index++;
+		}
+		DefaultTableModel model = new DefaultTableModel(data, col);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(294, 79, 524, 128);
+		frmPatientView.getContentPane().add(scrollPane);
+		appointTable = new JTable();
+		scrollPane.setViewportView(appointTable);
+		appointTable = new JTable(model);
+		scrollPane.setViewportView(appointTable);
+		appointTable.setDefaultEditor(Object.class, null);
+		//////////////////////////////////////////////////////////////////////////////////////////////////////
+		appointTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int p = appointTable.getSelectedRow();
+				PatientRecord specific = last;
+				for (PatientRecord s : patient_records)
+					if (s.getRecord_id() == list.get(p).getRecord_id())
+						specific = s;
+				Diagnosis.openWindow(client, doctor, patient, drugs, specific);
+				frmPatientView.dispose();
+
+			}
+		});
+
 	}
 }

@@ -808,13 +808,109 @@ public class JDBC {
 	}
 
 	/**
+	 * This method fetches the appointments for a day of a doctor, based on their
+	 * id.
+	 * 
+	 * @param doctor Doctor doctor id
+	 * @param date   String the day in question
+	 * @return An ArrayList of appointments
+	 */
+	public ArrayList<Appointment> getDoctorsAppointments(int doctor, String date) {
+		ArrayList<Appointment> rendez = new ArrayList<>();
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call getDoctorsAppointmentsForADay(?,?)}");
+			cs.setInt(1, doctor);
+			cs.setString(2, date);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Appointment rec = new Appointment();
+				rec.setDoctor_id(rs.getInt("doctor_id"));
+				rec.setAppoint_id(rs.getInt("appoint_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+				rec.setDate(rs.getString("date"));
+				rec.setTime(rs.getString("time"));
+				rec.setDropIn(rs.getBoolean("dropIn"));
+
+				PreparedStatement cs2 = this.conn.prepareCall("{call getAppointmentRecords(?)}");
+				cs2.setInt(1, rs.getInt("appoint_id"));
+				ResultSet rs2 = cs2.executeQuery();
+				boolean doesItExist = false;
+				while (rs2.next()) {
+					rec.setRecord_id(rs2.getInt("record_id"));
+					doesItExist = true;
+				}
+				if (doesItExist == false)
+					rec.setRecord_id(-1);
+
+				rendez.add(rec);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rendez;
+	}
+
+	/**
+	 * This method fetches the appointments of a patient with a doctor, based on
+	 * their id.
+	 * 
+	 * @param doctor  Doctor doctor id
+	 * @param patient Patient patient id
+	 * @return An ArrayList of appointments
+	 */
+	public ArrayList<Appointment> getPatientAppointmentsWithDoctor(int doctor, int patient) {
+		ArrayList<Appointment> rendez = new ArrayList<>();
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call getPatientAppointmentWithADoctor(?,?)}");
+			cs.setInt(1, doctor);
+			cs.setInt(2, patient);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Appointment rec = new Appointment();
+				rec.setDoctor_id(rs.getInt("doctor_id"));
+				rec.setAppoint_id(rs.getInt("appoint_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+				rec.setDate(rs.getString("date"));
+				rec.setTime(rs.getString("time"));
+				rec.setDropIn(rs.getBoolean("dropIn"));
+
+				PreparedStatement cs2 = this.conn.prepareCall("{call getAppointmentRecords(?)}");
+				cs2.setInt(1, rs.getInt("appoint_id"));
+				ResultSet rs2 = cs2.executeQuery();
+				boolean doesItExist = false;
+				while (rs2.next()) {
+					rec.setRecord_id(rs2.getInt("record_id"));
+					doesItExist = true;
+				}
+				if (doesItExist == false)
+					rec.setRecord_id(-1);
+
+				rendez.add(rec);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rendez;
+	}
+
+	/**
 	 * Main function for the JDBC, used for testing.
 	 * 
 	 * @param args No arguments needed
 	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		base.getPatientsOfEachCondition(0);
+		for (Appointment s : base.getPatientAppointmentsWithDoctor(0, 1)) {
+			System.out.println(s.getAppoint_id());
+		}
 	}
 
 }
