@@ -517,7 +517,7 @@ public class JDBC {
 	 */
 	public int insertTreatment(Treatment treat) {
 		try {
-			CallableStatement cs = this.conn.prepareCall("{ ? = call  insertTreatment(?,?,?,?,?,?,?)}");
+			CallableStatement cs = this.conn.prepareCall("{ ? = call  insertTreatment(?,?,?,?,?,?,?,?)}");
 
 			cs.registerOutParameter(1, java.sql.Types.INTEGER);
 			cs.setInt(2, treat.getPatient_id());
