@@ -1047,6 +1047,7 @@ public class JDBC {
 				p.setPatient_id(rs.getInt("patient_id"));
 				p.setName(rs.getString("name"));
 				p.setSurname(rs.getString("surname"));
+				p.setDate(rs.getString("birthday"));
 				p.setTelephone(rs.getString("telephone"));
 				p.setEmail(rs.getString("email"));
 				patient_list.add(p);
