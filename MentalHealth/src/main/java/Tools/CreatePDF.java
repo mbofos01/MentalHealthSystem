@@ -135,7 +135,7 @@ public class CreatePDF {
 			doc.add(new Paragraph("                                       "));
 			doc.add(doted_line);
 			doc.add(new Paragraph(space));
-			PdfPTable pdfPTable = new PdfPTable(2);
+			PdfPTable pdfPTable = new PdfPTable(5);
 			pdfPTable.addCell("Name");
 			pdfPTable.addCell("Surname");
 			pdfPTable.addCell("Birthday");

@@ -141,6 +141,7 @@ public class HealthService {
 				for (int i = 0; i < size; i++) {
 					patients.add(new Gson().fromJson(client.read(), Patient.class));
 				}
+				CreatePDF.createPatientReport(patients, conds.get(indexCond).getName(), drug_list.get(indexTreat).getCommercial_name());
 			}
 		});
 		btnReportPatient.setBackground(new Color(51, 204, 102));
