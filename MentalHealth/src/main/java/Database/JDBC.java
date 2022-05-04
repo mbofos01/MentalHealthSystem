@@ -1236,7 +1236,7 @@ public class JDBC {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 
 	 * @param app_id
@@ -1258,6 +1258,69 @@ public class JDBC {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * This method updates the data for a treatment record.
+	 * 
+	 * @param treat Updated Treatment record
+	 */
+	public void updateTreatment(Treatment treat) {
+		System.out.println("\n\n Update Treatment \n\n");
+
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call updateTreatment(?, ?, ?, ?, ?, ?)}");
+			cs.setInt(1, treat.getTreatment_id());
+			cs.setInt(2, treat.getDose());
+			cs.setString(3, treat.getComments());
+			cs.setBoolean(4, treat.isWarning());
+			cs.setInt(5, treat.getDrug_id());
+			cs.setString(6, treat.getLast_updated());
+			cs.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * This method updates the data for a treatment record.
+	 * 
+	 * @param treat Updated Treatment record
+	 */
+	public void updateRecord(PatientRecord rec) {
+		System.out.println("\n\n Update Record \n\n");
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call updateRecord(?, ?, ?, ?, ?, ?, ?, ?)}");
+			cs.setInt(1, rec.getRecord_id());
+			cs.setString(2, Clock.currentSQLTime());
+			cs.setBoolean(3, rec.isSelf_harm());
+			cs.setBoolean(4, rec.isThreat());
+			cs.setBoolean(5, rec.isOverdose());
+			cs.setBoolean(6, rec.isUnderdose());
+			cs.setInt(7, rec.getCondition_id());
+			cs.setInt(8, rec.getTreatment_id());
+			cs.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public int getLastAppointmentID() {
+		int ret = -1;
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{  call  getLastAppointmentID()}");
+			ResultSet rs = cs.executeQuery();
+			while (rs.next()) {
+				ret = rs.getInt("last_value");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ret;
 	}
 
 	/**
