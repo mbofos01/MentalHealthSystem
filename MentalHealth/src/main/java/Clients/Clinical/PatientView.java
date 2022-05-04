@@ -296,18 +296,23 @@ public class PatientView {
 		ArrayList<Appointment> list = new ArrayList<Appointment>();
 		for (int i = 0; i < size_ap; i++)
 			list.add(new Gson().fromJson(client.read(), Appointment.class));
-		String col[] = { "Patient", "Time", "Type", "Updated" };
+		String col[] = { "Patient", "Date", "Time", "Type", "Attended", "Updated" };
 		int index = 0;
 		String data[][] = new String[list.size()][col.length];
 		for (Appointment ap : list) {
 			data[index][0] = patient.getName() + " " + patient.getSurname();
-			data[index][1] = ap.getTime();
-			data[index][2] = ap.getType();
+			data[index][1] = ap.getDate();
+			data[index][2] = ap.getTime();
+			data[index][3] = ap.getType();
+			if (ap.isAttended())
+				data[index][4] = "YES";
+			else
+				data[index][4] = "NO";
 
 			if (ap.getRecord_id() == -1)
-				data[index][3] = "NO";
+				data[index][5] = "NO";
 			else
-				data[index][3] = "YES";
+				data[index][5] = "YES";
 
 			index++;
 		}

@@ -42,10 +42,10 @@ public class Appointment {
 	 */
 	private int receptionist_id;
 	/**
-	 * Each appointment was attended or not by the patient 
+	 * Each appointment was attended or not by the patient
 	 */
 	private boolean attended;
-	
+
 	/**
 	 * @return the appoint_id
 	 */
@@ -156,18 +156,34 @@ public class Appointment {
 		this.record_id = record_id;
 	}
 
+	/**
+	 * 
+	 * @return receptionist_id
+	 */
 	public int getReceptionist_id() {
 		return receptionist_id;
 	}
 
+	/**
+	 * 
+	 * @param receptionist_id Integer
+	 */
 	public void setReceptionist_id(int receptionist_id) {
 		this.receptionist_id = receptionist_id;
 	}
 
+	/**
+	 * 
+	 * @return True if attended, otherwise false
+	 */
 	public boolean isAttended() {
 		return attended;
 	}
 
+	/**
+	 * 
+	 * @param attended Boolean
+	 */
 	public void setAttended(boolean attended) {
 		this.attended = attended;
 	}

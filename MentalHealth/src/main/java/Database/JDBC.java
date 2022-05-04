@@ -832,6 +832,8 @@ public class JDBC {
 				rec.setDate(rs.getString("date"));
 				rec.setTime(rs.getString("time"));
 				rec.setDropIn(rs.getBoolean("dropIn"));
+				rec.setReceptionist_id(rs.getInt("receptionist_id"));
+				rec.setAttended(rs.getBoolean("attended"));
 
 				PreparedStatement cs2 = this.conn.prepareCall("{call getAppointmentRecords(?)}");
 				cs2.setInt(1, rs.getInt("appoint_id"));
@@ -844,6 +846,7 @@ public class JDBC {
 				if (doesItExist == false)
 					rec.setRecord_id(-1);
 
+				System.out.println(rec.getReceptionist_id() + " " + rec.isAttended());
 				rendez.add(rec);
 
 			}
@@ -879,6 +882,8 @@ public class JDBC {
 				rec.setDate(rs.getString("date"));
 				rec.setTime(rs.getString("time"));
 				rec.setDropIn(rs.getBoolean("dropIn"));
+				rec.setReceptionist_id(rs.getInt("receptionist_id"));
+				rec.setAttended(rs.getBoolean("attended"));
 
 				PreparedStatement cs2 = this.conn.prepareCall("{call getAppointmentRecords(?)}");
 				cs2.setInt(1, rs.getInt("appoint_id"));
@@ -937,7 +942,7 @@ public class JDBC {
 	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		base.getWeeksAppointments(0);
+		base.getDoctorsAppointments(0,"2022-05-03");
 	}
 
 }
