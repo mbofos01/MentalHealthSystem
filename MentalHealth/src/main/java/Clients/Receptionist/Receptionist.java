@@ -1,6 +1,7 @@
 package Clients.Receptionist;
 
 import java.awt.EventQueue;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -8,9 +9,15 @@ import javax.swing.JScrollPane;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+import com.google.gson.Gson;
 
 import Clients.Client;
+import Objects.Patient;
 import Objects.ReceptionistObj;
+import Tools.Query;
+import Tools.Viewpoint;
 
 import javax.swing.JLabel;
 
@@ -55,12 +62,44 @@ public class Receptionist {
 		frmReceptionist.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmReceptionist.getContentPane().setLayout(null);
 		
+		Query q = new Query(Viewpoint.Receptionist);
+		q.setFunction("getPatients");
+		client.send(q);
+
+		Integer size = new Gson().fromJson(client.read(), Integer.class);
+		// System.out.println(size);
+		ArrayList<Patient> patient_list = new ArrayList<Patient>();
+		for (int i = 0; i < size; i++)
+			patient_list.add(new Gson().fromJson(client.read(), Patient.class));
+		// SHOW
+		String col[] = { "Patient ID", "Name", "Surname", "Telephone", "Email" };
+		int index = 0;
+		String data[][] = new String[patient_list.size()][col.length];
+		for (Patient p : patient_list) {
+			data[index][0] = p.getPatient_id()+ "";
+			data[index][1] = p.getName();
+			data[index][2] = p.getSurname();
+			data[index][3] = p.getTelephone();
+			data[index][4] = p.getEmail();
+			index++;
+		}
+
+		DefaultTableModel modelPatient = new DefaultTableModel(data, col);
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(86, 43, 476, 153);
+		scrollPane.setBounds(33, 154, 249, 128);
 		frmReceptionist.getContentPane().add(scrollPane);
+		tblPatient = new JTable();
+		scrollPane.setViewportView(tblPatient);
+		tblPatient = new JTable(modelPatient);
+		scrollPane.setViewportView(tblPatient);
+		tblPatient.setDefaultEditor(Object.class, null);
+		
+		JScrollPane scrollPane1 = new JScrollPane();
+		scrollPane1.setBounds(86, 43, 476, 153);
+		frmReceptionist.getContentPane().add(scrollPane1);
 		
 		tblAppointment = new JTable();
-		scrollPane.setViewportView(tblAppointment);
+		scrollPane1.setViewportView(tblAppointment);
 		
 		JButton btnPresc = new JButton("Generate Last Perscription for selected patient");
 		btnPresc.setBackground(new Color(0, 204, 102));
@@ -91,12 +130,6 @@ public class Receptionist {
 		lblPatients.setBounds(86, 241, 98, 13);
 		frmReceptionist.getContentPane().add(lblPatients);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(86, 296, 476, 153);
-		frmReceptionist.getContentPane().add(scrollPane_1);
-		
-		tblPatient = new JTable();
-		scrollPane_1.setViewportView(tblPatient);
 		
 		JButton btnReset = new JButton("Reset Table");
 		btnReset.setBackground(new Color(0, 153, 255));
@@ -108,5 +141,8 @@ public class Receptionist {
 		btnNewButton_1.setBackground(new Color(215, 0, 21));
 		btnNewButton_1.setBounds(535, 10, 80, 23);
 		frmReceptionist.getContentPane().add(btnNewButton_1);
+	}
+	public static void main(String[] args) {
+		
 	}
 }

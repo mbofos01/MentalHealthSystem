@@ -936,6 +936,37 @@ public class JDBC {
 	}
 
 	/**
+	 * This method fetches the data of a clinic based on an id.
+	 * 
+	 * @param clinic_id Integer clinics id
+	 * @return Clinic object
+	 */
+	public ArrayList<Patient> getPatients() {
+
+		ArrayList<Patient> patients = new ArrayList<Patient>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call ShowAllPatients()}");
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Patient p = new Patient();
+				p.setPatient_id(rs.getInt("patient_id"));
+				p.setName(rs.getString("name"));
+				p.setSurname(rs.getString("surname"));
+				p.setTelephone(rs.getString("telephone"));
+				p.setEmail(rs.getString("email"));
+				patients.add(p);
+			}
+			return patients;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
 	 * Main function for the JDBC, used for testing.
 	 * 
 	 * @param args No arguments needed
