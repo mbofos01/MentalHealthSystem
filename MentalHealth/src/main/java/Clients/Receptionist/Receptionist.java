@@ -102,5 +102,11 @@ public class Receptionist {
 		btnReset.setBackground(new Color(0, 153, 255));
 		btnReset.setBounds(454, 466, 108, 21);
 		frmReceptionist.getContentPane().add(btnReset);
+		
+		JButton btnNewButton_1 = new JButton("Log Out");
+		btnNewButton_1.setForeground(Color.WHITE);
+		btnNewButton_1.setBackground(new Color(215, 0, 21));
+		btnNewButton_1.setBounds(535, 10, 80, 23);
+		frmReceptionist.getContentPane().add(btnNewButton_1);
 	}
 }

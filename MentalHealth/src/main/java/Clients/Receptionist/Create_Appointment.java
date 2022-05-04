@@ -8,7 +8,14 @@ import java.awt.Color;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import Clients.Client;
+import Clients.Clinical.PatientView;
+import Objects.ReceptionistObj;
+
 import javax.swing.JComboBox;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Create_Appointment {
 
@@ -22,11 +29,11 @@ public class Create_Appointment {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(Client client, ReceptionistObj model) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Create_Appointment window = new Create_Appointment();
+					Create_Appointment window = new Create_Appointment(client, model);
 					window.crt_app.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,14 +45,14 @@ public class Create_Appointment {
 	/**
 	 * Create the application.
 	 */
-	public Create_Appointment() {
-		initialize();
+	public Create_Appointment(Client client, ReceptionistObj model) {
+		initialize(client, model);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(Client client, ReceptionistObj model) {
 		crt_app = new JFrame();
 		crt_app.getContentPane().setBackground(Color.WHITE);
 		crt_app.setTitle("Appointment");
@@ -132,5 +139,17 @@ public class Create_Appointment {
 		txtClinic.setColumns(10);
 		txtClinic.setBounds(198, 302, 134, 19);
 		crt_app.getContentPane().add(txtClinic);
+		
+		JButton btnNewButton_1 = new JButton("Back");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				crt_app.dispose();
+				Receptionist.openWin(client, model);
+			}
+		});
+		btnNewButton_1.setForeground(Color.WHITE);
+		btnNewButton_1.setBackground(new Color(0, 204, 102));
+		btnNewButton_1.setBounds(10, 10, 80, 23);
+		crt_app.getContentPane().add(btnNewButton_1);
 	}
 }

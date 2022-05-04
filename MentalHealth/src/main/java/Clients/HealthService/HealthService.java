@@ -85,6 +85,16 @@ public class HealthService {
 		JSeparator separator = new JSeparator();
 		separator.setBounds(131, 146, 276, 2);
 		frmHealthService.getContentPane().add(separator);
+		
+		JButton btnNewButton_1 = new JButton("Log Out");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnNewButton_1.setForeground(Color.WHITE);
+		btnNewButton_1.setBackground(new Color(215, 0, 21));
+		btnNewButton_1.setBounds(408, 299, 80, 23);
+		frmHealthService.getContentPane().add(btnNewButton_1);
 		frmHealthService.setBackground(Color.WHITE);
 		frmHealthService.setBounds(100, 100, 524, 381);
 		frmHealthService.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
