@@ -20,10 +20,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /**
- * In-page for the Medical Records Management Viewpoint. As stated in the basic
+ * In-page for the Health Service Viewpoint. As stated in the basic
  * structure each viewpoint must have a client object as an argument.
  * 
- * @author Michail Panagiotis Bofos
+ * @author Demetra Hadjicosti
  *
  */
 public class HealthServiceLogin {

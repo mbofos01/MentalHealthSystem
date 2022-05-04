@@ -19,6 +19,7 @@ import Objects.Comment;
 import Objects.Condition;
 import Objects.Doctor;
 import Objects.Drug;
+import Objects.HealthServ;
 import Objects.Patient;
 import Objects.PatientRecord;
 import Objects.RecordsStaff;
@@ -88,13 +89,28 @@ public class Server {
 		 * 
 		 * @param incoming Actual Query object
 		 * @param output   Output Stream
+		 * @throws IOException
 		 */
-		private void HandleHealthService(Query incoming, DataOutputStream output) {
+		private void HandleHealthService(Query incoming, DataOutputStream output) throws IOException {
+			/**
+			 * login - Clinical viewpoint may request a doctors login
+			 * 
+			 * Parameters: username and password
+			 */
+			if (incoming.getFunction().equals("login")) {
+				HealthServ hs = database.loginHealthService(incoming.getArguments().get(0),
+						incoming.getArguments().get(1));
+				if (hs == null) {
+					hs = new HealthServ();
+					hs.emptyValue();
+				}
+				output.writeBytes(new Gson().toJson(hs) + System.lineSeparator());
+			}
 			/**
 			 * generateWeeklyReport - Health Service viewpoint may request the creation of a
 			 * weekly report on a specific clinic.
 			 */
-			if (incoming.getFunction().equals("generateWeeklyReport")) {
+			else if (incoming.getFunction().equals("generateWeeklyReport")) {
 				int clinic_id = Integer.parseInt(incoming.getArguments().get(0));
 				ReportData rp = new ReportData();
 				rp.setVisitors(database.getWeeksAppointments(clinic_id));

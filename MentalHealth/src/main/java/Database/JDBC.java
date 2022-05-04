@@ -131,6 +131,44 @@ public class JDBC {
 	}
 
 	/**
+	 * This function is used to login a Health Service Staff Person
+	 * 
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public HealthServ loginHealthService(String username, String password) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call loginHealthService(?,?)}");
+			cs.setString(1, username);
+			cs.setString(2, password);
+			ResultSet rs = cs.executeQuery();
+			HealthServ rec = new HealthServ();
+			int right = 0;
+
+			while (rs.next()) {
+				rec.setId(rs.getInt("hs_id"));
+				rec.setName(rs.getString("name"));
+				rec.setSurname(rs.getString("surname"));
+				rec.setUsername(rs.getString("username"));
+				rec.setEmail(rs.getString("email"));
+				right++;
+
+			}
+			if (right == 0)
+				rec.emptyValue();
+
+			return rec;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		HealthServ rec = new HealthServ();
+		rec.emptyValue();
+		return rec;
+	}
+
+	/**
 	 * This method fetches the data of a clinic based on an id.
 	 * 
 	 * @param clinic_id Integer clinics id
@@ -907,7 +945,8 @@ public class JDBC {
 	}
 
 	/**
-	 * This method gets the appointment count of a clinic for a week.
+	 * This method gets the appointment count of a clinic for a week. IF A
+	 * APPOINTMENT IS ATTENDED
 	 * 
 	 * @param clinic Integer id
 	 * @return Integer array with the patient count
@@ -973,7 +1012,8 @@ public class JDBC {
 	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		base.getDoctorsAppointments(0,"2022-05-03");
+		HealthServ rec = base.loginHealthService("dhadji02", "1234");
+		System.out.println(rec.getUsername() + " " + rec.getId());
 	}
 
 }

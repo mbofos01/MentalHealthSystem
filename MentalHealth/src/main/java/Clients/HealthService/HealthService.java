@@ -89,6 +89,8 @@ public class HealthService {
 		JButton btnNewButton_1 = new JButton("Log Out");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				frmHealthService.dispose();
+				HealthServiceLogin.main(null);
 			}
 		});
 		btnNewButton_1.setForeground(Color.WHITE);
