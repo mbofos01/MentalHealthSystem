@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import Database.JDBC;
 import Objects.Allergy;
 import Objects.Appointment;
+import Objects.Clinic;
 import Objects.Comment;
 import Objects.Condition;
 import Objects.Doctor;
@@ -120,6 +121,73 @@ public class Server {
 				rp.setTreatmentCounter(database.getPatientsOfEachTreatment(clinic_id));
 				try {
 					output.writeBytes(new Gson().toJson(rp) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getConditions - Clinical Viewpoint may request a list with all the conditions
+			 * in the database.
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("getConditions")) {
+				ArrayList<Condition> cond = database.getConditions();
+				try {
+					output.writeBytes(new Gson().toJson(cond.size()) + System.lineSeparator());
+					for (int i = 0; i < cond.size(); i++)
+						output.writeBytes(new Gson().toJson(cond.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getDrugs - Clinical Viewpoint may request a list with all the drugs in the
+			 * database.
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("getDrugs")) {
+				ArrayList<Drug> rec = database.getDrugList();
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**FIX
+			 * getDrugs - Clinical Viewpoint may request a list with all the drugs in the
+			 * database.
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("getClinics")) {
+				ArrayList<Clinic> rec = database.getClinics();
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**FIX
+			 * getDrugs - Clinical Viewpoint may request a list with all the drugs in the
+			 * database.
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("getPatientsTreatmentCond")) {
+				int treatment, cond;
+				cond = Integer.parseInt(incoming.getArguments().get(0)); 
+				treatment= Integer.parseInt(incoming.getArguments().get(1));
+				ArrayList<Patient> rec = database.getReport2(cond, treatment);
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

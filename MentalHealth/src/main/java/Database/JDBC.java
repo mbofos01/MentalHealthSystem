@@ -975,7 +975,7 @@ public class JDBC {
 	}
 
 	/**
-	 * This method fetches the data of a clinic based on an id.
+	 * This method fetches the patients
 	 * 
 	 * @param clinic_id Integer clinics id
 	 * @return Clinic object
@@ -1004,7 +1004,59 @@ public class JDBC {
 
 		return null;
 	}
+	
+	/**
+	 * This method fetches all the conditions all the database.
+	 * 
+	 * @return An ArrayList of conditions
+	 */
+	public ArrayList<Clinic> getClinics() {
+		ArrayList<Clinic> clinic_list = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getAllClinics()}");
+			ResultSet rs = cs.executeQuery();
 
+			while (rs.next()) {
+				Clinic c = new Clinic();
+				c.setClinic_id(rs.getInt("clinic_id"));
+				c.setName(rs.getString("name"));
+
+				clinic_list.add(c);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return clinic_list;
+	}
+
+	/**
+	 * This method fetches all the conditions all the database.
+	 * 
+	 * @return An ArrayList of conditions
+	 */
+	public ArrayList<Patient> getReport2(int cond, int treat) {
+		ArrayList<Patient> patient_list = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getPatientsConditionTreatment(?, ?)}");
+			cs.setInt(1, cond);
+			cs.setInt(2, treat);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Patient p = new Patient();
+				p.setPatient_id(rs.getInt("patient_id"));
+				p.setName(rs.getString("name"));
+				p.setSurname(rs.getString("surname"));
+				p.setTelephone(rs.getString("telephone"));
+				p.setEmail(rs.getString("email"));
+				patient_list.add(p);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return patient_list;
+	}
+	
 	/**
 	 * Main function for the JDBC, used for testing.
 	 * 
