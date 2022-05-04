@@ -1106,6 +1106,22 @@ public class JDBC {
 		}
 	}
 
+	public int getLastAppointmentID() {
+		int ret = -1;
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{  call  getLastAppointmentID()}");
+			ResultSet rs = cs.executeQuery();
+			while (rs.next()) {
+				ret = rs.getInt("last_value");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return ret;
+	}
+
 	/**
 	 * Main function for the JDBC, used for testing.
 	 * 
@@ -1113,16 +1129,8 @@ public class JDBC {
 	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		Treatment rec = new Treatment();
-		rec.setTreatment_id(72);
-		rec.setDoctor_id(0);
-		rec.setComments("PLEASEEEE");
-		rec.setAccepted(false);
-		rec.setDate("2001-05-05");
-		rec.setDrug_id(0);
-		rec.setLast_updated("2001-05-11");
-		rec.setDose(2000);
-		base.updateTreatment(rec);
+
+		System.out.println(base.getLastAppointmentID());
 	}
 
 }
