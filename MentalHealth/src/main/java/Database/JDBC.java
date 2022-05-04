@@ -2,7 +2,6 @@ package Database;
 
 import java.sql.*;
 import java.util.ArrayList;
-
 import Objects.*;
 import Tools.Clock;
 import Tools.Counter;
@@ -164,6 +163,45 @@ public class JDBC {
 			e.printStackTrace();
 		}
 		HealthServ rec = new HealthServ();
+		rec.emptyValue();
+		return rec;
+	}
+
+	/**
+	 * This function is used to login a Receptionist
+	 * 
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public ReceptionistObj loginReceptionist(String username, String password) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call loginReceptionist(?,?)}");
+			cs.setString(1, username);
+			cs.setString(2, password);
+			ResultSet rs = cs.executeQuery();
+			ReceptionistObj rec = new ReceptionistObj();
+			int right = 0;
+
+			while (rs.next()) {
+				rec.setId(rs.getInt("id"));
+				rec.setName(rs.getString("name"));
+				rec.setSurname(rs.getString("surname"));
+				rec.setUsername(rs.getString("username"));
+				rec.setEmail(rs.getString("email"));
+				rec.setClinic_id(rs.getInt("clinic_id"));
+				right++;
+
+			}
+			if (right == 0)
+				rec.emptyValue();
+
+			return rec;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		ReceptionistObj rec = new ReceptionistObj();
 		rec.emptyValue();
 		return rec;
 	}
@@ -975,10 +1013,8 @@ public class JDBC {
 	}
 
 	/**
-	 * This method fetches the patients
 	 * 
-	 * @param clinic_id Integer clinics id
-	 * @return Clinic object
+	 * @return
 	 */
 	public ArrayList<Patient> getPatients() {
 
@@ -1004,11 +1040,10 @@ public class JDBC {
 
 		return null;
 	}
-	
+
 	/**
-	 * This method fetches all the conditions all the database.
 	 * 
-	 * @return An ArrayList of conditions
+	 * @return
 	 */
 	public ArrayList<Clinic> getClinics() {
 		ArrayList<Clinic> clinic_list = new ArrayList<>();
@@ -1030,9 +1065,10 @@ public class JDBC {
 	}
 
 	/**
-	 * This method fetches all the conditions all the database.
 	 * 
-	 * @return An ArrayList of conditions
+	 * @param cond
+	 * @param treat
+	 * @return
 	 */
 	public ArrayList<Patient> getReport2(int cond, int treat) {
 		ArrayList<Patient> patient_list = new ArrayList<>();
@@ -1057,7 +1093,173 @@ public class JDBC {
 		}
 		return patient_list;
 	}
+
+	/**
+	 * 
+	 * @param clinic_id
+	 * @return
+	 */
+	public ArrayList<Appointment> getAppointments(int clinic_id) {
+		ArrayList<Appointment> rendez = new ArrayList<>();
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call showAppointment_All(?)}");
+			cs.setInt(1, clinic_id);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Appointment rec = new Appointment();
+				rec.setDoctor_id(rs.getInt("doctor_id"));
+				rec.setAppoint_id(rs.getInt("appoint_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+				rec.setDate(rs.getString("date"));
+				rec.setTime(rs.getString("time"));
+				rec.setDropIn(rs.getBoolean("dropIn"));
+				rec.setReceptionist_id(rs.getInt("receptionist_id"));
+				rec.setAttended(rs.getBoolean("attended"));
+
+				rendez.add(rec);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rendez;
+	}
+
+	/**
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public ArrayList<Patient> search(String name) {
+		ArrayList<Patient> patient_list = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call searchPatient(?)}");
+			cs.setString(1, name);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Patient p = new Patient();
+				p.setPatient_id(rs.getInt("patient_id"));
+				p.setName(rs.getString("name"));
+				p.setSurname(rs.getString("surname"));
+				p.setDate(rs.getString("birthday"));
+				p.setTelephone(rs.getString("telephone"));
+				p.setEmail(rs.getString("email"));
+				patient_list.add(p);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return patient_list;
+	}
+
+	/**
+	 * 
+	 * @param app_id
+	 * @return
+	 */
+	public Appointment getAppointment(int app_id) {
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call showAppointment(?)}");
+			cs.setInt(1, app_id);
+			ResultSet rs = cs.executeQuery();
+			Appointment rec = new Appointment();
+			rec.setDoctor_id(rs.getInt("doctor_id"));
+			rec.setAppoint_id(rs.getInt("appoint_id"));
+			rec.setPatient_id(rs.getInt("patient_id"));
+			rec.setDate(rs.getString("date"));
+			rec.setTime(rs.getString("time"));
+			rec.setDropIn(rs.getBoolean("dropIn"));
+			rec.setReceptionist_id(rs.getInt("receptionist_id"));
+			rec.setAttended(rs.getBoolean("attended"));
+			return rec;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param doctor_id
+	 * @param patient_id
+	 * @param clinic_id
+	 * @param date
+	 * @param time
+	 * @param drop_in
+	 * @param receptionist_id
+	 * @return
+	 */
+	public boolean insertAppointment(int doctor_id, int patient_id, int clinic_id, String date, String time,
+			int drop_in, int receptionist_id) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertAppointment(?,?,?,?,?,?,?)}");
+			cs.setInt(1, doctor_id);
+			cs.setInt(2, patient_id);
+			cs.setInt(3, clinic_id);
+			cs.setString(4, date);
+			cs.setString(5, time);
+			cs.setInt(6, drop_in);
+			cs.setInt(7, receptionist_id);
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * This method updates an appointment (attendance)
+	 *
+	 * @param app_id Integer id of an appointment
+	 * @param val    1 or 0 for indicating attendance
+	 * @return true if successful otherwise false
+	 */
+	public boolean updateAppointment(int app_id, int val) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertAppointment(?,?)}");
+			cs.setInt(1, val);
+			cs.setInt(2, app_id);
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 	
+	/**
+	 * 
+	 * @param app_id
+	 * @return
+	 */
+	public Treatment getPersc(int pid) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getPerscription(?)}");
+			cs.setInt(1, pid);
+			ResultSet rs = cs.executeQuery();
+			Treatment rec = new Treatment();
+			rec.setDate(rs.getString("date"));
+			rec.setDose(rs.getInt("dose"));
+			rec.setComments(rs.getString("comments"));
+			rec.setDoctor_id(rs.getInt("doctor_id"));
+			rec.setPatient_id(rs.getInt("patient_id"));
+			return rec;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	/**
 	 * Main function for the JDBC, used for testing.
 	 * 

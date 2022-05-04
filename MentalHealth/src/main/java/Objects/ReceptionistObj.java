@@ -30,7 +30,10 @@ public class ReceptionistObj {
 			 * A Health Service person must have an username.
 			 */
 			private String username;
-
+			/**
+			 * 
+			 */
+			private int clinic_id;
 			/**
 			 * @return the id
 			 */
@@ -113,6 +116,14 @@ public class ReceptionistObj {
 			public void emptyValue() {
 				id = -1;
 
+			}
+
+			public int getClinic_id() {
+				return clinic_id;
+			}
+
+			public void setClinic_id(int clinic_id) {
+				this.clinic_id = clinic_id;
 			}
 
 }
