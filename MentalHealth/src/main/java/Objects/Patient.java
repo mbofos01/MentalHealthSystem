@@ -33,6 +33,7 @@ public class Patient {
 	 * Each patient could have a telephone.
 	 */
 	private String telephone;
+	private boolean alive;
 
 	/**
 	 * @return the patient_id
@@ -116,6 +117,22 @@ public class Patient {
 	 */
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
+	}
+
+	/**
+	 * 
+	 * @return boolean
+	 */
+	public boolean isAlive() {
+		return alive;
+	}
+
+	/**
+	 * 
+	 * @param alive boolean
+	 */
+	public void setAlive(boolean alive) {
+		this.alive = alive;
 	}
 
 }

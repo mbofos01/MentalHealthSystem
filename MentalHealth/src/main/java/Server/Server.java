@@ -159,9 +159,9 @@ public class Server {
 					e.printStackTrace();
 				}
 			}
-			/**FIX
-			 * getDrugs - Clinical Viewpoint may request a list with all the drugs in the
-			 * database.
+			/**
+			 * FIX getDrugs - Clinical Viewpoint may request a list with all the drugs in
+			 * the database.
 			 * 
 			 * Parameters: no parameters
 			 */
@@ -175,16 +175,16 @@ public class Server {
 					e.printStackTrace();
 				}
 			}
-			/**FIX
-			 * getDrugs - Clinical Viewpoint may request a list with all the drugs in the
-			 * database.
+			/**
+			 * FIX getDrugs - Clinical Viewpoint may request a list with all the drugs in
+			 * the database.
 			 * 
 			 * Parameters: no parameters
 			 */
 			else if (incoming.getFunction().equals("getPatientsTreatmentCond")) {
 				int treatment, cond;
-				cond = Integer.parseInt(incoming.getArguments().get(0)); 
-				treatment= Integer.parseInt(incoming.getArguments().get(1));
+				cond = Integer.parseInt(incoming.getArguments().get(0));
+				treatment = Integer.parseInt(incoming.getArguments().get(1));
 				ArrayList<Patient> rec = database.getReport2(cond, treatment);
 				try {
 					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
@@ -504,6 +504,26 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+			/**
+			 * updateTreatment - Clinical viewpoint may request the update of an existing
+			 * treatment.
+			 * 
+			 * Parameters: Treatment object
+			 */
+			else if (incoming.getFunction().equals("updateTreatment")) {
+				Treatment tr = new Gson().fromJson(incoming.getArguments().get(0), Treatment.class);
+				database.updateTreatment(tr);
+			}
+			/**
+			 * updateRecord - Clinical viewpoint may request the update of an existing
+			 * record.
+			 * 
+			 * Parameters: PatientRecord object
+			 */
+			else if (incoming.getFunction().equals("updateRecord")) {
+				PatientRecord re = new Gson().fromJson(incoming.getArguments().get(0), PatientRecord.class);
+				database.updateRecord(re);
 			}
 			/**
 			 * If no correct function is called a message should be printed in server side.
