@@ -1226,7 +1226,7 @@ public class JDBC {
 	 */
 	public boolean updateAppointment(int app_id, int val) {
 		try {
-			PreparedStatement cs = this.conn.prepareCall("{call insertAppointment(?,?)}");
+			PreparedStatement cs = this.conn.prepareCall("{call updateAppointment(?,?)}");
 			cs.setInt(1, val);
 			cs.setInt(2, app_id);
 			cs.execute();
@@ -1321,6 +1321,36 @@ public class JDBC {
 		}
 
 		return ret;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Treatment getgenTreat(int patient_id) {
+
+		Treatment treat = new Treatment();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call ShowAllTreatments(?)}");
+			cs.setInt(1, patient_id);
+			ResultSet rs = cs.executeQuery();
+			treat.setPatient_id(rs.getInt("patient_id"));
+			treat.setDoctor_id(rs.getInt("doctor_id"));
+			treat.setDose(rs.getInt("dose"));
+			treat.setComments(rs.getString("comments"));
+			if (rs.getInt("warning") == 1)
+				treat.setWarning(true);
+			else
+				treat.setWarning(false);
+			treat.setDoctor_id(rs.getInt("doctor_id"));
+			treat.setAccepted(true);
+			treat.setDate(rs.getString("date"));
+			return treat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/**

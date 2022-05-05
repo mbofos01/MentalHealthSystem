@@ -127,12 +127,12 @@ public class Create_Appointment {
 
 		JComboBox<String> cmb_Patient = new JComboBox<String>();
 		// cmb_Patient.setEditable(true);
-		cmb_Patient.setBounds(198, 90, 134, 21);
+		cmb_Patient.setBounds(179, 90, 165, 21);
 		crt_app.getContentPane().add(cmb_Patient);
 
 		JComboBox<String> cmb_Doctor = new JComboBox<String>();
 		// cmb_Doctor.setEditable(true);
-		cmb_Doctor.setBounds(198, 136, 134, 21);
+		cmb_Doctor.setBounds(179, 136, 165, 21);
 		crt_app.getContentPane().add(cmb_Doctor);
 
 		JLabel lblClinicId = new JLabel("Clinic ID");

@@ -236,14 +236,12 @@ public class Server {
 			 * generateWeeklyReport - Health Service viewpoint may request the creation of a
 			 * weekly report on a specific clinic.
 			 */
-			else if (incoming.getFunction().equals("getAppointments")) {
+			else if (incoming.getFunction().equals("getAppointment")) {
 				int clinic;
 				clinic = Integer.parseInt(incoming.getArguments().get(0));
-				ArrayList<Appointment> rec = database.getAppointments(clinic);
+				Appointment rec = database.getAppointment(clinic);
 				try {
-					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
-					for (int i = 0; i < rec.size(); i++)
-						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+						output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -296,7 +294,7 @@ public class Server {
 					e.printStackTrace();
 				}
 			}
-			else if (incoming.getFunction().equals("getAppointment")) {
+			else if (incoming.getFunction().equals("getAppointments")) {
 				int clinic;
 				clinic = Integer.parseInt(incoming.getArguments().get(0));
 				ArrayList<Appointment> rec = database.getAppointments(clinic);
@@ -316,6 +314,20 @@ public class Server {
 					output.writeBytes("SUCCESS" + System.lineSeparator());
 				else
 					output.writeBytes("FAILURE" + System.lineSeparator());
+			}
+			else if (incoming.getFunction().equals("addTreatment")) {
+				Treatment tr = new Gson().fromJson(incoming.getArguments().get(0), Treatment.class);
+				int row = database.insertTreatment(tr);
+				output.writeBytes(new Gson().toJson(row) + System.lineSeparator());
+			}
+			else if (incoming.getFunction().equals("showAllTreatments")) {
+				int att = Integer.parseInt(incoming.getArguments().get(0));
+				Treatment row = database.getgenTreat(att);
+				try {
+					output.writeBytes(new Gson().toJson(row) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 

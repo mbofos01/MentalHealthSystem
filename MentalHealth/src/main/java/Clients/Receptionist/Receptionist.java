@@ -15,6 +15,7 @@ import Clients.Client;
 import Objects.Appointment;
 import Objects.Patient;
 import Objects.ReceptionistObj;
+import Objects.Treatment;
 import Tools.Query;
 import Tools.Viewpoint;
 import javax.swing.JLabel;
@@ -156,6 +157,28 @@ public class Receptionist {
 		});
 
 		JButton btnPresc = new JButton("Generate Last Perscription for selected patient");
+		btnPresc.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Query q = new Query(Viewpoint.Receptionist);
+				q.setFunction("showAllTreatments");
+				int p = tblPatient.getSelectedRow();
+				int a=0;
+				for (Patient p1 : patient_list) {
+					if (patient_list.get(p).getPatient_id() == p1.getPatient_id()) {
+						a = appointments.get(p).getAppoint_id();
+					}
+				}
+				q.addArgument(a+"");
+				client.send(q);
+				Treatment app = new Treatment();
+				app = new Gson().fromJson(client.read(), Treatment.class);
+				app.setAccepted(true);
+				q = new Query(Viewpoint.Receptionist);
+				q.setFunction("addTreatment");
+				q.addArgument(new Gson().toJson(app));
+				client.send(q);
+			}
+		});
 		btnPresc.setBackground(new Color(0, 204, 102));
 		btnPresc.setBounds(63, 439, 309, 34);
 		frmReceptionist.getContentPane().add(btnPresc);
