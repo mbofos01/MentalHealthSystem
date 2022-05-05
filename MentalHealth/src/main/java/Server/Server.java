@@ -237,9 +237,8 @@ public class Server {
 			 * weekly report on a specific clinic.
 			 */
 			else if (incoming.getFunction().equals("getAppointment")) {
-				int clinic;
-				clinic = Integer.parseInt(incoming.getArguments().get(0));
-				Appointment rec = database.getAppointment(clinic);
+				int appid = Integer.parseInt(incoming.getArguments().get(0));
+				Appointment rec = database.getAppointment(appid);
 				try {
 						output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
 				} catch (IOException e) {
@@ -295,8 +294,7 @@ public class Server {
 				}
 			}
 			else if (incoming.getFunction().equals("getAppointments")) {
-				int clinic;
-				clinic = Integer.parseInt(incoming.getArguments().get(0));
+				int clinic = Integer.parseInt(incoming.getArguments().get(0));
 				ArrayList<Appointment> rec = database.getAppointments(clinic);
 				try {
 					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());

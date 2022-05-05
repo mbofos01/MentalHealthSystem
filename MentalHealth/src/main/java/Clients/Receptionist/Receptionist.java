@@ -19,6 +19,8 @@ import Objects.Treatment;
 import Tools.Query;
 import Tools.Viewpoint;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -109,7 +111,7 @@ public class Receptionist {
 		// SHOW
 		String col1[] = { "App.ID", "Name", "Surname", "Date", "Time", "Type", "Attended", "Receptionist" };
 		index = 0;
-		String data1[][] = new String[patient_list.size()][col1.length];
+		String data1[][] = new String[appointments.size()][col1.length];
 		for (Appointment p : appointments) {
 			data1[index][0] = p.getAppoint_id() + "";
 			String name = "", surname = "";
@@ -162,21 +164,27 @@ public class Receptionist {
 				Query q = new Query(Viewpoint.Receptionist);
 				q.setFunction("showAllTreatments");
 				int p = tblPatient.getSelectedRow();
-				int a=0;
+				int a = 0;
 				for (Patient p1 : patient_list) {
 					if (patient_list.get(p).getPatient_id() == p1.getPatient_id()) {
-						a = appointments.get(p).getAppoint_id();
+						a = patient_list.get(p).getPatient_id();
 					}
 				}
-				q.addArgument(a+"");
+				q.addArgument(a + "");
 				client.send(q);
 				Treatment app = new Treatment();
 				app = new Gson().fromJson(client.read(), Treatment.class);
-				app.setAccepted(true);
-				q = new Query(Viewpoint.Receptionist);
-				q.setFunction("addTreatment");
-				q.addArgument(new Gson().toJson(app));
-				client.send(q);
+				// app.setAccepted(true);
+				//
+				if (app.isAccepted()) {
+					q = new Query(Viewpoint.Receptionist);
+					q.setFunction("addTreatment");
+					q.addArgument(new Gson().toJson(app));
+					client.send(q);
+				} else {
+					JOptionPane.showMessageDialog(frmReceptionist.getContentPane(),
+							"Prescription cannot be done, because treatment has not been accepted yet.");
+				}
 			}
 		});
 		btnPresc.setBackground(new Color(0, 204, 102));

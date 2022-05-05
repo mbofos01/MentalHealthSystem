@@ -219,8 +219,9 @@ public class Create_Appointment {
 			Query q3 = new Query(Viewpoint.Receptionist);
 			q3.setFunction("getAppointment");
 			q3.addArgument(a + "");
+			System.out.println(a);
 			client.send(q3);
-			new Gson().fromJson(client.read(), Integer.class);
+			//new Gson().fromJson(client.read(), Integer.class);
 			Appointment app = new Appointment();
 			app = new Gson().fromJson(client.read(), Appointment.class);
 			txtAppID.setText(app.getAppoint_id() + "");
@@ -237,22 +238,18 @@ public class Create_Appointment {
 			else
 				chk_drop.setSelected(false);
 		
-			/**
 			int indexd = 0;
 			for (Doctor p1 : doctor_list)
 				if (p1.getId()== app.getDoctor_id()) {
 					cmb_Doctor.setSelectedIndex(indexd);
 					indexd++;
-					break;
 				}
 			indexd = 0;
 			for (Patient p1 : patient_list)
 				if (p1.getPatient_id() == app.getPatient_id()) {
 					cmb_Patient.setSelectedIndex(indexd);
 					indexd++;
-					break;
 				}
-				**/
 		}
 
 		JButton btnNewButton = new JButton("Submit");
