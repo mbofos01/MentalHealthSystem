@@ -38,7 +38,6 @@ import Clients.Client;
 
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
-import java.awt.Color;
 
 /**
  * This application window presents the patient info to a doctor.

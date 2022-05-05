@@ -1409,14 +1409,4 @@ public class JDBC {
 		}
 	}
 
-	/**
-	 * Main function for the JDBC, used for testing.
-	 * 
-	 * @param args No arguments needed
-	 */
-	public static void main(String[] args) {
-		JDBC base = new JDBC();
-
-	}
-
 }

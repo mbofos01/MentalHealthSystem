@@ -9,8 +9,6 @@ import Objects.HealthServ;
 import Objects.ReceptionistObj;
 import Objects.RecordsStaff;
 
-import org.junit.jupiter.api.DisplayName;
-
 public class LogInTest {
 	/**
 	 * This test checks to see if login for medical records staff works right we
