@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>441</groupId>
 	<artifactId>123</artifactId>
@@ -170,6 +172,26 @@
 							</descriptorRefs>
 							<!-- <appendAssemblyId>false</appendAssemblyId> -->
 							<finalName>HealthService</finalName>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>build-e</id>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>Clients.Receptionist.ReceptionistLogin</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<!-- <appendAssemblyId>false</appendAssemblyId> -->
+							<finalName>Receptionist</finalName>
 						</configuration>
 						<phase>package</phase>
 						<goals>
