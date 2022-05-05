@@ -11,30 +11,30 @@ import Objects.PatientRecord;
 
 class RecordTest {
 	static JDBC database = new JDBC();
-	static ArrayList<PatientRecord> d = database.getPatientRecords(3, 2);
+	static ArrayList<PatientRecord> d = database.getPatientRecords(5, 1);
 
 	@Test
 	@DisplayName("Ensure patient records are correct - Record ID")
 	void testRecordID1() {
-		assertEquals(d.get(0).getRecord_id(), 48);
+		assertEquals(d.get(0).getRecord_id(), 87);
 	}
 
 	@Test
 	@DisplayName("Ensure patient records are correct - Record ID")
 	void testRecordID2() {
-		assertEquals(d.get(1).getRecord_id(), 49);
+		assertEquals(d.get(1).getRecord_id(), 88);
 	}
 
 	@Test
 	@DisplayName("Ensure patient records are correct - Date")
 	void testRecordDate1() {
-		assertEquals(d.get(0).getDate(), "2022-05-01");
+		assertEquals(d.get(0).getDate(), "2022-05-05");
 	}
 
 	@Test
 	@DisplayName("Ensure patient records are correct - Date")
 	void testRecordDate2() {
-		assertEquals(d.get(1).getDate(), "2022-05-01");
+		assertEquals(d.get(1).getDate(), "2022-05-05");
 	}
 
 	@Test
@@ -64,7 +64,7 @@ class RecordTest {
 	@Test
 	@DisplayName("Ensure patient records are correct - Treatment ID")
 	void testRecordTreatment1() {
-		assertEquals(d.get(0).getTreatment_id(), 53);
+		assertEquals(d.get(0).getTreatment_id(), 80);
 	}
 
 	@Test

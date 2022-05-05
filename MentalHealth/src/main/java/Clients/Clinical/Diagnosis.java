@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 
 import Clients.Client;
 import Objects.Allergy;
+import Objects.Appointment;
 import Objects.Condition;
 import Objects.Doctor;
 import Objects.Drug;
@@ -59,16 +60,18 @@ public class Diagnosis {
 	 * @param drugs           An ArrayList of drugs - the list of all drugs in our
 	 *                        database
 	 * @param last            PatientRecord object last patients diagnosis
-	 * @param update
-	 * @param updateTreatment
+	 * @param updateTreatment Boolean flag to update treatment
+	 * @param updateRecord    Boolean flag to update record
+	 * @param appointment     Appoint object in order to connect record with
+	 *                        appointment
 	 */
 	public static void openWindow(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs,
-			PatientRecord last, boolean updateRecord, boolean updateTreatment) {
+			PatientRecord last, boolean updateRecord, boolean updateTreatment, Appointment appointment) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Diagnosis window = new Diagnosis(client, doctor, patient, drugs, last, updateRecord,
-							updateTreatment);
+							updateTreatment, appointment);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -80,30 +83,40 @@ public class Diagnosis {
 	/**
 	 * Create the application.
 	 *
-	 * @param client  Client object for server client communication
-	 * @param doctor  Doctor object - the one how is logged in
-	 * @param patient Patient object - the patient whom we want to create a
-	 *                diagnosis
-	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
-	 * @param last    PatientRecord object last patients diagnosis
+	 * @param client          Client object for server client communication
+	 * @param doctor          Doctor object - the one how is logged in
+	 * @param patient         Patient object - the patient whom we want to create a
+	 *                        diagnosis
+	 * @param drugs           An ArrayList of drugs - the list of all drugs in our
+	 *                        database
+	 * @param last            PatientRecord object last patients diagnosis
+	 * @param updateTreatment Boolean flag to update treatment
+	 * @param updateRecord    Boolean flag to update record
+	 * @param appointment     Appoint object in order to connect record with
+	 *                        appointment
 	 */
 	public Diagnosis(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs, PatientRecord last,
-			boolean updateRecord, boolean updateTreatment) {
-		initialize(client, doctor, patient, drugs, last, updateRecord, updateTreatment);
+			boolean updateRecord, boolean updateTreatment, Appointment appointment) {
+		initialize(client, doctor, patient, drugs, last, updateRecord, updateTreatment, appointment);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 * 
-	 * @param client  Client object for server client communication
-	 * @param doctor  Doctor object - the one how is logged in
-	 * @param patient Patient object - the patient whom we want to create a
-	 *                diagnosis
-	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
-	 * @param last    PatientRecord object last patients diagnosis
+	 * @param client          Client object for server client communication
+	 * @param doctor          Doctor object - the one how is logged in
+	 * @param patient         Patient object - the patient whom we want to create a
+	 *                        diagnosis
+	 * @param drugs           An ArrayList of drugs - the list of all drugs in our
+	 *                        database
+	 * @param last            PatientRecord object last patients diagnosis
+	 * @param updateTreatment Boolean flag to update treatment
+	 * @param updateRecord    Boolean flag to update record
+	 * @param appointment     Appoint object in order to connect record with
+	 *                        appointment
 	 */
 	private void initialize(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs, PatientRecord last,
-			boolean updateRecord, boolean updateTreatment) {
+			boolean updateRecord, boolean updateTreatment, Appointment appointment) {
 		System.out.println(last.getTreatment_id());
 		frame = new JFrame();
 		frame.setResizable(false);
@@ -259,19 +272,15 @@ public class Diagnosis {
 				Integer treat_id = -1;
 				if (index2 != -1) {
 					for (Allergy allergy_drug : getPatientAllergies) {
-						// System.out.println(drugs.get(index2).getId() + " " +
-						// allergy_drug.getDrug_id());
 						if (drugs.get(index2).getId() == allergy_drug.getDrug_id()) {
 
-							// System.out.println("ALLERGY");
 							int option = JOptionPane.showConfirmDialog(null,
 									"          " + patient.getName() + " " + patient.getSurname() + " is allergic to "
 											+ drugs.get(index2).getCommercial_name()
 											+ "! \n Do you really want to prescribe them "
 											+ drugs.get(index2).getCommercial_name() + "?",
 									"Allergy", JOptionPane.YES_NO_OPTION);
-
-							if (option == 0) { // The ISSUE is here
+							if (option == 0) {
 								warned = true;
 							} else {
 								return;
@@ -290,13 +299,15 @@ public class Diagnosis {
 					 * insert treatment and fetch its id
 					 */
 					if (updateTreatment == false) {
+						System.out.println("FTIAXNO KAINOURGIO TREATMENT ");
 						Query addTreatmentQuery = new Query(Viewpoint.Clinical);
 						addTreatmentQuery.setFunction("addTreatment");
 						addTreatmentQuery.addArgument(new Gson().toJson(treat));
 						client.send(addTreatmentQuery);
 						treat_id = new Gson().fromJson(client.read(), Integer.class);
-						System.out.println("id: " + treat_id);
+						System.out.print(treat_id + " \n");
 					} else if (updateTreatment == true) {
+						System.out.println("ALLAZO TO TREATMENT " + last.getTreatment_id());
 						treat.setLast_updated(Clock.currentSQLTime());
 						treat.setTreatment_id(last.getTreatment_id());
 						Query updateOne = new Query(Viewpoint.Clinical);
@@ -344,15 +355,12 @@ public class Diagnosis {
 					Query addRecordQuery = new Query(Viewpoint.Clinical);
 					addRecordQuery.setFunction("addRecord");
 					addRecordQuery.addArgument(new Gson().toJson(record));
+					addRecordQuery.addArgument("" + appointment.getAppoint_id());
 					client.send(addRecordQuery);
 				} else if (updateRecord == true) {
-					System.out.println("UPDATE");
 					record.setRecord_id(last.getRecord_id());
-					if (index2 != -1) {
-						record.setTreatment_id(-1);
-					} else {
+					if (updateTreatment == true)
 						record.setTreatment_id(treat_id);
-					}
 
 					record.setLast_update(Clock.currentSQLTime());
 					Query updateRecordQuery = new Query(Viewpoint.Clinical);

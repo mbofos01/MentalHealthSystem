@@ -237,10 +237,11 @@ public class Server {
 			 * weekly report on a specific clinic.
 			 */
 			else if (incoming.getFunction().equals("getAppointment")) {
-				int appid = Integer.parseInt(incoming.getArguments().get(0));
-				Appointment rec = database.getAppointment(appid);
+				int clinic;
+				clinic = Integer.parseInt(incoming.getArguments().get(0));
+				Appointment rec = database.getAppointment(clinic);
 				try {
-						output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
+					output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -292,9 +293,9 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
-			else if (incoming.getFunction().equals("getAppointments")) {
-				int clinic = Integer.parseInt(incoming.getArguments().get(0));
+			} else if (incoming.getFunction().equals("getAppointments")) {
+				int clinic;
+				clinic = Integer.parseInt(incoming.getArguments().get(0));
 				ArrayList<Appointment> rec = database.getAppointments(clinic);
 				try {
 					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
@@ -303,8 +304,7 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
-			else if (incoming.getFunction().equals("updateApp")) {
+			} else if (incoming.getFunction().equals("updateApp")) {
 				int att = Integer.parseInt(incoming.getArguments().get(0));
 				int id = Integer.parseInt(incoming.getArguments().get(1));
 				boolean flag = database.updateAppointment(id, att);
@@ -312,14 +312,11 @@ public class Server {
 					output.writeBytes("SUCCESS" + System.lineSeparator());
 				else
 					output.writeBytes("FAILURE" + System.lineSeparator());
-			}
-			else if (incoming.getFunction().equals("addTreatment")) {
+			} else if (incoming.getFunction().equals("addTreatment")) {
 				Treatment tr = new Gson().fromJson(incoming.getArguments().get(0), Treatment.class);
 				int row = database.insertTreatment(tr);
 				output.writeBytes(new Gson().toJson(row) + System.lineSeparator());
-			}
-			//
-			else if (incoming.getFunction().equals("showAllTreatments")) {
+			} else if (incoming.getFunction().equals("showAllTreatments")) {
 				int att = Integer.parseInt(incoming.getArguments().get(0));
 				Treatment row = database.getgenTreat(att);
 				try {
@@ -486,11 +483,23 @@ public class Server {
 			 */
 			else if (incoming.getFunction().equals("addRecord")) {
 				PatientRecord re = new Gson().fromJson(incoming.getArguments().get(0), PatientRecord.class);
+				int appointment_id = Integer.parseInt(incoming.getArguments().get(1));
 				boolean flag = database.insertRecord(re);
+				int id = database.getIDofLastRecord();
+				database.insertRecordAppointmentRelationship(id, appointment_id);
 				if (flag)
 					output.writeBytes("SUCCESS" + System.lineSeparator());
 				else
 					output.writeBytes("FAILURE" + System.lineSeparator());
+
+			}
+			/**
+			 * 
+			 */
+			else if (incoming.getFunction().equals("getRecordOfAnAppointment")) {
+				int appointment_id = Integer.parseInt(incoming.getArguments().get(0));
+				int reid = database.getRecordOfAnAppointment(appointment_id);
+				output.writeBytes(reid + System.lineSeparator());
 			}
 			/**
 			 * requestDeath - Clinical Viewpoint may request the addition of a death request
