@@ -37,11 +37,11 @@ public class Create_Appointment {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(Client client, ReceptionistObj model, int p, int a) {
+	public static void main(Client client, ReceptionistObj model, int p, int a, int id_patient) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Create_Appointment window = new Create_Appointment(client, model, p, a);
+					Create_Appointment window = new Create_Appointment(client, model, p, a, id_patient);
 					window.crt_app.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,14 +53,14 @@ public class Create_Appointment {
 	/**
 	 * Create the application.
 	 */
-	public Create_Appointment(Client client, ReceptionistObj model, int p, int a) {
-		initialize(client, model, p, a);
+	public Create_Appointment(Client client, ReceptionistObj model, int p, int a, int id_patient) {
+		initialize(client, model, p, a, id_patient);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Client client, ReceptionistObj model, int p, int a) {
+	private void initialize(Client client, ReceptionistObj model, int p, int a, int id_patient) {
 		crt_app = new JFrame();
 		crt_app.getContentPane().setBackground(Color.WHITE);
 		crt_app.setTitle("Appointment");
@@ -134,7 +134,7 @@ public class Create_Appointment {
 		// cmb_Doctor.setEditable(true);
 		cmb_Doctor.setBounds(179, 136, 165, 21);
 		crt_app.getContentPane().add(cmb_Doctor);
-
+		JButton btnNewButton = new JButton("Submit");
 		JLabel lblClinicId = new JLabel("Clinic ID");
 		lblClinicId.setBounds(76, 305, 93, 13);
 		crt_app.getContentPane().add(lblClinicId);
@@ -151,8 +151,12 @@ public class Create_Appointment {
 		client.send(q);
 		Integer size = new Gson().fromJson(client.read(), Integer.class);
 		ArrayList<Patient> patient_list = new ArrayList<Patient>();
-		for (int i = 0; i < size; i++)
-			patient_list.add(new Gson().fromJson(client.read(), Patient.class));
+		for (int i = 0; i < size; i++) {
+			Patient toAdd = new Gson().fromJson(client.read(), Patient.class);
+			System.out.println(toAdd.isAlive() + " " + toAdd.getName());
+			if (toAdd.isAlive() && p == -1)
+				patient_list.add(toAdd);
+		}
 		int index = 0;
 		String data[][] = new String[patient_list.size()][5];
 		for (Patient p1 : patient_list) {
@@ -197,7 +201,6 @@ public class Create_Appointment {
 			txtClinic.setEnabled(false);
 			cmb_Doctor.setEnabled(true);
 			cmb_Patient.setEnabled(true);
-
 			txt_Receptionist.setText(model.getId() + "");
 			txtClinic.setText(model.getClinic_id() + "");
 			Query q2 = new Query(Viewpoint.Receptionist);
@@ -205,8 +208,9 @@ public class Create_Appointment {
 			client.send(q2);
 			Integer last = new Gson().fromJson(client.read(), Integer.class) + 1;
 			txtAppID.setText(last + "");
+			cmb_Doctor.setSelectedIndex(0);
+			cmb_Patient.setSelectedIndex(0);
 		} else {
-			chk_attend.setEnabled(true);
 			chk_drop.setEnabled(false);
 			txtDate.setEnabled(false);
 			txtTime.setEnabled(false);
@@ -216,43 +220,53 @@ public class Create_Appointment {
 			cmb_Doctor.setEnabled(false);
 			txtClinic.setEnabled(false);
 
+			Query q4 = new Query(Viewpoint.Receptionist);
+			q4.setFunction("CheckIfAlive");
+			q4.addArgument(id_patient + "");
+			System.out.println(a);
+			client.send(q4);
+			boolean alive = new Gson().fromJson(client.read(), Boolean.class);
+			System.out.println("Am i alive? " + alive);
+			chk_attend.setEnabled(alive);
+			btnNewButton.setEnabled(alive);
+
 			Query q3 = new Query(Viewpoint.Receptionist);
 			q3.setFunction("getAppointment");
 			q3.addArgument(a + "");
-			System.out.println(a);
 			client.send(q3);
-			//new Gson().fromJson(client.read(), Integer.class);
-			Appointment app = new Appointment();
-			app = new Gson().fromJson(client.read(), Appointment.class);
+			Appointment app = new Gson().fromJson(client.read(), Appointment.class);
 			txtAppID.setText(app.getAppoint_id() + "");
 			txt_Receptionist.setText(app.getReceptionist_id() + "");
 			txtClinic.setText(model.getClinic_id() + "");
 			txtDate.setText(app.getDate());
 			txtTime.setText(app.getTime());
-			if (app.getType().equals("1"))
+			if (app.isDropIn())
 				chk_drop.setSelected(true);
 			else
 				chk_drop.setSelected(false);
 			if (app.isAttended())
-				chk_drop.setSelected(true);
+				chk_attend.setSelected(true);
 			else
-				chk_drop.setSelected(false);
-		
+				chk_attend.setSelected(false);
+
 			int indexd = 0;
-			for (Doctor p1 : doctor_list)
-				if (p1.getId()== app.getDoctor_id()) {
+			for (Doctor p1 : doctor_list) {
+				if (p1.getId() == app.getDoctor_id()) {
 					cmb_Doctor.setSelectedIndex(indexd);
-					indexd++;
+					break;
 				}
+				indexd++;
+			}
 			indexd = 0;
-			for (Patient p1 : patient_list)
+			for (Patient p1 : patient_list) {
 				if (p1.getPatient_id() == app.getPatient_id()) {
 					cmb_Patient.setSelectedIndex(indexd);
-					indexd++;
+					break;
 				}
+				indexd++;
+			}
 		}
 
-		JButton btnNewButton = new JButton("Submit");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (p == -1) {
@@ -275,11 +289,12 @@ public class Create_Appointment {
 					Query q2 = new Query(Viewpoint.Receptionist);
 					q2.setFunction("updateApp");
 					q2.addArgument(txtAppID.getText());
-					if (chk_drop.isSelected())
+					if (chk_attend.isSelected())
 						q2.addArgument("1");
 					else
 						q2.addArgument("0");
 					client.send(q2);
+					JOptionPane.showMessageDialog(crt_app.getContentPane(), "Updated successfully");
 				}
 			}
 		});

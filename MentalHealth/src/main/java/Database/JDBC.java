@@ -1030,6 +1030,7 @@ public class JDBC {
 				p.setSurname(rs.getString("surname"));
 				p.setTelephone(rs.getString("telephone"));
 				p.setEmail(rs.getString("email"));
+				p.setAlive(rs.getBoolean("alive"));
 				patients.add(p);
 			}
 			return patients;
@@ -1168,19 +1169,47 @@ public class JDBC {
 			PreparedStatement cs = this.conn.prepareCall("{call ShowAppointment(?)}");
 			cs.setInt(1, app_id);
 			ResultSet rs = cs.executeQuery();
-			rec.setDoctor_id(rs.getInt("doctor_id"));
-			rec.setAppoint_id(rs.getInt("appoint_id"));
-			rec.setPatient_id(rs.getInt("patient_id"));
-			rec.setDate(rs.getString("date"));
-			rec.setTime(rs.getString("time"));
-			rec.setDropIn(rs.getBoolean("dropIn"));
-			rec.setReceptionist_id(rs.getInt("receptionist_id"));
-			rec.setAttended(rs.getBoolean("attended"));
-			System.out.println(rec.toString());
+			while (rs.next()) {
+				rec.setDoctor_id(rs.getInt("doctor_id"));
+				rec.setAppoint_id(rs.getInt("appoint_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+				rec.setDate(rs.getString("date"));
+				rec.setTime(rs.getString("time"));
+				rec.setDropIn(rs.getBoolean("dropIn"));
+				rec.setReceptionist_id(rs.getInt("receptionist_id"));
+				rec.setAttended(rs.getBoolean("attended"));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return rec;
+	}
+
+	/**
+	 * 
+	 * @param app_id
+	 * @return
+	 */
+	public boolean CheckIfAlive(int p_id) {
+		boolean is = true;
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call checkIfAlive(?)}");
+			cs.setInt(1, p_id);
+			ResultSet rs = cs.executeQuery();
+			while (rs.next()) {
+				is = rs.getBoolean("alive");
+				System.out.println(is);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return is;
+	}
+
+	public static void main(String[] args) {
+		JDBC a = new JDBC();
+		for (int i = 0; i < 5; i++)
+			System.out.println(a.getPatient(i).isAlive() + " " + a.getPatient(i).getName());
 	}
 
 	/**
@@ -1242,21 +1271,22 @@ public class JDBC {
 	 * @return
 	 */
 	public Treatment getPersc(int pid) {
+		Treatment rec = new Treatment();
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call getPerscription(?)}");
 			cs.setInt(1, pid);
 			ResultSet rs = cs.executeQuery();
-			Treatment rec = new Treatment();
-			rec.setDate(rs.getString("date"));
-			rec.setDose(rs.getInt("dose"));
-			rec.setComments(rs.getString("comments"));
-			rec.setDoctor_id(rs.getInt("doctor_id"));
-			rec.setPatient_id(rs.getInt("patient_id"));
-			return rec;
+			while (rs.next()) {
+				rec.setDate(rs.getString("date"));
+				rec.setDose(rs.getInt("dose"));
+				rec.setComments(rs.getString("comments"));
+				rec.setDoctor_id(rs.getInt("doctor_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return rec;
 	}
 
 	/**
@@ -1337,17 +1367,22 @@ public class JDBC {
 			PreparedStatement cs = this.conn.prepareCall("{call ShowAllTreatments(?)}");
 			cs.setInt(1, patient_id);
 			ResultSet rs = cs.executeQuery();
-			treat.setPatient_id(rs.getInt("patient_id"));
-			treat.setDoctor_id(rs.getInt("doctor_id"));
-			treat.setDose(rs.getInt("dose"));
-			treat.setComments(rs.getString("comments"));
-			if (rs.getInt("warning") == 1)
-				treat.setWarning(true);
-			else
-				treat.setWarning(false);
-			treat.setDoctor_id(rs.getInt("drug_id"));
-			treat.setAccepted(true);
-			treat.setDate(rs.getString("date"));
+			while (rs.next()) {
+				treat.setPatient_id(rs.getInt("patient_id"));
+				treat.setDoctor_id(rs.getInt("doctor_id"));
+				treat.setDose(rs.getInt("dose"));
+				treat.setComments(rs.getString("comments"));
+				if (rs.getInt("warning") == 1)
+					treat.setWarning(true);
+				else
+					treat.setWarning(false);
+				treat.setDrug_id(rs.getInt("drug_id"));
+				if (rs.getInt("accepted") == 1)
+					treat.setAccepted(true);
+				else
+					treat.setAccepted(false);
+				treat.setDate(rs.getString("date"));
+			}
 			return treat;
 		} catch (SQLException e) {
 			e.printStackTrace();

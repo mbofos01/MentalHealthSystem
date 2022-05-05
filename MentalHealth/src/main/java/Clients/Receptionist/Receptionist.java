@@ -16,6 +16,7 @@ import Objects.Appointment;
 import Objects.Patient;
 import Objects.ReceptionistObj;
 import Objects.Treatment;
+import Tools.Clock;
 import Tools.Query;
 import Tools.Viewpoint;
 import javax.swing.JLabel;
@@ -148,13 +149,14 @@ public class Receptionist {
 			public void mouseClicked(MouseEvent e) {
 				int p = tblAppointment.getSelectedRow();
 				frmReceptionist.dispose();
-				int a = 0;
+				int a = 0, patr_id = -1;
 				for (Appointment p1 : appointments) {
 					if (appointments.get(p).getAppoint_id() == p1.getAppoint_id()) {
 						a = appointments.get(p).getAppoint_id();
+						patr_id = p1.getPatient_id();
 					}
 				}
-				Create_Appointment.main(client, model, 1, a);
+				Create_Appointment.main(client, model, 1, a, patr_id);
 			}
 		});
 
@@ -172,10 +174,8 @@ public class Receptionist {
 				}
 				q.addArgument(a + "");
 				client.send(q);
-				Treatment app = new Treatment();
-				app = new Gson().fromJson(client.read(), Treatment.class);
-				// app.setAccepted(true);
-				//
+				Treatment app = new Gson().fromJson(client.read(), Treatment.class);
+				app.setDate(Clock.currentSQLTime());
 				if (app.isAccepted()) {
 					q = new Query(Viewpoint.Receptionist);
 					q.setFunction("addTreatment");
@@ -242,7 +242,7 @@ public class Receptionist {
 		btnNewAppointment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmReceptionist.dispose();
-				Create_Appointment.main(client, model, -1, 0);
+				Create_Appointment.main(client, model, -1, 0, -1);
 			}
 		});
 		btnNewAppointment.setBackground(new Color(0, 204, 102));
