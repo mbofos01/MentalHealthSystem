@@ -62,7 +62,7 @@ public class Create_Appointment {
 	 * Main Procedure of the class that initiates the application
 	 * 
 	 * @param client     Client object for server client communication
-	 * @param model      Health Service staff instance
+	 * @param model      Receptionist instance
 	 * @param p          State of the interface (-1 for add, 1 for update)
 	 * @param a          ID of the appointment selected (update mode)
 	 * @param id_patient ID of the patient
@@ -84,7 +84,7 @@ public class Create_Appointment {
 	 * Create the Application
 	 * 
 	 * @param client     Client object for server client communication
-	 * @param model      Health Service staff instance
+	 * @param model      Receptionist instance
 	 * @param p          State of the interface (-1 for add, 1 for update)
 	 * @param a          ID of the appointment selected (update mode)
 	 * @param id_patient ID of the patient
@@ -97,7 +97,7 @@ public class Create_Appointment {
 	 * Initialize the contents of the frame
 	 * 
 	 * @param client     Client object for server client communication
-	 * @param model      Health Service staff instance
+	 * @param model      Receptionist instance
 	 * @param p          State of the interface (-1 for add, 1 for update)
 	 * @param a          ID of the appointment selected (update mode)
 	 * @param id_patient ID of the patient

@@ -56,7 +56,7 @@ public class Receptionist {
 	 * Launch the Application
 	 * 
 	 * @param client Client object for server client communication
-	 * @param model  Health Service staff instance
+	 * @param model  Receptionist instance
 	 */
 	public static void openWin(final Client client, final ReceptionistObj model) {
 		EventQueue.invokeLater(new Runnable() {
@@ -75,7 +75,7 @@ public class Receptionist {
 	 * Create the Application
 	 * 
 	 * @param client Client object for server client communication
-	 * @param model
+	 * @param model Receptionist instance
 	 */
 	public Receptionist(Client client, ReceptionistObj model) {
 		initialize(client, model);
@@ -85,7 +85,7 @@ public class Receptionist {
 	 * Initialize the contents of the frame
 	 * 
 	 * @param client Client object for server client communication
-	 * @param model
+	 * @param model Receptionist instance
 	 */
 	private void initialize(Client client, ReceptionistObj model) {
 		frmReceptionist = new JFrame();
