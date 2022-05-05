@@ -318,6 +318,7 @@ public class Server {
 				int row = database.insertTreatment(tr);
 				output.writeBytes(new Gson().toJson(row) + System.lineSeparator());
 			}
+			//
 			else if (incoming.getFunction().equals("showAllTreatments")) {
 				int att = Integer.parseInt(incoming.getArguments().get(0));
 				Treatment row = database.getgenTreat(att);
