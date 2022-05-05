@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import Clients.Client;
 import Objects.Clinic;
@@ -103,6 +104,7 @@ public class HealthService {
 					ReportData rp = new Gson().fromJson(client.read(), ReportData.class);
 					CreatePDF.createReport(rp);
 				}
+				JOptionPane.showMessageDialog(frmHealthService.getContentPane(), "Weakly Report created successfully");
 			}
 		});
 		btnWeekReport.setBounds(174, 67, 180, 21);
@@ -164,6 +166,7 @@ public class HealthService {
 				}
 				CreatePDF.createPatientReport(patients, conds.get(indexCond).getName(),
 						drug_list.get(indexTreat).getCommercial_name());
+				JOptionPane.showMessageDialog(frmHealthService.getContentPane(), "Report of Patients created successfully");
 			}
 		});
 		btnReportPatient.setBackground(new Color(51, 204, 102));
