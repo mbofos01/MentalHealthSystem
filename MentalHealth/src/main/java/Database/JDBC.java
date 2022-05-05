@@ -983,7 +983,7 @@ public class JDBC {
 	}
 
 	/**
-	 * This method gets the appointment count of a clinic for a week. IF A
+	 * This method gets the appointment count of a clinic for a week. IF AN
 	 * APPOINTMENT IS ATTENDED
 	 * 
 	 * @param clinic Integer id
@@ -1308,6 +1308,11 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This method fetches the ID of the last appointment created.
+	 * 
+	 * @return Integer ID of appointment
+	 */
 	public int getLastAppointmentID() {
 		int ret = -1;
 		try {
@@ -1374,6 +1379,12 @@ public class JDBC {
 
 	}
 
+	/**
+	 * This method fetches the corresponding record of an appointment.
+	 * 
+	 * @param appoint Integer ID of an appointment
+	 * @return Integer ID of the corresponding record
+	 */
 	public int getRecordOfAnAppointment(int appoint) {
 		int rec = -1;
 		try {
