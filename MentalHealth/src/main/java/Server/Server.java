@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.google.gson.Gson;
+
 import Database.JDBC;
 import Objects.Allergy;
 import Objects.Appointment;
@@ -20,8 +21,10 @@ import Objects.Comment;
 import Objects.Condition;
 import Objects.Doctor;
 import Objects.Drug;
+import Objects.HealthServ;
 import Objects.Patient;
 import Objects.PatientRecord;
+import Objects.ReceptionistObj;
 import Objects.RecordsStaff;
 import Objects.ReportData;
 import Objects.Request;
@@ -90,13 +93,31 @@ public class Server {
 		 * 
 		 * @param incoming Actual Query object
 		 * @param output   Output Stream
+		 * @throws IOException
 		 */
-		private void HandleHealthService(Query incoming, DataOutputStream output) {
+		private void HandleHealthService(Query incoming, DataOutputStream output) throws IOException {
+			/**
+			 * login - Health Service viewpoint - request a Health Service Staff member
+			 * login
+			 * 
+			 * Parameters: username and password
+			 */
+			if (incoming.getFunction().equals("login")) {
+				HealthServ hs = database.loginHealthService(incoming.getArguments().get(0),
+						incoming.getArguments().get(1));
+				if (hs == null) {
+					hs = new HealthServ();
+					hs.emptyValue();
+				}
+				output.writeBytes(new Gson().toJson(hs) + System.lineSeparator());
+			}
 			/**
 			 * generateWeeklyReport - Health Service viewpoint may request the creation of a
 			 * weekly report on a specific clinic.
+			 * 
+			 * Parameters: Clinic ID
 			 */
-			if (incoming.getFunction().equals("generateWeeklyReport")) {
+			else if (incoming.getFunction().equals("generateWeeklyReport")) {
 				int clinic_id = Integer.parseInt(incoming.getArguments().get(0));
 				ReportData rp = new ReportData();
 				rp.setVisitors(database.getWeeksAppointments(clinic_id));
@@ -106,6 +127,73 @@ public class Server {
 				rp.setTreatmentCounter(database.getPatientsOfEachTreatment(clinic_id));
 				try {
 					output.writeBytes(new Gson().toJson(rp) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getConditions - Health Service Viewpoint may request a list with all the
+			 * conditions in the database.
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("getConditions")) {
+				ArrayList<Condition> cond = database.getConditions();
+				try {
+					output.writeBytes(new Gson().toJson(cond.size()) + System.lineSeparator());
+					for (int i = 0; i < cond.size(); i++)
+						output.writeBytes(new Gson().toJson(cond.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getDrugs - Health Service Viewpoint may request a list with all the drugs in
+			 * the database.
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("getDrugs")) {
+				ArrayList<Drug> rec = database.getDrugList();
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getClinics - Health Service may request a list with all the clinics in the
+			 * database.
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("getClinics")) {
+				ArrayList<Clinic> rec = database.getClinics();
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getPatientsTreatmentCond - Health Service may request a list with all the
+			 * patients that have got a specific treatment with a specific condition
+			 * 
+			 * Parameters: treatment and condition
+			 */
+			else if (incoming.getFunction().equals("getPatientsTreatmentCond")) {
+				int treatment, cond;
+				cond = Integer.parseInt(incoming.getArguments().get(0));
+				treatment = Integer.parseInt(incoming.getArguments().get(1));
+				ArrayList<Patient> rec = database.getReport2(cond, treatment);
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -120,7 +208,194 @@ public class Server {
 		 * @throws IOException
 		 */
 		private void HandleReceptionist(Query incoming, DataOutputStream output) throws IOException {
-			// TODO:
+			/**
+			 * login - Receptionist viewpoint may request a receptionist login
+			 * 
+			 * Parameters: username and password
+			 */
+			if (incoming.getFunction().equals("login")) {
+				ReceptionistObj hs = database.loginReceptionist(incoming.getArguments().get(0),
+						incoming.getArguments().get(1));
+				if (hs == null) {
+					hs = new ReceptionistObj();
+					hs.emptyValue();
+				}
+				output.writeBytes(new Gson().toJson(hs) + System.lineSeparator());
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request a list with all the patients
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("getPatients")) {
+				ArrayList<Patient> rec = database.getPatients();
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getAppointment - Receptionist viewpoint may request a specific appointment's
+			 * details
+			 * 
+			 * Parameters: appointment ID
+			 */
+			else if (incoming.getFunction().equals("getAppointment")) {
+				int appid = Integer.parseInt(incoming.getArguments().get(0));
+				Appointment rec = database.getAppointment(appid);
+				try {
+					output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getPatientsSearch - Receptionist viewpoint may search for a patient given a
+			 * specific name
+			 * 
+			 * Parameters: name
+			 */
+			else if (incoming.getFunction().equals("getPatientsSearch")) {
+				String name;
+				name = incoming.getArguments().get(0);
+				ArrayList<Patient> rec = database.search(name);
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request to check if a patient is
+			 * alive
+			 * 
+			 * Parameters: patient ID
+			 */
+			else if (incoming.getFunction().equals("CheckIfAlive")) {
+				int appid = Integer.parseInt(incoming.getArguments().get(0));
+				boolean rec = database.CheckIfAlive(appid);
+				try {
+					output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request to make a new appointment
+			 * 
+			 * Parameters: doctor ID, patient ID, clinic ID, date, time, drop in?,
+			 * receptionist ID, attended?
+			 */
+			else if (incoming.getFunction().equals("newAppointment")) {
+				int doc_id = Integer.parseInt(incoming.getArguments().get(0));
+				int pat_id = Integer.parseInt(incoming.getArguments().get(1));
+				int clinic_id = Integer.parseInt(incoming.getArguments().get(2));
+				String date = incoming.getArguments().get(3);
+				String time = incoming.getArguments().get(4);
+				int drop_in = Integer.parseInt(incoming.getArguments().get(5));
+				int receptionist_id = Integer.parseInt(incoming.getArguments().get(6));
+				int att = Integer.parseInt(incoming.getArguments().get(7));
+				boolean flag = database.insertAppointment(doc_id, pat_id, clinic_id, date, time, drop_in,
+						receptionist_id, att);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request to get the ID of the last
+			 * appointment in the table of Appointments
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("getlastID")) {
+				int rec = database.getLastAppointmentID();
+				try {
+					output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request a list with the doctors of a
+			 * specific clinic
+			 * 
+			 * Parameters: clinic ID
+			 */
+			else if (incoming.getFunction().equals("getDoctors")) {
+				int c_id = Integer.parseInt(incoming.getArguments().get(0));
+				ArrayList<Doctor> rec = database.getDoctorsOfAClinic(c_id);
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request a list with the appointments
+			 * of a specific clinic
+			 * 
+			 * Parameters: clinic ID
+			 */
+			else if (incoming.getFunction().equals("getAppointments")) {
+				int clinic;
+				clinic = Integer.parseInt(incoming.getArguments().get(0));
+				ArrayList<Appointment> rec = database.getAppointments(clinic);
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request to update the attendance of
+			 * a specific appointment
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("updateApp")) {
+				int att = Integer.parseInt(incoming.getArguments().get(1));
+				int id = Integer.parseInt(incoming.getArguments().get(0));
+				boolean flag = database.updateAppointment(id, att);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request to generate a new treatment
+			 * 
+			 * Parameters: Treatment object instance
+			 */
+			else if (incoming.getFunction().equals("addTreatment")) {
+				Treatment tr = new Gson().fromJson(incoming.getArguments().get(0), Treatment.class);
+				int row = database.insertTreatment(tr);
+				output.writeBytes(new Gson().toJson(row) + System.lineSeparator());
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request a list with the last
+			 * treatment given to a specific patient
+			 * 
+			 * Parameters: Patient ID
+			 */
+			else if (incoming.getFunction().equals("showAllTreatments")) {
+				int att = Integer.parseInt(incoming.getArguments().get(0));
+				Treatment row = database.getgenTreat(att);
+				try {
+					output.writeBytes(new Gson().toJson(row) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 		/**
@@ -279,11 +554,23 @@ public class Server {
 			 */
 			else if (incoming.getFunction().equals("addRecord")) {
 				PatientRecord re = new Gson().fromJson(incoming.getArguments().get(0), PatientRecord.class);
+				int appointment_id = Integer.parseInt(incoming.getArguments().get(1));
 				boolean flag = database.insertRecord(re);
+				int id = database.getIDofLastRecord();
+				database.insertRecordAppointmentRelationship(id, appointment_id);
 				if (flag)
 					output.writeBytes("SUCCESS" + System.lineSeparator());
 				else
 					output.writeBytes("FAILURE" + System.lineSeparator());
+
+			}
+			/**
+			 * 
+			 */
+			else if (incoming.getFunction().equals("getRecordOfAnAppointment")) {
+				int appointment_id = Integer.parseInt(incoming.getArguments().get(0));
+				int reid = database.getRecordOfAnAppointment(appointment_id);
+				output.writeBytes(reid + System.lineSeparator());
 			}
 			/**
 			 * requestDeath - Clinical Viewpoint may request the addition of a death request
@@ -350,6 +637,26 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+			/**
+			 * updateTreatment - Clinical viewpoint may request the update of an existing
+			 * treatment.
+			 * 
+			 * Parameters: Treatment object
+			 */
+			else if (incoming.getFunction().equals("updateTreatment")) {
+				Treatment tr = new Gson().fromJson(incoming.getArguments().get(0), Treatment.class);
+				database.updateTreatment(tr);
+			}
+			/**
+			 * updateRecord - Clinical viewpoint may request the update of an existing
+			 * record.
+			 * 
+			 * Parameters: PatientRecord object
+			 */
+			else if (incoming.getFunction().equals("updateRecord")) {
+				PatientRecord re = new Gson().fromJson(incoming.getArguments().get(0), PatientRecord.class);
+				database.updateRecord(re);
 			}
 			/**
 			 * If no correct function is called a message should be printed in server side.

@@ -58,6 +58,7 @@ public class PatientView {
 	 * JTable for patient appointments
 	 */
 	private JTable appointTable;
+	private JButton allergiesBtn;
 
 	/**
 	 * Launch the application.
@@ -171,6 +172,7 @@ public class PatientView {
 		JButton addComment = new JButton("Add Comment");
 		addComment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				// System.out.println(commentsText.getText());
 				if (commentsText.getText().length() > 0) {
 					Query q = new Query(Viewpoint.Clinical);
@@ -189,13 +191,15 @@ public class PatientView {
 								JOptionPane.ERROR_MESSAGE);
 					}
 				}
+
 				commentsText.setText("");
 			}
 		});
 		addComment.setBackground(CustomColours.Mint());
 		addComment.setForeground(CustomColours.interChangableWhite());
 		addComment.setBounds(664, 409, 133, 23);
-		frmPatientView.getContentPane().add(addComment);
+		if (patient.isAlive())
+			frmPatientView.getContentPane().add(addComment);
 
 		JButton ViewComments = new JButton("View Comments");
 		ViewComments.addActionListener(new ActionListener() {
@@ -272,9 +276,10 @@ public class PatientView {
 		death.setForeground(CustomColours.interChangableWhite());
 		death.setBackground(CustomColours.interChangableBlack());
 		death.setBounds(916, 33, 145, 25);
-		frmPatientView.getContentPane().add(death);
+		if (patient.isAlive())
+			frmPatientView.getContentPane().add(death);
 
-		JButton allergiesBtn = new JButton("Allergies");
+		allergiesBtn = new JButton("Allergies");
 		allergiesBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AllergyWindow.openWindow(client, patient, drugs);
@@ -283,7 +288,8 @@ public class PatientView {
 		allergiesBtn.setForeground(CustomColours.interChangableWhite());
 		allergiesBtn.setBackground(CustomColours.Brown());
 		allergiesBtn.setBounds(43, 336, 89, 23);
-		frmPatientView.getContentPane().add(allergiesBtn);
+		if (patient.isAlive())
+			frmPatientView.getContentPane().add(allergiesBtn);
 		/***********************************************/
 		Query getApps = new Query(Viewpoint.Clinical);
 		getApps.setFunction("getAppointmentsOfDoctorAndPatient");
@@ -296,18 +302,23 @@ public class PatientView {
 		ArrayList<Appointment> list = new ArrayList<Appointment>();
 		for (int i = 0; i < size_ap; i++)
 			list.add(new Gson().fromJson(client.read(), Appointment.class));
-		String col[] = { "Patient", "Time", "Type", "Updated" };
+		String col[] = { "Patient", "Date", "Time", "Type", "Attended", "Updated" };
 		int index = 0;
 		String data[][] = new String[list.size()][col.length];
 		for (Appointment ap : list) {
 			data[index][0] = patient.getName() + " " + patient.getSurname();
-			data[index][1] = ap.getTime();
-			data[index][2] = ap.getType();
+			data[index][1] = ap.getDate();
+			data[index][2] = ap.getTime();
+			data[index][3] = ap.getType();
+			if (ap.isAttended())
+				data[index][4] = "YES";
+			else
+				data[index][4] = "NO";
 
 			if (ap.getRecord_id() == -1)
-				data[index][3] = "NO";
+				data[index][5] = "NO";
 			else
-				data[index][3] = "YES";
+				data[index][5] = "YES";
 
 			index++;
 		}
@@ -320,19 +331,65 @@ public class PatientView {
 		scrollPane.setViewportView(appointTable);
 		appointTable = new JTable(model);
 		scrollPane.setViewportView(appointTable);
+
+		JLabel lblNewLabel = new JLabel("Read Only");
+		lblNewLabel.setForeground(CustomColours.Red());
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 23));
+		lblNewLabel.setBounds(43, 86, 123, 27);
+		if (!patient.isAlive())
+			frmPatientView.getContentPane().add(lblNewLabel);
 		appointTable.setDefaultEditor(Object.class, null);
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
 		appointTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int p = appointTable.getSelectedRow();
-				PatientRecord specific = last;
-				for (PatientRecord s : patient_records)
-					if (s.getRecord_id() == list.get(p).getRecord_id())
-						specific = s;
-				Diagnosis.openWindow(client, doctor, patient, drugs, specific);
-				frmPatientView.dispose();
+				if (patient.isAlive()) {
+					int p = appointTable.getSelectedRow();
+					PatientRecord specific = null;
+					Appointment selectedAppointment = list.get(p);
+					Query t = new Query(Viewpoint.Clinical);
+					t.setFunction("getRecordOfAnAppointment");
+					t.addArgument("" + selectedAppointment.getAppoint_id());
+					client.send(t);
 
+					Integer record_id = new Gson().fromJson(client.read(), Integer.class);
+					Integer treatment_id = -1;
+
+					for (int j = 0; j < patient_records.size(); j++) {
+						PatientRecord s = patient_records.get(j);
+						if (s.getRecord_id() == record_id) {
+							treatment_id = s.getTreatment_id();
+							specific = s;
+							break;
+						}
+					}
+					boolean updateRecord = false;
+					boolean updateTreatment = false;
+
+					if (record_id == -1) {
+						// I'll need the last record
+						System.out.println("PAME GIA KAINOURGIO RECORD KAI TREATMENT");
+						specific = last;
+						updateRecord = false;
+					} else {
+						// I'll need to fetch this appointments approved
+						updateRecord = true;
+						System.out.println("PAME GIA ALLAGI TOU RECORD " + record_id);
+						if (treatment_id == -1) {
+							System.out.println("PAME GIA KAINOUTGIO TREATMENT");
+							updateTreatment = false;
+						} else {
+							System.out.println("PAME GIA ALLAGI STO TREATMENT " + treatment_id);
+							updateTreatment = true;
+						}
+
+					}
+
+					Diagnosis.openWindow(client, doctor, patient, drugs, specific, updateRecord, updateTreatment,
+							selectedAppointment);
+					frmPatientView.dispose();
+
+				}
 			}
 		});
 

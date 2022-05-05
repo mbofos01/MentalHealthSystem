@@ -118,6 +118,27 @@
 							<goal>single</goal>
 						</goals>
 					</execution>
+
+					<execution>
+						<id>build-b</id>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>Server.Server</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<!-- <appendAssemblyId>false</appendAssemblyId> -->
+							<finalName>Server</finalName>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+
 					<execution>
 						<id>build-c</id>
 						<configuration>
@@ -137,19 +158,40 @@
 							<goal>single</goal>
 						</goals>
 					</execution>
+
 					<execution>
-						<id>build-b</id>
+						<id>build-d</id>
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>Server.Server</mainClass>
+									<mainClass>Clients.HealthService.HealthServiceLogin</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>
 								<descriptorRef>jar-with-dependencies</descriptorRef>
 							</descriptorRefs>
 							<!-- <appendAssemblyId>false</appendAssemblyId> -->
-							<finalName>Server</finalName>
+							<finalName>HealthService</finalName>
+						</configuration>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>build-e</id>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>Clients.Receptionist.ReceptionistLogin</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<!-- <appendAssemblyId>false</appendAssemblyId> -->
+							<finalName>Receptionist</finalName>
 						</configuration>
 						<phase>package</phase>
 						<goals>

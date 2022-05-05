@@ -2,7 +2,6 @@ package Database;
 
 import java.sql.*;
 import java.util.ArrayList;
-
 import Objects.*;
 import Tools.Clock;
 import Tools.Counter;
@@ -130,6 +129,83 @@ public class JDBC {
 		rec.emptyValue();
 		return rec;
 
+	}
+
+	/**
+	 * This function is used to login a Health Service Staff Person
+	 * 
+	 * @param username String the username we enter
+	 * @param password String the password we enter
+	 * @return Health Service staff instance
+	 */
+	public HealthServ loginHealthService(String username, String password) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call loginHealthService(?,?)}");
+			cs.setString(1, username);
+			cs.setString(2, password);
+			ResultSet rs = cs.executeQuery();
+			HealthServ rec = new HealthServ();
+			int right = 0;
+
+			while (rs.next()) {
+				rec.setId(rs.getInt("hs_id"));
+				rec.setName(rs.getString("name"));
+				rec.setSurname(rs.getString("surname"));
+				rec.setUsername(rs.getString("username"));
+				rec.setEmail(rs.getString("email"));
+				right++;
+
+			}
+			if (right == 0)
+				rec.emptyValue();
+
+			return rec;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		HealthServ rec = new HealthServ();
+		rec.emptyValue();
+		return rec;
+	}
+
+	/**
+	 * This function is used to login a Receptionist
+	 * 
+	 * @param username String the username we enter
+	 * @param password String the password we enter
+	 * @return Receptionist instance
+	 */
+	public ReceptionistObj loginReceptionist(String username, String password) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call loginReceptionist(?,?)}");
+			cs.setString(1, username);
+			cs.setString(2, password);
+			ResultSet rs = cs.executeQuery();
+			ReceptionistObj rec = new ReceptionistObj();
+			int right = 0;
+
+			while (rs.next()) {
+				rec.setId(rs.getInt("id"));
+				rec.setName(rs.getString("name"));
+				rec.setSurname(rs.getString("surname"));
+				rec.setUsername(rs.getString("username"));
+				rec.setEmail(rs.getString("email"));
+				rec.setClinic_id(rs.getInt("clinic_id"));
+				right++;
+
+			}
+			if (right == 0)
+				rec.emptyValue();
+
+			return rec;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		ReceptionistObj rec = new ReceptionistObj();
+		rec.emptyValue();
+		return rec;
 	}
 
 	/**
@@ -293,6 +369,7 @@ public class JDBC {
 				patient.setTelephone(rs.getString("telephone"));
 				patient.setName(rs.getString("name"));
 				patient.setSurname(rs.getString("surname"));
+				patient.setAlive(rs.getBoolean("alive"));
 				flag++;
 			}
 		} catch (SQLException e) {
@@ -546,8 +623,8 @@ public class JDBC {
 						t.setDose(treat_rs.getInt("dose"));
 						t.setDrug_id(treat_rs.getInt("drug_id"));
 						t.setPatient_id(treat_rs.getInt("patient_id"));
-						t.setDate(rs.getString("date"));
-						t.setLast_updated(rs.getString("last_update"));
+						t.setDate(treat_rs.getString("date"));
+						t.setLast_updated(treat_rs.getString("last_update"));
 						if (treat_rs.getInt("warning") == 0)
 							flag = false;
 						else
@@ -975,6 +1052,8 @@ public class JDBC {
 				rec.setDate(rs.getString("date"));
 				rec.setTime(rs.getString("time"));
 				rec.setDropIn(rs.getBoolean("dropIn"));
+				rec.setReceptionist_id(rs.getInt("receptionist_id"));
+				rec.setAttended(rs.getBoolean("attended"));
 
 				PreparedStatement cs2 = this.conn.prepareCall("{call getAppointmentRecords(?)}");
 				cs2.setInt(1, rs.getInt("appoint_id"));
@@ -1160,6 +1239,8 @@ public class JDBC {
 				rec.setDate(rs.getString("date"));
 				rec.setTime(rs.getString("time"));
 				rec.setDropIn(rs.getBoolean("dropIn"));
+				rec.setReceptionist_id(rs.getInt("receptionist_id"));
+				rec.setAttended(rs.getBoolean("attended"));
 
 				PreparedStatement cs2 = this.conn.prepareCall("{call getAppointmentRecords(?)}");
 				cs2.setInt(1, rs.getInt("appoint_id"));
@@ -1183,7 +1264,8 @@ public class JDBC {
 	}
 
 	/**
-	 * This method gets the appointment count of a clinic for a week.
+	 * This method gets the appointment count of a clinic for a week. IF AN
+	 * APPOINTMENT IS ATTENDED
 	 * 
 	 * @param clinic Integer id
 	 * @return Integer array with the patient count
@@ -1212,9 +1294,9 @@ public class JDBC {
 	}
 
 	/**
-	 * Main function for the JDBC, used for testing.
+	 * This method, fetches all the patients from the database
 	 * 
-	 * @param args No arguments needed
+	 * @return An Array List that contains all patients in the database
 	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
@@ -1227,6 +1309,11 @@ public class JDBC {
 
 			PreparedStatement cs = this.conn.prepareCall("{call getPatientByID(?)}");
 			cs.setInt(1, pat);
+	public ArrayList<Patient> getPatients() {
+
+		ArrayList<Patient> patients = new ArrayList<Patient>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call ShowAllPatients()}");
 			ResultSet rs = cs.executeQuery();
 
 			while (rs.next()) {
@@ -1261,6 +1348,15 @@ public class JDBC {
 				return p;
 
 			}
+				p.setPatient_id(rs.getInt("patient_id"));
+				p.setName(rs.getString("name"));
+				p.setSurname(rs.getString("surname"));
+				p.setTelephone(rs.getString("telephone"));
+				p.setEmail(rs.getString("email"));
+				p.setAlive(rs.getBoolean("alive"));
+				patients.add(p);
+			}
+			return patients;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1282,12 +1378,426 @@ public class JDBC {
 				rec.setClinic_id(rs.getInt("clinic_id"));
 				clinics.add(rec);
 
+		return null;
+	}
+
+	/**
+	 * This method, fetches all the clinics in the database
+	 * 
+	 * @return An array list of all the Clinics from the database
+	 */
+	public ArrayList<Clinic> getClinics() {
+		ArrayList<Clinic> clinic_list = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getAllClinics()}");
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Clinic c = new Clinic();
+				c.setClinic_id(rs.getInt("clinic_id"));
+				c.setName(rs.getString("name"));
+
+				clinic_list.add(c);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return clinic_list;
+	}
+
+	/**
+	 * This method, fetches all the patients that were treated with a specific drug
+	 * for a specific condition
+	 * 
+	 * @param cond  Specific condition id
+	 * @param treat Specific treatment id
+	 * @return Array list of patients
+	 */
+	public ArrayList<Patient> getReport2(int cond, int treat) {
+		ArrayList<Patient> patient_list = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getPatientsConditionTreatment(?, ?)}");
+			cs.setInt(1, cond);
+			cs.setInt(2, treat);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Patient p = new Patient();
+				p.setPatient_id(rs.getInt("patient_id"));
+				p.setName(rs.getString("name"));
+				p.setSurname(rs.getString("surname"));
+				p.setDate(rs.getString("birthday"));
+				p.setTelephone(rs.getString("telephone"));
+				p.setEmail(rs.getString("email"));
+				patient_list.add(p);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return patient_list;
+	}
+
+	/**
+	 * This method, fetches all the appointments of a specific clinic
+	 * 
+	 * @param clinic_id Clinic ID
+	 * @return An array list of appointments
+	 */
+	public ArrayList<Appointment> getAppointments(int clinic_id) {
+		ArrayList<Appointment> rendez = new ArrayList<>();
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call showAppointment_All(?)}");
+			cs.setInt(1, clinic_id);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Appointment rec = new Appointment();
+				rec.setDoctor_id(rs.getInt("doctor_id"));
+				rec.setAppoint_id(rs.getInt("appoint_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+				rec.setDate(rs.getString("date"));
+				rec.setTime(rs.getString("time"));
+				rec.setDropIn(rs.getBoolean("dropIn"));
+				rec.setReceptionist_id(rs.getInt("receptionist_id"));
+				rec.setAttended(rs.getBoolean("attended"));
+				rendez.add(rec);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rendez;
+	}
+
+	/**
+	 * This method, generates an array list of patients that have similar name as
+	 * the user input
+	 * 
+	 * @param name Name of the patients that will get searched
+	 * @return An array list of patients that have similar name with what was
+	 *         entered in the search
+	 */
+	public ArrayList<Patient> search(String name) {
+		ArrayList<Patient> patient_list = new ArrayList<>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call searchPatient(?)}");
+			cs.setString(1, name);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Patient p = new Patient();
+				p.setPatient_id(rs.getInt("patient_id"));
+				p.setName(rs.getString("name"));
+				p.setSurname(rs.getString("surname"));
+				p.setDate(rs.getString("birthday"));
+				p.setTelephone(rs.getString("telephone"));
+				p.setEmail(rs.getString("email"));
+				patient_list.add(p);
+
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return clinics;
+		return patient_list;
+	}
+
+	/**
+	 * This method, gets an instance which is a copy of a specific appointment
+	 * 
+	 * @param app_id Appointment ID
+	 * @return An appointment instance
+	 */
+	public Appointment getAppointment(int app_id) {
+		Appointment rec = new Appointment();
+		System.out.println(app_id);
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call ShowAppointment(?)}");
+			cs.setInt(1, app_id);
+			ResultSet rs = cs.executeQuery();
+			while (rs.next()) {
+				rec.setDoctor_id(rs.getInt("doctor_id"));
+				rec.setAppoint_id(rs.getInt("appoint_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+				rec.setDate(rs.getString("date"));
+				rec.setTime(rs.getString("time"));
+				rec.setDropIn(rs.getBoolean("dropIn"));
+				rec.setReceptionist_id(rs.getInt("receptionist_id"));
+				rec.setAttended(rs.getBoolean("attended"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rec;
+	}
+
+	/**
+	 * This method, checks if a patient is still alive
+	 * 
+	 * @param p_id Patient ID
+	 * @return true if the patient is alive, otherwise false
+	 */
+	public boolean CheckIfAlive(int p_id) {
+		boolean is = true;
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call checkIfAlive(?)}");
+			cs.setInt(1, p_id);
+			ResultSet rs = cs.executeQuery();
+			while (rs.next()) {
+				is = rs.getBoolean("alive");
+				System.out.println(is);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return is;
+	}
+
+	/**
+	 * This methos, inserts a new appoint ment into the database
+	 * 
+	 * @param doctor_id       Doctor ID
+	 * @param patient_id      Patient ID
+	 * @param clinic_id       Clinic ID
+	 * @param date            Date
+	 * @param time            Time
+	 * @param drop_in         If it is drop in
+	 * @param receptionist_id Receptionist ID
+	 * @param att             If it was attended or not
+	 * @return true for successful insertion otherwise false
+	 */
+	public boolean insertAppointment(int doctor_id, int patient_id, int clinic_id, String date, String time,
+			int drop_in, int receptionist_id, int att) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertAppointment(?,?,?,?,?,?,?,?)}");
+			cs.setInt(1, doctor_id);
+			cs.setInt(2, patient_id);
+			cs.setInt(3, clinic_id);
+			cs.setString(4, date);
+			cs.setString(5, time);
+			cs.setInt(6, drop_in);
+			cs.setInt(7, receptionist_id);
+			cs.setInt(8, att);
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * This method updates an appointment (attendance)
+	 *
+	 * @param app_id Integer id of an appointment
+	 * @param val    1 or 0 for indicating attendance
+	 * @return true if successful otherwise false
+	 */
+	public boolean updateAppointment(int app_id, int val) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call updateAppointment(?,?)}");
+			cs.setInt(1, val);
+			cs.setInt(2, app_id);
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * This method gets the last treatment given of a specific patient
+	 * 
+	 * @param pid Patient id
+	 * @return Treatment instance (last treatment given)
+	 */
+	public Treatment getPersc(int pid) {
+		Treatment rec = new Treatment();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getPerscription(?)}");
+			cs.setInt(1, pid);
+			ResultSet rs = cs.executeQuery();
+			while (rs.next()) {
+				rec.setDate(rs.getString("date"));
+				rec.setDose(rs.getInt("dose"));
+				rec.setComments(rs.getString("comments"));
+				rec.setDoctor_id(rs.getInt("doctor_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return rec;
+	}
+
+	/**
+	 * This method updates the data for a treatment record.
+	 * 
+	 * @param treat Updated Treatment record
+	 */
+	public void updateTreatment(Treatment treat) {
+		System.out.println("\n\n Update Treatment \n\n");
+
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call updateTreatment(?, ?, ?, ?, ?, ?)}");
+			cs.setInt(1, treat.getTreatment_id());
+			cs.setInt(2, treat.getDose());
+			cs.setString(3, treat.getComments());
+			cs.setBoolean(4, treat.isWarning());
+			cs.setInt(5, treat.getDrug_id());
+			cs.setString(6, treat.getLast_updated());
+			cs.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * This method updates the data for a treatment record.
+	 * 
+	 * @param rec Updated Patient record
+	 */
+	public void updateRecord(PatientRecord rec) {
+		System.out.println("\n\n Update Record \n\n");
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call updateRecord(?, ?, ?, ?, ?, ?, ?, ?)}");
+			cs.setInt(1, rec.getRecord_id());
+			cs.setString(2, Clock.currentSQLTime());
+			cs.setBoolean(3, rec.isSelf_harm());
+			cs.setBoolean(4, rec.isThreat());
+			cs.setBoolean(5, rec.isOverdose());
+			cs.setBoolean(6, rec.isUnderdose());
+			cs.setInt(7, rec.getCondition_id());
+			cs.setInt(8, rec.getTreatment_id());
+			cs.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * This method fetches the ID of the last appointment created.
+	 * 
+	 * @return Integer ID of appointment
+	 */
+	public int getLastAppointmentID() {
+		int ret = -1;
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{  call  getLastAppointmentID()}");
+			ResultSet rs = cs.executeQuery();
+			while (rs.next()) {
+				ret = rs.getInt("last_value");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return ret;
+	}
+
+	/**
+	 * 
+	 * @param patient_id
+	 * @return
+	 */
+	public Treatment getgenTreat(int patient_id) {
+
+		Treatment treat = new Treatment();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call ShowAllTreatments(?)}");
+			cs.setInt(1, patient_id);
+			ResultSet rs = cs.executeQuery();
+			while (rs.next()) {
+				treat.setPatient_id(rs.getInt("patient_id"));
+				treat.setDoctor_id(rs.getInt("doctor_id"));
+				treat.setDose(rs.getInt("dose"));
+				treat.setComments(rs.getString("comments"));
+				if (rs.getInt("warning") == 1)
+					treat.setWarning(true);
+				else
+					treat.setWarning(false);
+				treat.setDrug_id(rs.getInt("drug_id"));
+				if (rs.getInt("accepted") == 1)
+					treat.setAccepted(true);
+				else
+					treat.setAccepted(false);
+				treat.setDate(rs.getString("date"));
+			}
+			return treat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * This method fetches the id of the last record inserted in the Database.
+	 * 
+	 * @return Integer ID
+	 */
+	public int getIDofLastRecord() {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getIDofInsertedRecord()}");
+			ResultSet rs = cs.executeQuery();
+			int ret = -1;
+			while (rs.next()) {
+				ret = rs.getInt("last_value");
+			}
+			return ret;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+
+	}
+
+	/**
+	 * This method fetches the corresponding record of an appointment.
+	 * 
+	 * @param appoint Integer ID of an appointment
+	 * @return Integer ID of the corresponding record
+	 */
+	public int getRecordOfAnAppointment(int appoint) {
+		int rec = -1;
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call checkAppointmentRecordConnection(?)}");
+			cs.setInt(1, appoint);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				rec = rs.getInt("record_id");
+			}
+			return rec;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	/**
+	 * This method inserts a Record and Appointment relationship.
+	 * 
+	 * @param rec     Integer id of record
+	 * @param appoint Integer id of appointment
+	 */
+	public void insertRecordAppointmentRelationship(int rec, int appoint) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertRecordAppointmentRealtion(?,?)}");
+			cs.setInt(1, rec);
+			cs.setInt(2, appoint);
+			cs.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

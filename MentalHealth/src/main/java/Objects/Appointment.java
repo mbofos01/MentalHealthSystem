@@ -37,7 +37,18 @@ public class Appointment {
 	 * Each appointment could have a record id to correspond
 	 */
 	private int record_id;
-
+	/**
+	 * Each appointment could have a receptionist id to correspond
+	 */
+	private int receptionist_id;
+	/**
+	 * Each appointment was attended or not by the patient
+	 */
+	private boolean attended;
+	/**
+	 * Each appointment could have a record id to correspond
+	 */
+	private int clinic_id;
 	/**
 	 * @return the appoint_id
 	 */
@@ -146,6 +157,46 @@ public class Appointment {
 	 */
 	public void setRecord_id(int record_id) {
 		this.record_id = record_id;
+	}
+
+	/**
+	 * 
+	 * @return receptionist_id
+	 */
+	public int getReceptionist_id() {
+		return receptionist_id;
+	}
+
+	/**
+	 * 
+	 * @param receptionist_id Integer
+	 */
+	public void setReceptionist_id(int receptionist_id) {
+		this.receptionist_id = receptionist_id;
+	}
+
+	/**
+	 * 
+	 * @return True if attended, otherwise false
+	 */
+	public boolean isAttended() {
+		return attended;
+	}
+
+	/**
+	 * 
+	 * @param attended Boolean
+	 */
+	public void setAttended(boolean attended) {
+		this.attended = attended;
+	}
+
+	public int getClinic_id() {
+		return clinic_id;
+	}
+
+	public void setClinic_id(int clinic_id) {
+		this.clinic_id = clinic_id;
 	}
 
 }
