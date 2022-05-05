@@ -247,8 +247,7 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
-			else if (incoming.getFunction().equals("getPatientsSearch")) {
+			} else if (incoming.getFunction().equals("getPatientsSearch")) {
 				String name;
 				name = incoming.getArguments().get(0);
 				ArrayList<Patient> rec = database.search(name);
@@ -259,8 +258,7 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
-			else if (incoming.getFunction().equals("newAppointment")) {
+			} else if (incoming.getFunction().equals("newAppointment")) {
 				int doc_id = Integer.parseInt(incoming.getArguments().get(0));
 				int pat_id = Integer.parseInt(incoming.getArguments().get(1));
 				int clinic_id = Integer.parseInt(incoming.getArguments().get(2));
@@ -268,13 +266,57 @@ public class Server {
 				String time = incoming.getArguments().get(4);
 				int drop_in = Integer.parseInt(incoming.getArguments().get(5));
 				int receptionist_id = Integer.parseInt(incoming.getArguments().get(6));
-				boolean flag = database.insertAppointment(doc_id, pat_id, clinic_id, date, time, drop_in, receptionist_id);
+				int att = Integer.parseInt(incoming.getArguments().get(7));
+				boolean flag = database.insertAppointment(doc_id, pat_id, clinic_id, date, time, drop_in,
+						receptionist_id, att);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
+			} else if (incoming.getFunction().equals("getlastID")) {
+				int rec = database.getLastAppointmentID();
+				try {
+					output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			/**
+			 * generateWeeklyReport - Health Service viewpoint may request the creation of a
+			 * weekly report on a specific clinic.
+			 */
+			else if (incoming.getFunction().equals("getDoctors")) {
+				int c_id = Integer.parseInt(incoming.getArguments().get(0));
+				ArrayList<Doctor> rec = database.getDoctorsOfAClinic(c_id);
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else if (incoming.getFunction().equals("getAppointment")) {
+				int clinic;
+				clinic = Integer.parseInt(incoming.getArguments().get(0));
+				ArrayList<Appointment> rec = database.getAppointments(clinic);
+				try {
+					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
+					for (int i = 0; i < rec.size(); i++)
+						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			else if (incoming.getFunction().equals("updateApp")) {
+				int att = Integer.parseInt(incoming.getArguments().get(0));
+				int id = Integer.parseInt(incoming.getArguments().get(1));
+				boolean flag = database.updateAppointment(id, att);
 				if (flag)
 					output.writeBytes("SUCCESS" + System.lineSeparator());
 				else
 					output.writeBytes("FAILURE" + System.lineSeparator());
 			}
-			
 		}
 
 		/**

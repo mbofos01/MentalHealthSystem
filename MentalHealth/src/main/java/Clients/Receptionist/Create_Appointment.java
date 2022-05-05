@@ -13,6 +13,8 @@ import javax.swing.JTextField;
 import com.google.gson.Gson;
 
 import Clients.Client;
+import Objects.Appointment;
+import Objects.Doctor;
 import Objects.Patient;
 import Objects.ReceptionistObj;
 import Tools.Query;
@@ -65,7 +67,7 @@ public class Create_Appointment {
 		crt_app.setBounds(100, 100, 402, 509);
 		crt_app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		crt_app.getContentPane().setLayout(null);
-		
+
 		JCheckBox chk_attend = new JCheckBox("Attended");
 		chk_attend.setEnabled(false);
 		chk_attend.setBounds(142, 383, 93, 21);
@@ -124,12 +126,12 @@ public class Create_Appointment {
 		crt_app.getContentPane().add(txtTime);
 
 		JComboBox<String> cmb_Patient = new JComboBox<String>();
-		cmb_Patient.setEditable(true);
+		// cmb_Patient.setEditable(true);
 		cmb_Patient.setBounds(198, 90, 134, 21);
 		crt_app.getContentPane().add(cmb_Patient);
 
 		JComboBox<String> cmb_Doctor = new JComboBox<String>();
-		cmb_Doctor.setEditable(true);
+		// cmb_Doctor.setEditable(true);
 		cmb_Doctor.setBounds(198, 136, 134, 21);
 		crt_app.getContentPane().add(cmb_Doctor);
 
@@ -143,8 +145,48 @@ public class Create_Appointment {
 		txtClinic.setColumns(10);
 		txtClinic.setBounds(198, 302, 134, 19);
 		crt_app.getContentPane().add(txtClinic);
-		
-		if (p==-1) {
+
+		Query q = new Query(Viewpoint.Receptionist);
+		q.setFunction("getPatients");
+		client.send(q);
+		Integer size = new Gson().fromJson(client.read(), Integer.class);
+		ArrayList<Patient> patient_list = new ArrayList<Patient>();
+		for (int i = 0; i < size; i++)
+			patient_list.add(new Gson().fromJson(client.read(), Patient.class));
+		int index = 0;
+		String data[][] = new String[patient_list.size()][5];
+		for (Patient p1 : patient_list) {
+			data[index][0] = p1.getPatient_id() + "";
+			data[index][1] = p1.getName();
+			data[index][2] = p1.getSurname();
+			data[index][3] = p1.getTelephone();
+			data[index][4] = p1.getEmail();
+			String add = data[index][0] + " " + data[index][1] + " " + data[index][2];
+			cmb_Patient.insertItemAt(add, index);
+			index++;
+		}
+
+		Query q1 = new Query(Viewpoint.Receptionist);
+		q1.setFunction("getDoctors");
+		q1.addArgument(model.getClinic_id() + "");
+		client.send(q1);
+
+		Integer size1 = new Gson().fromJson(client.read(), Integer.class);
+		ArrayList<Doctor> doctor_list = new ArrayList<Doctor>();
+		for (int i = 0; i < size1; i++)
+			doctor_list.add(new Gson().fromJson(client.read(), Doctor.class));
+		int index1 = 0;
+		String data1[][] = new String[doctor_list.size()][3];
+		for (Doctor p1 : doctor_list) {
+			data1[index1][0] = p1.getName();
+			data1[index1][1] = p1.getSurname();
+			data1[index1][2] = p1.getId() + "";
+			String add = data1[index1][2] + " " + data1[index1][0] + " " + data1[index1][1];
+			cmb_Doctor.insertItemAt(add, index1);
+			index1++;
+		}
+
+		if (p == -1) {
 			chk_attend.setEnabled(false);
 			chk_attend.setSelected(false);
 			chk_drop.setEnabled(true);
@@ -152,15 +194,18 @@ public class Create_Appointment {
 			txtTime.setEnabled(true);
 			txtAppID.setEnabled(false);
 			txt_Receptionist.setEnabled(false);
-			cmb_Patient.setEnabled(true);
-			cmb_Doctor.setEnabled(true);
 			txtClinic.setEnabled(false);
-			
-			txt_Receptionist.setText(model.getId()+"");
-			txtClinic.setText(model.getClinic_id()+"");
-			txtAppID.setText(model.getClinic_id()+"");
-		}
-		else {
+			cmb_Doctor.setEnabled(true);
+			cmb_Patient.setEnabled(true);
+
+			txt_Receptionist.setText(model.getId() + "");
+			txtClinic.setText(model.getClinic_id() + "");
+			Query q2 = new Query(Viewpoint.Receptionist);
+			q2.setFunction("getlastID");
+			client.send(q2);
+			Integer last = new Gson().fromJson(client.read(), Integer.class) + 1;
+			txtAppID.setText(last + "");
+		} else {
 			chk_attend.setEnabled(true);
 			chk_drop.setEnabled(false);
 			txtDate.setEnabled(false);
@@ -170,30 +215,74 @@ public class Create_Appointment {
 			cmb_Patient.setEnabled(false);
 			cmb_Doctor.setEnabled(false);
 			txtClinic.setEnabled(false);
-			
-			//chk_drop.setSelected(false);
-			//chk_attend.setSelected(false);
-		}
+
+			Query q3 = new Query(Viewpoint.Receptionist);
+			q3.setFunction("getAppointment");
+			q3.addArgument(a + "");
+			client.send(q3);
+			new Gson().fromJson(client.read(), Integer.class);
+			Appointment app = new Appointment();
+			app = new Gson().fromJson(client.read(), Appointment.class);
+			txtAppID.setText(app.getAppoint_id() + "");
+			txt_Receptionist.setText(app.getReceptionist_id() + "");
+			txtClinic.setText(model.getClinic_id() + "");
+			txtDate.setText(app.getDate());
+			txtTime.setText(app.getTime());
+			if (app.getType().equals("1"))
+				chk_drop.setSelected(true);
+			else
+				chk_drop.setSelected(false);
+			if (app.isAttended())
+				chk_drop.setSelected(true);
+			else
+				chk_drop.setSelected(false);
 		
+			/**
+			int indexd = 0;
+			for (Doctor p1 : doctor_list)
+				if (p1.getId()== app.getDoctor_id()) {
+					cmb_Doctor.setSelectedIndex(indexd);
+					indexd++;
+					break;
+				}
+			indexd = 0;
+			for (Patient p1 : patient_list)
+				if (p1.getPatient_id() == app.getPatient_id()) {
+					cmb_Patient.setSelectedIndex(indexd);
+					indexd++;
+					break;
+				}
+				**/
+		}
+
 		JButton btnNewButton = new JButton("Submit");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (p==-1) {
+				if (p == -1) {
 					Query q = new Query(Viewpoint.Receptionist);
 					q.setFunction("newAppointment");
-					// insertAppointment(int doctor_id, int patient_id, int clinic_id, String date, String time,
-					//int drop_in, int receptionist_id)
+					q.addArgument(cmb_Doctor.getSelectedItem().toString().split(" ")[0]);
+					q.addArgument(cmb_Patient.getSelectedItem().toString().split(" ")[0]);
 					q.addArgument(txtClinic.getText());
 					q.addArgument(txtDate.getText());
 					q.addArgument(txtTime.getText());
-					//q.addArgument(chk_drop.se)
+					if (chk_drop.isSelected())
+						q.addArgument("1");
+					else
+						q.addArgument("0");
 					q.addArgument(txt_Receptionist.getText());
-				//niaou
+					q.addArgument("0");
 					client.send(q);
 					JOptionPane.showMessageDialog(crt_app.getContentPane(), "Added successfully");
-				}
-				else {
-					
+				} else {
+					Query q2 = new Query(Viewpoint.Receptionist);
+					q2.setFunction("updateApp");
+					q2.addArgument(txtAppID.getText());
+					if (chk_drop.isSelected())
+						q2.addArgument("1");
+					else
+						q2.addArgument("0");
+					client.send(q2);
 				}
 			}
 		});

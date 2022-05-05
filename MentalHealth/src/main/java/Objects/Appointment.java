@@ -45,7 +45,10 @@ public class Appointment {
 	 * Each appointment was attended or not by the patient
 	 */
 	private boolean attended;
-
+	/**
+	 * Each appointment could have a record id to correspond
+	 */
+	private int clinic_id;
 	/**
 	 * @return the appoint_id
 	 */
@@ -186,6 +189,14 @@ public class Appointment {
 	 */
 	public void setAttended(boolean attended) {
 		this.attended = attended;
+	}
+
+	public int getClinic_id() {
+		return clinic_id;
+	}
+
+	public void setClinic_id(int clinic_id) {
+		this.clinic_id = clinic_id;
 	}
 
 }

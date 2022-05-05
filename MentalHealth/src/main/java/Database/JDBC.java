@@ -1197,9 +1197,9 @@ public class JDBC {
 	 * @return
 	 */
 	public boolean insertAppointment(int doctor_id, int patient_id, int clinic_id, String date, String time,
-			int drop_in, int receptionist_id) {
+			int drop_in, int receptionist_id, int att) {
 		try {
-			PreparedStatement cs = this.conn.prepareCall("{call insertAppointment(?,?,?,?,?,?,?)}");
+			PreparedStatement cs = this.conn.prepareCall("{call insertAppointment(?,?,?,?,?,?,?,?)}");
 			cs.setInt(1, doctor_id);
 			cs.setInt(2, patient_id);
 			cs.setInt(3, clinic_id);
@@ -1207,6 +1207,7 @@ public class JDBC {
 			cs.setString(5, time);
 			cs.setInt(6, drop_in);
 			cs.setInt(7, receptionist_id);
+			cs.setInt(8, att);
 			cs.execute();
 
 			return true;
@@ -1316,7 +1317,6 @@ public class JDBC {
 				ret = rs.getInt("last_value");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
