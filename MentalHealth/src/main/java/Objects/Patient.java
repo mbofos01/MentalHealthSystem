@@ -33,6 +33,9 @@ public class Patient {
 	 * Each patient could have a telephone.
 	 */
 	private String telephone;
+	/**
+	 * Each patient must have an alive flag.
+	 */
 	private boolean alive;
 
 	/**

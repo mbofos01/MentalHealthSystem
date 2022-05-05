@@ -53,19 +53,19 @@ class PatientTest {
 	@Test
 	@DisplayName("Ensure that a patient has a specific patient Email")
 	void testPatientEmail() {
-		assertEquals(d.get(0).getEmail(), "example@domain");
+		assertEquals(d.get(0).getEmail(), "epl441.mentalhealth@gmail.com");
 	}
 
 	@Test
-	@DisplayName("Ensure that a doctor has a specific patient Email")
+	@DisplayName("Ensure that a patient is dead")
 	void testPatientAlive() {
-		assertFalse(dead.get(1).isAlive());
+		assertFalse(dead.get(0).isAlive());
 	}
 
 	@Test
 	@DisplayName("Ensure that a patient has a specific patient Email (null)")
 	void testPatientEmail2() {
-		assertNull(dead.get(1).getEmail());
+		assertNotEquals(dead.get(0).getEmail(), "otheremail@gmail.com");
 	}
 
 }
