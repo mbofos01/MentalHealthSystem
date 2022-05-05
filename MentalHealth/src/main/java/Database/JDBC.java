@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import Objects.*;
 import Tools.Clock;
 import Tools.Counter;
+import Tools.RequestType;
+import Tools.Viewpoint;
 
 /**
  * This object is the middleware between the server and the SQL Database. Each
@@ -245,6 +247,31 @@ public class JDBC {
 		return rec;
 	}
 
+	public Allergy getAllergy(int id) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getAllergy(?)}");
+			cs.setInt(1, id);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Allergy rec = new Allergy();
+				rec.setAllergy_id(rs.getInt("allergy_id"));
+				rec.setPatient_id(rs.getInt("patient_id"));
+				rec.setDrug_id(rs.getInt("drug_id"));
+				rec.setAccepted(rs.getBoolean("accepted"));
+				rec.setDate(rs.getString("date"));
+				rec.setLast_updated(rs.getString("last_updated"));
+				return rec;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Allergy rec = new Allergy();
+		rec.setAllergy_id(-1);
+		System.out.println("rec");
+		return rec;
+	}
+
 	/**
 	 * This method fetched a patient based on their id.
 	 * 
@@ -317,6 +344,68 @@ public class JDBC {
 			cs.setString(4, Tools.Clock.currentSQLTime());
 			cs.execute();
 
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean insertDoctorPatientRelationship(int patient_id, int doctor_id) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertDoctorPatientRelationship(?,?)}");
+			cs.setInt(1, patient_id);
+			cs.setInt(2, doctor_id);
+			cs.execute();
+
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean changeAllAccept(int recId) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call changeAllAccept(?)}");
+			cs.setInt(1, recId);
+			cs.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean changeRecAccept(int recId) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call changeRecAccept(?)}");
+			cs.setInt(1, recId);
+			cs.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean changeDeath(int recId) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call changeDeath(?)}");
+			cs.setInt(1, recId);
+			cs.execute();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean changeTreatAccept(int recId) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call changeTreatAccept(?)}");
+			cs.setInt(1, recId);
+			cs.execute();
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -765,6 +854,60 @@ public class JDBC {
 		return merged;
 	}
 
+	public ArrayList<Doctor> getDoctors() {
+
+		ArrayList<Doctor> doctors = new ArrayList<>();
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call getAllDoctors()}");
+
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Doctor doc = new Doctor();
+				doc.setId(rs.getInt("doctor_id"));
+				doc.setUsername(rs.getString("username"));
+				doc.setSurname(rs.getString("surname"));
+				doc.setClinic_id(rs.getInt("clinic_id"));
+				doc.setName(rs.getString("name"));
+
+				doctors.add(doc);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return doctors;
+	}
+
+	public ArrayList<Patient> getPatients() {
+
+		ArrayList<Patient> patients = new ArrayList<Patient>();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call ShowAllPatients()}");
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Patient p = new Patient();
+				p.setPatient_id(rs.getInt("patient_id"));
+				p.setName(rs.getString("name"));
+				p.setSurname(rs.getString("surname"));
+				p.setTelephone(rs.getString("telephone"));
+				p.setEmail(rs.getString("email"));
+
+				p.setAlive(rs.getBoolean("alive"));
+				patients.add(p);
+			}
+			return patients;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 	/**
 	 * Helper function checks if a doctor belongs to a list.
 	 * 
@@ -854,6 +997,144 @@ public class JDBC {
 		return rendez;
 	}
 
+	public ArrayList<Request> getRequests() {
+		ArrayList<Request> requests = new ArrayList<>();
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call getDeaths()}");
+
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Request rec = new Request();
+				rec.setAccepted(0);
+				rec.setDescr(null);
+				rec.setDt(rs.getString("date"));
+				rec.setType(RequestType.Death);
+				rec.setView(Viewpoint.Clinical);
+				rec.setId(rs.getInt("death_id"));
+				rec.setInfoA(null);
+
+				rec.setInfoR(null);
+				rec.setInfoT(null);
+
+				PreparedStatement p = this.conn.prepareCall("{call getPatient(?)}");
+				p.setInt(1, rs.getInt("patient_id"));
+				ResultSet r = p.executeQuery();
+				ArrayList<String> list = new ArrayList<>();
+				while (r.next()) {
+					String name = r.getString("name");
+					list.add(name);
+				}
+
+				rec.setInfoD(list);
+
+				requests.add(rec);
+			}
+
+			PreparedStatement cs1 = this.conn.prepareCall("{call getRequestAllergies()}");
+
+			ResultSet rs1 = cs1.executeQuery();
+
+			while (rs1.next()) {
+
+				Request rec = new Request();
+				rec.setAccepted(0);
+				rec.setDescr(null);
+				rec.setDt(rs1.getString("date"));
+				rec.setType(RequestType.Allergies);
+				rec.setView(Viewpoint.Clinical);
+				rec.setId(rs1.getInt("allergy_id"));
+
+				rec.setInfoD(null);
+
+				rec.setInfoR(null);
+				rec.setInfoT(null);
+
+				PreparedStatement p = this.conn.prepareCall("{call getDrug(?)}");
+				p.setInt(1, rs1.getInt("drug_id"));
+				ResultSet r = p.executeQuery();
+				ArrayList<String> list = new ArrayList<>();
+				while (r.next()) {
+					String name = r.getString("name");
+					list.add(name);
+				}
+
+//thore mpas j kamo tpt 
+				rec.setInfoA(list);
+
+				requests.add(rec);
+
+			}
+			PreparedStatement cs2 = this.conn.prepareCall("{call getRequestRecord()}");
+
+			ResultSet rs2 = cs2.executeQuery();
+
+			while (rs2.next()) {
+				Request rec = new Request();
+				rec.setAccepted(0);
+				rec.setDescr(null);
+				rec.setDt(rs2.getString("date"));
+				rec.setType(RequestType.Reccord);
+				rec.setView(Viewpoint.Clinical);
+				rec.setId(rs2.getInt("record_id"));
+
+				rec.setInfoD(null);
+
+				rec.setInfoA(null);
+				rec.setInfoT(null);
+
+				PreparedStatement p = this.conn.prepareCall("{call getConditionName(?)}");
+				p.setInt(1, rs2.getInt("condition_id"));
+				ResultSet r = p.executeQuery();
+				ArrayList<String> list = new ArrayList<>();
+				while (r.next()) {
+					String name = r.getString("name");
+					list.add(name);
+				}
+
+				rec.setInfoR(list);
+				requests.add(rec);
+			}
+
+			PreparedStatement cs3 = this.conn.prepareCall("{call getRequestTreatment()}");
+
+			ResultSet rs3 = cs3.executeQuery();
+
+			while (rs3.next()) {
+				Request rec = new Request();
+				rec.setAccepted(0);
+				rec.setDescr(null);
+				rec.setDt(rs3.getString("date"));
+				rec.setType(RequestType.Treatment);
+				rec.setView(Viewpoint.Clinical);
+				rec.setId(rs3.getInt("treatment_id"));
+
+				rec.setInfoD(null);
+
+				rec.setInfoA(null);
+				rec.setInfoR(null);
+
+				PreparedStatement p = this.conn.prepareCall("{call getTreatment(?)}");
+				p.setInt(1, rs3.getInt("treatment_id"));
+				ResultSet r = p.executeQuery();
+				ArrayList<String> list = new ArrayList<>();
+
+				while (r.next()) {
+					String name = r.getString("comments");
+					list.add(name);
+				}
+
+				rec.setInfoT(list);
+
+				requests.add(rec);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return requests;
+	}
+
 	/**
 	 * This method fetches the appointments of a patient with a doctor, based on
 	 * their id.
@@ -937,7 +1218,76 @@ public class JDBC {
 	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		base.getWeeksAppointments(0);
+		base.insertDoctorPatientRelationship(4, 0);
+
+	}
+
+	public Patient getPatientByID(int pat) {
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call getPatientByID(?)}");
+			cs.setInt(1, pat);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Patient p = new Patient();
+				p.setEmail(rs.getString("email"));
+				p.setName(rs.getString("name"));
+				p.setSurname(rs.getString("surname"));
+				p.setAlive(rs.getBoolean("alive"));
+
+				return p;
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public PatientRecord getRecordByID(int pat) {
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call getRecordByID(?)}");
+			cs.setInt(1, pat);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				PatientRecord p = new PatientRecord();
+				p.setSelf_harm(rs.getBoolean("selfharm"));
+				p.setPatient_id(rs.getInt("patient_id"));
+
+				return p;
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public ArrayList<Clinic> getClinics() {
+		ArrayList<Clinic> clinics = new ArrayList<>();
+		try {
+
+			PreparedStatement cs = this.conn.prepareCall("{call getClinics()}");
+
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				Clinic rec = new Clinic();
+				rec.setName(rs.getString("name"));
+				rec.setClinic_id(rs.getInt("clinic_id"));
+				clinics.add(rec);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return clinics;
 	}
 
 }

@@ -10,6 +10,12 @@ import Clients.Client;
 import Objects.RecordsStaff;
 import Tools.Query;
 import Tools.Viewpoint;
+import java.awt.Font;
+import javax.swing.JButton;
+import java.awt.SystemColor;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * This application windows is used (as of now) just for displaying some info
@@ -62,29 +68,64 @@ public class WelcomeRecordStaff {
 	 */
 	private void initialize(Client client, RecordsStaff model) {
 		Query q = new Query(Viewpoint.Clinical);
+		
 		q.setFunction("see");
 		client.send(q);
 		frame = new JFrame();
-		frame.setBounds(100, 100, 697, 436);
+		frame.getContentPane().setForeground(Color.RED);
+		frame.setBounds(100, 100, 899, 442);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
 		JLabel lblNewLabel = new JLabel(model.getName());
-		lblNewLabel.setBounds(69, 55, 110, 28);
+		lblNewLabel.setFont(new Font("Segoe Script", Font.PLAIN, 29));
+		lblNewLabel.setBounds(333, 22, 174, 48);
 		frame.getContentPane().add(lblNewLabel);
 
 		JLabel lblNewLabel_1 = new JLabel(model.getSurname());
-		lblNewLabel_1.setBounds(249, 55, 117, 28);
+		lblNewLabel_1.setFont(new Font("Segoe Script", Font.PLAIN, 29));
+		lblNewLabel_1.setBounds(517, 22, 195, 48);
 		frame.getContentPane().add(lblNewLabel_1);
-
-		JLabel lblNewLabel_2 = new JLabel(model.getUsername());
-		lblNewLabel_2.setBounds(448, 55, 110, 40);
-		frame.getContentPane().add(lblNewLabel_2);
-
-		JLabel lblNewLabel_3 = new JLabel(model.getEmail());
-		lblNewLabel_3.setBounds(69, 125, 172, 28);
-		frame.getContentPane().add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("Welcome");
+		lblNewLabel_4.setFont(new Font("Segoe Script", Font.BOLD, 32));
+		lblNewLabel_4.setBounds(152, 10, 243, 70);
+		frame.getContentPane().add(lblNewLabel_4);
+		
+		JButton btnNewButton = new JButton("Transactions");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Transactions.openWindow(client);
+			}
+		});
+		btnNewButton.setBackground(SystemColor.inactiveCaption);
+		btnNewButton.setFont(new Font("Segoe Script", Font.PLAIN, 20));
+		btnNewButton.setBounds(82, 161, 183, 151);
+		frame.getContentPane().add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("View Requests");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Requests.openWindow(client);
+			}
+		});
+		btnNewButton_1.setFont(new Font("Segoe Script", Font.PLAIN, 20));
+		btnNewButton_1.setBackground(SystemColor.inactiveCaption);
+		btnNewButton_1.setBounds(383, 161, 183, 151);
+		frame.getContentPane().add(btnNewButton_1);
+		
+		JButton btnNewButton_1_1 = new JButton("Assign Patients");
+		btnNewButton_1_1.setFont(new Font("Segoe Script", Font.PLAIN, 16));
+		btnNewButton_1_1.setBackground(SystemColor.inactiveCaption);
+		btnNewButton_1_1.setBounds(676, 162, 183, 151);
+		btnNewButton_1_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Assign.openWindow(client);
+			}
+		});
+		frame.getContentPane().add(btnNewButton_1_1);
+		
+		
 
 	}
-
 }

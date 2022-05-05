@@ -33,6 +33,16 @@ public class Patient {
 	 * Each patient could have a telephone.
 	 */
 	private String telephone;
+	
+	private boolean alive;
+
+	public boolean isAlive() {
+		return alive;
+	}
+
+	public void setAlive(boolean alive) {
+		this.alive = alive;
+	}
 
 	/**
 	 * @return the patient_id

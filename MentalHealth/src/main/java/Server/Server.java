@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import Database.JDBC;
 import Objects.Allergy;
 import Objects.Appointment;
+import Objects.Clinic;
 import Objects.Comment;
 import Objects.Condition;
 import Objects.Doctor;
@@ -23,6 +24,7 @@ import Objects.Patient;
 import Objects.PatientRecord;
 import Objects.RecordsStaff;
 import Objects.ReportData;
+import Objects.Request;
 import Objects.Treatment;
 import Tools.Clock;
 import Tools.FileResourcesUtils;
@@ -374,6 +376,95 @@ public class Server {
 					rec = new RecordsStaff();
 					rec.emptyValue();
 				}
+				output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
+			} else if (incoming.getFunction().equals("getClinics")) {
+				ArrayList<Clinic> clinics = database.getClinics();
+				try {
+					output.writeBytes(new Gson().toJson(clinics.size()) + System.lineSeparator());
+					for (int i = 0; i < clinics.size(); i++)
+						output.writeBytes(new Gson().toJson(clinics.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else if (incoming.getFunction().equals("getRequests")) {
+				ArrayList<Request> reqs = database.getRequests();
+				try {
+					output.writeBytes(new Gson().toJson(reqs.size()) + System.lineSeparator());
+					for (int i = 0; i < reqs.size(); i++)
+						output.writeBytes(new Gson().toJson(reqs.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else if (incoming.getFunction().equals("getAllergy")) {
+				int al_id = Integer.parseInt(incoming.getArguments().get(0));
+				Allergy allergy = database.getAllergy(al_id);
+				try {
+					output.writeBytes(new Gson().toJson(allergy) + System.lineSeparator());
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else if (incoming.getFunction().equals("changeTreatAccept")) {
+				int id = Integer.parseInt(incoming.getArguments().get(0));
+				boolean flag = database.changeTreatAccept(id);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
+			} else if (incoming.getFunction().equals("changeAllAccept")) {
+				int id = Integer.parseInt(incoming.getArguments().get(0));
+				boolean flag = database.changeAllAccept(id);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
+			} else if (incoming.getFunction().equals("changeRecAccept")) {
+				int id = Integer.parseInt(incoming.getArguments().get(0));
+				boolean flag = database.changeRecAccept(id);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
+			} else if (incoming.getFunction().equals("changeDeath")) {
+				int id = Integer.parseInt(incoming.getArguments().get(0));
+				boolean flag = database.changeDeath(id);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
+			} else if (incoming.getFunction().equals("getPatients")) {
+				ArrayList<Patient> reqs = database.getPatients();
+				try {
+					output.writeBytes(new Gson().toJson(reqs.size()) + System.lineSeparator());
+					for (int i = 0; i < reqs.size(); i++)
+						output.writeBytes(new Gson().toJson(reqs.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else if (incoming.getFunction().equals("getDoctors")) {
+				ArrayList<Doctor> reqs = database.getDoctors();
+				try {
+					output.writeBytes(new Gson().toJson(reqs.size()) + System.lineSeparator());
+					for (int i = 0; i < reqs.size(); i++)
+						output.writeBytes(new Gson().toJson(reqs.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else if (incoming.getFunction().equals("insertDoctorPatientRelationship")) {
+				int doc_id = Integer.parseInt(incoming.getArguments().get(1));
+				int p_id = Integer.parseInt(incoming.getArguments().get(0));
+				boolean flag = database.insertDoctorPatientRelationship(p_id, doc_id);
+				if (flag)
+					output.writeBytes("SUCCESS" + System.lineSeparator());
+				else
+					output.writeBytes("FAILURE" + System.lineSeparator());
+			} else if (incoming.getFunction().equals("getPatientByID")) {
+				int id = Integer.parseInt(incoming.getArguments().get(0));
+				Patient rec = database.getPatientByID(id);
+				output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
+			} else if (incoming.getFunction().equals("getRecordByID")) {
+				int id = Integer.parseInt(incoming.getArguments().get(0));
+				PatientRecord rec = database.getRecordByID(id);
 				output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
 			}
 

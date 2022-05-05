@@ -15,13 +15,17 @@ import javax.swing.SwingConstants;
 import com.google.gson.Gson;
 
 import Clients.Client;
+import Objects.Clinic;
+import Objects.Condition;
 import Objects.RecordsStaff;
 import Tools.Query;
 import Tools.Viewpoint;
 import Tools.CustomColours;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 /**
  * In-page for the Medical Records Management Viewpoint. As stated in the basic
@@ -134,7 +138,7 @@ public class MedicalRecordsLogin {
 		loginbtn.setBackground(CustomColours.Green());
 		loginbtn.setForeground(CustomColours.White());
 		loginbtn.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		loginbtn.setBounds(102, 295, 138, 38);
+		loginbtn.setBounds(102, 316, 138, 38);
 		frmMedicalRecordsStaff.getContentPane().add(loginbtn);
 
 		JButton cancelbtn = new JButton("Cancel");
@@ -146,7 +150,7 @@ public class MedicalRecordsLogin {
 		cancelbtn.setForeground(CustomColours.White());
 		cancelbtn.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		cancelbtn.setBackground(CustomColours.Red());
-		cancelbtn.setBounds(280, 295, 138, 38);
+		cancelbtn.setBounds(280, 316, 138, 38);
 		frmMedicalRecordsStaff.getContentPane().add(cancelbtn);
 
 		JLabel title = new JLabel("Login to Medical Records");
@@ -162,5 +166,9 @@ public class MedicalRecordsLogin {
 		title2.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		title2.setBounds(154, 69, 239, 38);
 		frmMedicalRecordsStaff.getContentPane().add(title2);
+
+		
+
+		
 	}
 }
