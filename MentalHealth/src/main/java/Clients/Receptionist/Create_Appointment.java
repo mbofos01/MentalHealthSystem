@@ -25,17 +25,47 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
+/**
+ * Interface for Receptionists. Via this Interface a receptionist can create
+ * Appointments and update appointments
+ * 
+ * @author Demetra Hadjicosti
+ *
+ */
 public class Create_Appointment {
-
+	/**
+	 * The frame (window of the application)
+	 */
 	private JFrame crt_app;
+	/**
+	 * Field for the Appointment ID
+	 */
 	private JTextField txtAppID;
+	/**
+	 * Field for the Receptionist ID
+	 */
 	private JTextField txt_Receptionist;
+	/**
+	 * Field for the Date
+	 */
 	private JTextField txtDate;
+	/**
+	 * Field for the Time
+	 */
 	private JTextField txtTime;
+	/**
+	 * Field for the Clinic ID
+	 */
 	private JTextField txtClinic;
 
 	/**
-	 * Launch the application.
+	 * Main Procedure of the class that initiates the application
+	 * 
+	 * @param client     Client object for server client communication
+	 * @param model      Health Service staff instance
+	 * @param p          State of the interface (-1 for add, 1 for update)
+	 * @param a          ID of the appointment selected (update mode)
+	 * @param id_patient ID of the patient
 	 */
 	public static void main(Client client, ReceptionistObj model, int p, int a, int id_patient) {
 		EventQueue.invokeLater(new Runnable() {
@@ -51,14 +81,26 @@ public class Create_Appointment {
 	}
 
 	/**
-	 * Create the application.
+	 * Create the Application
+	 * 
+	 * @param client     Client object for server client communication
+	 * @param model      Health Service staff instance
+	 * @param p          State of the interface (-1 for add, 1 for update)
+	 * @param a          ID of the appointment selected (update mode)
+	 * @param id_patient ID of the patient
 	 */
 	public Create_Appointment(Client client, ReceptionistObj model, int p, int a, int id_patient) {
 		initialize(client, model, p, a, id_patient);
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame
+	 * 
+	 * @param client     Client object for server client communication
+	 * @param model      Health Service staff instance
+	 * @param p          State of the interface (-1 for add, 1 for update)
+	 * @param a          ID of the appointment selected (update mode)
+	 * @param id_patient ID of the patient
 	 */
 	private void initialize(Client client, ReceptionistObj model, int p, int a, int id_patient) {
 		crt_app = new JFrame();
@@ -126,12 +168,10 @@ public class Create_Appointment {
 		crt_app.getContentPane().add(txtTime);
 
 		JComboBox<String> cmb_Patient = new JComboBox<String>();
-		// cmb_Patient.setEditable(true);
 		cmb_Patient.setBounds(179, 90, 165, 21);
 		crt_app.getContentPane().add(cmb_Patient);
 
 		JComboBox<String> cmb_Doctor = new JComboBox<String>();
-		// cmb_Doctor.setEditable(true);
 		cmb_Doctor.setBounds(179, 136, 165, 21);
 		crt_app.getContentPane().add(cmb_Doctor);
 		JButton btnNewButton = new JButton("Submit");
@@ -153,7 +193,6 @@ public class Create_Appointment {
 		ArrayList<Patient> patient_list = new ArrayList<Patient>();
 		for (int i = 0; i < size; i++) {
 			Patient toAdd = new Gson().fromJson(client.read(), Patient.class);
-			System.out.println(toAdd.isAlive() + " " + toAdd.getName());
 			if (toAdd.isAlive() && p == -1)
 				patient_list.add(toAdd);
 		}
@@ -216,17 +255,15 @@ public class Create_Appointment {
 			txtTime.setEnabled(false);
 			txtAppID.setEnabled(false);
 			txt_Receptionist.setEnabled(false);
-			cmb_Patient.setEnabled(false);
 			cmb_Doctor.setEnabled(false);
+			cmb_Patient.setEnabled(false);
 			txtClinic.setEnabled(false);
 
 			Query q4 = new Query(Viewpoint.Receptionist);
 			q4.setFunction("CheckIfAlive");
 			q4.addArgument(id_patient + "");
-			System.out.println(a);
 			client.send(q4);
 			boolean alive = new Gson().fromJson(client.read(), Boolean.class);
-			System.out.println("Am i alive? " + alive);
 			chk_attend.setEnabled(alive);
 			btnNewButton.setEnabled(alive);
 
@@ -250,21 +287,37 @@ public class Create_Appointment {
 				chk_attend.setSelected(false);
 
 			int indexd = 0;
-			for (Doctor p1 : doctor_list) {
-				if (p1.getId() == app.getDoctor_id()) {
+			for (indexd = 0; indexd < cmb_Doctor.getItemCount(); indexd++) {
+				if (Integer.parseInt(cmb_Doctor.getItemAt(indexd).toString().split(" ")[0]) == app.getDoctor_id()) {
 					cmb_Doctor.setSelectedIndex(indexd);
-					break;
 				}
-				indexd++;
 			}
-			indexd = 0;
+
+			q = new Query(Viewpoint.Receptionist);
+			q.setFunction("getPatients");
+			client.send(q);
+			size = new Gson().fromJson(client.read(), Integer.class);
+			patient_list = new ArrayList<Patient>();
+			for (int i = 0; i < size; i++) {
+				Patient toAdd = new Gson().fromJson(client.read(), Patient.class);
+				patient_list.add(toAdd);
+			}
+			index1 = 0;
+			data = new String[patient_list.size()][5];
 			for (Patient p1 : patient_list) {
-				if (p1.getPatient_id() == app.getPatient_id()) {
-					cmb_Patient.setSelectedIndex(indexd);
-					break;
-				}
-				indexd++;
+				data[index1][0] = p1.getPatient_id() + "";
+				data[index1][1] = p1.getName();
+				data[index1][2] = p1.getSurname();
+				data[index1][3] = p1.getTelephone();
+				data[index1][4] = p1.getEmail();
+				String add = data[index1][0] + " " + data[index1][1] + " " + data[index1][2];
+				cmb_Patient.insertItemAt(add, index1);
+				index1++;
 			}
+
+			for (indexd = 0; indexd < cmb_Patient.getItemCount(); indexd++)
+				if (Integer.parseInt(cmb_Patient.getItemAt(indexd).toString().split(" ")[0]) == app.getPatient_id())
+					cmb_Patient.setSelectedIndex(indexd);
 		}
 
 		btnNewButton.addActionListener(new ActionListener() {

@@ -132,9 +132,9 @@ public class JDBC {
 	/**
 	 * This function is used to login a Health Service Staff Person
 	 * 
-	 * @param username
-	 * @param password
-	 * @return
+	 * @param username String the username we enter
+	 * @param password String the password we enter
+	 * @return Health Service staff instance
 	 */
 	public HealthServ loginHealthService(String username, String password) {
 		try {
@@ -170,9 +170,9 @@ public class JDBC {
 	/**
 	 * This function is used to login a Receptionist
 	 * 
-	 * @param username
-	 * @param password
-	 * @return
+	 * @param username String the username we enter
+	 * @param password String the password we enter
+	 * @return Receptionist instance
 	 */
 	public ReceptionistObj loginReceptionist(String username, String password) {
 		try {
@@ -1013,8 +1013,9 @@ public class JDBC {
 	}
 
 	/**
+	 * This method, fetches all the patients from the database
 	 * 
-	 * @return
+	 * @return An Array List that contains all patients in the database
 	 */
 	public ArrayList<Patient> getPatients() {
 
@@ -1043,8 +1044,9 @@ public class JDBC {
 	}
 
 	/**
+	 * This method, fetches all the clinics in the database
 	 * 
-	 * @return
+	 * @return An array list of all the Clinics from the database
 	 */
 	public ArrayList<Clinic> getClinics() {
 		ArrayList<Clinic> clinic_list = new ArrayList<>();
@@ -1066,10 +1068,12 @@ public class JDBC {
 	}
 
 	/**
+	 * This method, fetches all the patients that were treated with a specific drug
+	 * for a specific condition
 	 * 
-	 * @param cond
-	 * @param treat
-	 * @return
+	 * @param cond  Specific condition id
+	 * @param treat Specific treatment id
+	 * @return Array list of patients
 	 */
 	public ArrayList<Patient> getReport2(int cond, int treat) {
 		ArrayList<Patient> patient_list = new ArrayList<>();
@@ -1096,9 +1100,10 @@ public class JDBC {
 	}
 
 	/**
+	 * This method, fetches all the appointments of a specific clinic
 	 * 
-	 * @param clinic_id
-	 * @return
+	 * @param clinic_id Clinic ID
+	 * @return An array list of appointments
 	 */
 	public ArrayList<Appointment> getAppointments(int clinic_id) {
 		ArrayList<Appointment> rendez = new ArrayList<>();
@@ -1128,9 +1133,12 @@ public class JDBC {
 	}
 
 	/**
+	 * This method, generates an array list of patients that have similar name as
+	 * the user input
 	 * 
-	 * @param name
-	 * @return
+	 * @param name Name of the patients that will get searched
+	 * @return An array list of patients that have similar name with what was
+	 *         entered in the search
 	 */
 	public ArrayList<Patient> search(String name) {
 		ArrayList<Patient> patient_list = new ArrayList<>();
@@ -1158,9 +1166,10 @@ public class JDBC {
 	}
 
 	/**
+	 * This method, gets an instance which is a copy of a specific appointment
 	 * 
-	 * @param app_id
-	 * @return
+	 * @param app_id Appointment ID
+	 * @return An appointment instance
 	 */
 	public Appointment getAppointment(int app_id) {
 		Appointment rec = new Appointment();
@@ -1186,9 +1195,10 @@ public class JDBC {
 	}
 
 	/**
+	 * This method, checks if a patient is still alive
 	 * 
-	 * @param app_id
-	 * @return
+	 * @param p_id Patient ID
+	 * @return true if the patient is alive, otherwise false
 	 */
 	public boolean CheckIfAlive(int p_id) {
 		boolean is = true;
@@ -1206,22 +1216,18 @@ public class JDBC {
 		return is;
 	}
 
-	public static void main(String[] args) {
-		JDBC a = new JDBC();
-		for (int i = 0; i < 5; i++)
-			System.out.println(a.getPatient(i).isAlive() + " " + a.getPatient(i).getName());
-	}
-
 	/**
+	 * This methos, inserts a new appoint ment into the database
 	 * 
-	 * @param doctor_id
-	 * @param patient_id
-	 * @param clinic_id
-	 * @param date
-	 * @param time
-	 * @param drop_in
-	 * @param receptionist_id
-	 * @return
+	 * @param doctor_id       Doctor ID
+	 * @param patient_id      Patient ID
+	 * @param clinic_id       Clinic ID
+	 * @param date            Date
+	 * @param time            Time
+	 * @param drop_in         If it is drop in
+	 * @param receptionist_id Receptionist ID
+	 * @param att             If it was attended or not
+	 * @return true for successful insertion otherwise false
 	 */
 	public boolean insertAppointment(int doctor_id, int patient_id, int clinic_id, String date, String time,
 			int drop_in, int receptionist_id, int att) {
@@ -1266,9 +1272,10 @@ public class JDBC {
 	}
 
 	/**
+	 * This method gets the last treatment given of a specific patient
 	 * 
-	 * @param app_id
-	 * @return
+	 * @param pid Patient id
+	 * @return Treatment instance (last treatment given)
 	 */
 	public Treatment getPersc(int pid) {
 		Treatment rec = new Treatment();
@@ -1315,7 +1322,7 @@ public class JDBC {
 	/**
 	 * This method updates the data for a treatment record.
 	 * 
-	 * @param treat Updated Treatment record
+	 * @param rec Updated Patient record
 	 */
 	public void updateRecord(PatientRecord rec) {
 		System.out.println("\n\n Update Record \n\n");
@@ -1358,6 +1365,7 @@ public class JDBC {
 
 	/**
 	 * 
+	 * @param patient_id
 	 * @return
 	 */
 	public Treatment getgenTreat(int patient_id) {

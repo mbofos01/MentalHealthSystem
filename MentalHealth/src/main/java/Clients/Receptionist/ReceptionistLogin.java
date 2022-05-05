@@ -21,13 +21,31 @@ import Tools.CustomColours;
 import Tools.Query;
 import Tools.Viewpoint;
 
+/**
+ * Main Interface for Health Service Staff. As stated in the basic structure
+ * each viewpoint must have a client object as an argument.
+ * 
+ * @author Demetra Hadjicosti
+ *
+ */
 public class ReceptionistLogin {
-
-	private JFrame frmReceptionistLogin;
-	private JTextField usernameField;
-	private JPasswordField passwordField;
 	/**
-	 * Launch the application.
+	 * The frame (window of the application)
+	 */
+	private JFrame frmReceptionistLogin;
+	/**
+	 * Field for username
+	 */
+	private JTextField usernameField;
+	/**
+	 * Field for password
+	 */
+	private JPasswordField passwordField;
+
+	/**
+	 * Main Procedure of the class that initiates the application (client creation)
+	 * 
+	 * @param args Array that holds the arguments of the application
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -45,6 +63,9 @@ public class ReceptionistLogin {
 
 	/**
 	 * Create the application.
+	 * 
+	 * @param client Client object must be passed in order to communicate with the
+	 *               server
 	 */
 	public ReceptionistLogin(Client Client) {
 		initialize(Client);
@@ -52,6 +73,9 @@ public class ReceptionistLogin {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client Client object must be passed in order to communicate with the
+	 *               server
 	 */
 	private void initialize(final Client client) {
 		frmReceptionistLogin = new JFrame();
@@ -81,6 +105,7 @@ public class ReceptionistLogin {
 		passwordLabel.setBounds(75, 215, 165, 28);
 		frmReceptionistLogin.getContentPane().add(passwordLabel);
 
+		// LOGIN BUTTON
 		JButton loginbtn = new JButton("Log In");
 		loginbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -116,6 +141,7 @@ public class ReceptionistLogin {
 		loginbtn.setBounds(102, 295, 138, 38);
 		frmReceptionistLogin.getContentPane().add(loginbtn);
 
+		// CANCEL
 		JButton cancelbtn = new JButton("Cancel");
 		cancelbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

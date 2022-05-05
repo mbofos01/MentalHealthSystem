@@ -26,10 +26,25 @@ import javax.swing.JSeparator;
 
 import com.google.gson.Gson;
 
+/**
+ * Main Interface for Health Service Staff. As stated in the basic structure
+ * each viewpoint must have a client object as an argument.
+ * 
+ * @author Demetra Hadjicosti
+ *
+ */
 public class HealthService {
-
+	/**
+	 * The frame (window of the application)
+	 */
 	private JFrame frmHealthService;
 
+	/**
+	 * Launch the Application
+	 * 
+	 * @param client Client object for server client communication
+	 * @param model  Health Service staff instance
+	 */
 	public static void openWindow(final Client client, final HealthServ model) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -44,14 +59,20 @@ public class HealthService {
 	}
 
 	/**
-	 * Create the application.
+	 * Create the Application
+	 * 
+	 * @param client Client object for server client communication
+	 * @param model  Health Service staff instance
 	 */
 	public HealthService(Client client, HealthServ model) {
 		initialize(client, model);
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame
+	 * 
+	 * @param client Client object for server client communication
+	 * @param model  Health Service staff instance
 	 */
 	private void initialize(Client client, HealthServ model) {
 		frmHealthService = new JFrame();
@@ -64,6 +85,7 @@ public class HealthService {
 		btnWeekReport.setBackground(new Color(51, 204, 102));
 		btnWeekReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// GETTING CLINICS
 				Query q1 = new Query(Viewpoint.HealthService);
 				q1.setFunction("getClinics");
 				client.send(q1);
@@ -91,7 +113,7 @@ public class HealthService {
 		frmHealthService.getContentPane().add(lblNewLabel);
 
 		JComboBox<String> cmbCondition = new JComboBox<String>();
-
+		// GETTING CONDITIONS
 		Query q = new Query(Viewpoint.HealthService);
 		q.setFunction("getConditions");
 		client.send(q);
@@ -104,7 +126,6 @@ public class HealthService {
 		for (int i = 0; i < size; i++) {
 			Condition con = conds.get(i);
 			cmbCondition.addItem(con.getName());
-
 		}
 
 		cmbCondition.setSelectedIndex(0);
@@ -133,15 +154,16 @@ public class HealthService {
 				int indexTreat = cmbTreatment.getSelectedIndex();
 				Query q = new Query(Viewpoint.HealthService);
 				q.setFunction("getPatientsTreatmentCond");
-				q.addArgument(""+ conds.get(indexCond).getCondition_id());
-				q.addArgument(""+ drug_list.get(indexTreat).getId());
+				q.addArgument("" + conds.get(indexCond).getCondition_id());
+				q.addArgument("" + drug_list.get(indexTreat).getId());
 				client.send(q);
 				int size = new Gson().fromJson(client.read(), Integer.class);
 				ArrayList<Patient> patients = new ArrayList<Patient>();
 				for (int i = 0; i < size; i++) {
 					patients.add(new Gson().fromJson(client.read(), Patient.class));
 				}
-				CreatePDF.createPatientReport(patients, conds.get(indexCond).getName(), drug_list.get(indexTreat).getCommercial_name());
+				CreatePDF.createPatientReport(patients, conds.get(indexCond).getName(),
+						drug_list.get(indexTreat).getCommercial_name());
 			}
 		});
 		btnReportPatient.setBackground(new Color(51, 204, 102));
@@ -160,6 +182,7 @@ public class HealthService {
 		separator.setBounds(131, 146, 276, 2);
 		frmHealthService.getContentPane().add(separator);
 
+		// LOGOUT
 		JButton btnNewButton_1 = new JButton("Log Out");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

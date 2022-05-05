@@ -20,22 +20,30 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 /**
- * In-page for the Health Service Viewpoint. As stated in the basic
- * structure each viewpoint must have a client object as an argument.
+ * In-page for the Health Service Viewpoint. As stated in the basic structure
+ * each viewpoint must have a client object as an argument.
  * 
  * @author Demetra Hadjicosti
  *
  */
 public class HealthServiceLogin {
-
+	/**
+	 * The frame (window of the application)
+	 */
 	private JFrame frmHealthServiceLogin;
+	/**
+	 * Field for username
+	 */
 	private JTextField usernameField;
+	/**
+	 * Field for password
+	 */
 	private JPasswordField passwordField;
 
-	/**s
-	 * Launch the application.
+	/**
+	 * Main Procedure of the class that initiates the application (client creation)
 	 * 
-	 * @param args No arguments needed
+	 * @param args Array that holds the arguments of the application
 	 */
 	public static void main(String[] args) {
 
@@ -117,7 +125,6 @@ public class HealthServiceLogin {
 					System.exit(0);
 
 				} else {
-					System.out.println(record.toString());
 					frmHealthServiceLogin.dispose();
 					HealthService.openWindow(client, record);
 				}

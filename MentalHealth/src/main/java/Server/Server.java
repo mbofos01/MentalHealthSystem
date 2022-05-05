@@ -96,7 +96,8 @@ public class Server {
 		 */
 		private void HandleHealthService(Query incoming, DataOutputStream output) throws IOException {
 			/**
-			 * login - Clinical viewpoint may request a doctors login
+			 * login - Health Service viewpoint - request a Health Service Staff member
+			 * login
 			 * 
 			 * Parameters: username and password
 			 */
@@ -112,6 +113,8 @@ public class Server {
 			/**
 			 * generateWeeklyReport - Health Service viewpoint may request the creation of a
 			 * weekly report on a specific clinic.
+			 * 
+			 * Parameters: Clinic ID
 			 */
 			else if (incoming.getFunction().equals("generateWeeklyReport")) {
 				int clinic_id = Integer.parseInt(incoming.getArguments().get(0));
@@ -128,8 +131,8 @@ public class Server {
 				}
 			}
 			/**
-			 * getConditions - Clinical Viewpoint may request a list with all the conditions
-			 * in the database.
+			 * getConditions - Health Service Viewpoint may request a list with all the
+			 * conditions in the database.
 			 * 
 			 * Parameters: no parameters
 			 */
@@ -144,8 +147,8 @@ public class Server {
 				}
 			}
 			/**
-			 * getDrugs - Clinical Viewpoint may request a list with all the drugs in the
-			 * database.
+			 * getDrugs - Health Service Viewpoint may request a list with all the drugs in
+			 * the database.
 			 * 
 			 * Parameters: no parameters
 			 */
@@ -160,8 +163,8 @@ public class Server {
 				}
 			}
 			/**
-			 * FIX getDrugs - Clinical Viewpoint may request a list with all the drugs in
-			 * the database.
+			 * getClinics - Health Service may request a list with all the clinics in the
+			 * database.
 			 * 
 			 * Parameters: no parameters
 			 */
@@ -176,10 +179,10 @@ public class Server {
 				}
 			}
 			/**
-			 * FIX getDrugs - Clinical Viewpoint may request a list with all the drugs in
-			 * the database.
+			 * getPatientsTreatmentCond - Health Service may request a list with all the
+			 * patients that have got a specific treatment with a specific condition
 			 * 
-			 * Parameters: no parameters
+			 * Parameters: treatment and condition
 			 */
 			else if (incoming.getFunction().equals("getPatientsTreatmentCond")) {
 				int treatment, cond;
@@ -205,7 +208,7 @@ public class Server {
 		 */
 		private void HandleReceptionist(Query incoming, DataOutputStream output) throws IOException {
 			/**
-			 * login - Clinical viewpoint may request a doctors login
+			 * login - Receptionist viewpoint may request a receptionist login
 			 * 
 			 * Parameters: username and password
 			 */
@@ -219,8 +222,9 @@ public class Server {
 				output.writeBytes(new Gson().toJson(hs) + System.lineSeparator());
 			}
 			/**
-			 * generateWeeklyReport - Health Service viewpoint may request the creation of a
-			 * weekly report on a specific clinic.
+			 * getPatients - Receptionist viewpoint may request a list with all the patients
+			 * 
+			 * Parameters: no parameters
 			 */
 			else if (incoming.getFunction().equals("getPatients")) {
 				ArrayList<Patient> rec = database.getPatients();
@@ -233,8 +237,10 @@ public class Server {
 				}
 			}
 			/**
-			 * generateWeeklyReport - Health Service viewpoint may request the creation of a
-			 * weekly report on a specific clinic.
+			 * getAppointment - Receptionist viewpoint may request a specific appointment's
+			 * details
+			 * 
+			 * Parameters: appointment ID
 			 */
 			else if (incoming.getFunction().equals("getAppointment")) {
 				int appid = Integer.parseInt(incoming.getArguments().get(0));
@@ -244,7 +250,14 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else if (incoming.getFunction().equals("getPatientsSearch")) {
+			}
+			/**
+			 * getPatientsSearch - Receptionist viewpoint may search for a patient given a
+			 * specific name
+			 * 
+			 * Parameters: name
+			 */
+			else if (incoming.getFunction().equals("getPatientsSearch")) {
 				String name;
 				name = incoming.getArguments().get(0);
 				ArrayList<Patient> rec = database.search(name);
@@ -255,7 +268,14 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else if (incoming.getFunction().equals("CheckIfAlive")) {
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request to check if a patient is
+			 * alive
+			 * 
+			 * Parameters: patient ID
+			 */
+			else if (incoming.getFunction().equals("CheckIfAlive")) {
 				int appid = Integer.parseInt(incoming.getArguments().get(0));
 				boolean rec = database.CheckIfAlive(appid);
 				try {
@@ -263,7 +283,14 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else if (incoming.getFunction().equals("newAppointment")) {
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request to make a new appointment
+			 * 
+			 * Parameters: doctor ID, patient ID, clinic ID, date, time, drop in?,
+			 * receptionist ID, attended?
+			 */
+			else if (incoming.getFunction().equals("newAppointment")) {
 				int doc_id = Integer.parseInt(incoming.getArguments().get(0));
 				int pat_id = Integer.parseInt(incoming.getArguments().get(1));
 				int clinic_id = Integer.parseInt(incoming.getArguments().get(2));
@@ -278,7 +305,14 @@ public class Server {
 					output.writeBytes("SUCCESS" + System.lineSeparator());
 				else
 					output.writeBytes("FAILURE" + System.lineSeparator());
-			} else if (incoming.getFunction().equals("getlastID")) {
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request to get the ID of the last
+			 * appointment in the table of Appointments
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("getlastID")) {
 				int rec = database.getLastAppointmentID();
 				try {
 					output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
@@ -287,8 +321,10 @@ public class Server {
 				}
 			}
 			/**
-			 * generateWeeklyReport - Health Service viewpoint may request the creation of a
-			 * weekly report on a specific clinic.
+			 * getPatients - Receptionist viewpoint may request a list with the doctors of a
+			 * specific clinic
+			 * 
+			 * Parameters: clinic ID
 			 */
 			else if (incoming.getFunction().equals("getDoctors")) {
 				int c_id = Integer.parseInt(incoming.getArguments().get(0));
@@ -300,7 +336,14 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else if (incoming.getFunction().equals("getAppointments")) {
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request a list with the appointments
+			 * of a specific clinic
+			 * 
+			 * Parameters: clinic ID
+			 */
+			else if (incoming.getFunction().equals("getAppointments")) {
 				int clinic;
 				clinic = Integer.parseInt(incoming.getArguments().get(0));
 				ArrayList<Appointment> rec = database.getAppointments(clinic);
@@ -311,7 +354,14 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else if (incoming.getFunction().equals("updateApp")) {
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request to update the attendance of
+			 * a specific appointment
+			 * 
+			 * Parameters: no parameters
+			 */
+			else if (incoming.getFunction().equals("updateApp")) {
 				int att = Integer.parseInt(incoming.getArguments().get(1));
 				int id = Integer.parseInt(incoming.getArguments().get(0));
 				boolean flag = database.updateAppointment(id, att);
@@ -319,11 +369,24 @@ public class Server {
 					output.writeBytes("SUCCESS" + System.lineSeparator());
 				else
 					output.writeBytes("FAILURE" + System.lineSeparator());
-			} else if (incoming.getFunction().equals("addTreatment")) {
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request to generate a new treatment
+			 * 
+			 * Parameters: Treatment object instance
+			 */
+			else if (incoming.getFunction().equals("addTreatment")) {
 				Treatment tr = new Gson().fromJson(incoming.getArguments().get(0), Treatment.class);
 				int row = database.insertTreatment(tr);
 				output.writeBytes(new Gson().toJson(row) + System.lineSeparator());
-			} else if (incoming.getFunction().equals("showAllTreatments")) {
+			}
+			/**
+			 * getPatients - Receptionist viewpoint may request a list with the last
+			 * treatment given to a specific patient
+			 * 
+			 * Parameters: Patient ID
+			 */
+			else if (incoming.getFunction().equals("showAllTreatments")) {
 				int att = Integer.parseInt(incoming.getArguments().get(0));
 				Treatment row = database.getgenTreat(att);
 				try {

@@ -27,15 +27,36 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 
+/**
+ * Main Interface for Health Service Staff. As stated in the basic structure
+ * each viewpoint must have a client object as an argument.
+ * 
+ * @author Demetra Hadjicosti
+ *
+ */
 public class Receptionist {
-
+	/**
+	 * The frame (window of the application)
+	 */
 	private JFrame frmReceptionist;
+	/**
+	 * Table that displays the appointments
+	 */
 	private JTable tblAppointment;
+	/**
+	 * Search field for searching patients
+	 */
 	private JTextField txtSearch;
+	/**
+	 * Table that displays the patients
+	 */
 	private JTable tblPatient;
 
 	/**
-	 * Launch the application.
+	 * Launch the Application
+	 * 
+	 * @param client Client object for server client communication
+	 * @param model  Health Service staff instance
 	 */
 	public static void openWin(final Client client, final ReceptionistObj model) {
 		EventQueue.invokeLater(new Runnable() {
@@ -51,14 +72,20 @@ public class Receptionist {
 	}
 
 	/**
-	 * Create the application.
+	 * Create the Application
+	 * 
+	 * @param client Client object for server client communication
+	 * @param model
 	 */
 	public Receptionist(Client client, ReceptionistObj model) {
 		initialize(client, model);
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Initialize the contents of the frame
+	 * 
+	 * @param client Client object for server client communication
+	 * @param model
 	 */
 	private void initialize(Client client, ReceptionistObj model) {
 		frmReceptionist = new JFrame();
@@ -74,7 +101,6 @@ public class Receptionist {
 		client.send(q);
 
 		Integer size = new Gson().fromJson(client.read(), Integer.class);
-		// System.out.println(size);
 		ArrayList<Patient> patient_list = new ArrayList<Patient>();
 		for (int i = 0; i < size; i++)
 			patient_list.add(new Gson().fromJson(client.read(), Patient.class));
@@ -297,6 +323,7 @@ public class Receptionist {
 		btnReset.setBounds(473, 444, 108, 21);
 		frmReceptionist.getContentPane().add(btnReset);
 
+		// LOGOUT
 		JButton btnNewButton_1 = new JButton("Log Out");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
