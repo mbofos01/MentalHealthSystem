@@ -1304,16 +1304,12 @@ public class JDBC {
 
 	}
 
+//***************************************************/
 	public Patient getPatientByID(int pat) {
 		try {
 
 			PreparedStatement cs = this.conn.prepareCall("{call getPatientByID(?)}");
 			cs.setInt(1, pat);
-	public ArrayList<Patient> getPatients() {
-
-		ArrayList<Patient> patients = new ArrayList<Patient>();
-		try {
-			PreparedStatement cs = this.conn.prepareCall("{call ShowAllPatients()}");
 			ResultSet rs = cs.executeQuery();
 
 			while (rs.next()) {
@@ -1333,6 +1329,8 @@ public class JDBC {
 		return null;
 	}
 
+//***************************************************/		
+
 	public PatientRecord getRecordByID(int pat) {
 		try {
 
@@ -1348,23 +1346,15 @@ public class JDBC {
 				return p;
 
 			}
-				p.setPatient_id(rs.getInt("patient_id"));
-				p.setName(rs.getString("name"));
-				p.setSurname(rs.getString("surname"));
-				p.setTelephone(rs.getString("telephone"));
-				p.setEmail(rs.getString("email"));
-				p.setAlive(rs.getBoolean("alive"));
-				patients.add(p);
-			}
-			return patients;
+		} catch (
 
-		} catch (SQLException e) {
+		SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public ArrayList<Clinic> getClinics() {
+	public ArrayList<Clinic> getClinicsJo() {
 		ArrayList<Clinic> clinics = new ArrayList<>();
 		try {
 
@@ -1377,8 +1367,11 @@ public class JDBC {
 				rec.setName(rs.getString("name"));
 				rec.setClinic_id(rs.getInt("clinic_id"));
 				clinics.add(rec);
-
-		return null;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return clinics;
 	}
 
 	/**
@@ -1500,7 +1493,7 @@ public class JDBC {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return clinics;
+
 		return patient_list;
 	}
 
