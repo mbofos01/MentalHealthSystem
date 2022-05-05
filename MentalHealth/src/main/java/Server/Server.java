@@ -237,9 +237,8 @@ public class Server {
 			 * weekly report on a specific clinic.
 			 */
 			else if (incoming.getFunction().equals("getAppointment")) {
-				int clinic;
-				clinic = Integer.parseInt(incoming.getArguments().get(0));
-				Appointment rec = database.getAppointment(clinic);
+				int appid = Integer.parseInt(incoming.getArguments().get(0));
+				Appointment rec = database.getAppointment(appid);
 				try {
 					output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
 				} catch (IOException e) {
@@ -253,6 +252,14 @@ public class Server {
 					output.writeBytes(new Gson().toJson(rec.size()) + System.lineSeparator());
 					for (int i = 0; i < rec.size(); i++)
 						output.writeBytes(new Gson().toJson(rec.get(i)) + System.lineSeparator());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else if (incoming.getFunction().equals("CheckIfAlive")) {
+				int appid = Integer.parseInt(incoming.getArguments().get(0));
+				boolean rec = database.CheckIfAlive(appid);
+				try {
+					output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -305,8 +312,8 @@ public class Server {
 					e.printStackTrace();
 				}
 			} else if (incoming.getFunction().equals("updateApp")) {
-				int att = Integer.parseInt(incoming.getArguments().get(0));
-				int id = Integer.parseInt(incoming.getArguments().get(1));
+				int att = Integer.parseInt(incoming.getArguments().get(1));
+				int id = Integer.parseInt(incoming.getArguments().get(0));
 				boolean flag = database.updateAppointment(id, att);
 				if (flag)
 					output.writeBytes("SUCCESS" + System.lineSeparator());
