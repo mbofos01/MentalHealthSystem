@@ -60,8 +60,10 @@ public class Diagnosis {
 	 * @param drugs           An ArrayList of drugs - the list of all drugs in our
 	 *                        database
 	 * @param last            PatientRecord object last patients diagnosis
-	 * @param update
-	 * @param updateTreatment
+	 * @param updateTreatment Boolean flag to update treatment
+	 * @param updateRecord    Boolean flag to update record
+	 * @param appointment     Appoint object in order to connect record with
+	 *                        appointment
 	 */
 	public static void openWindow(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs,
 			PatientRecord last, boolean updateRecord, boolean updateTreatment, Appointment appointment) {
@@ -81,12 +83,17 @@ public class Diagnosis {
 	/**
 	 * Create the application.
 	 *
-	 * @param client  Client object for server client communication
-	 * @param doctor  Doctor object - the one how is logged in
-	 * @param patient Patient object - the patient whom we want to create a
-	 *                diagnosis
-	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
-	 * @param last    PatientRecord object last patients diagnosis
+	 * @param client          Client object for server client communication
+	 * @param doctor          Doctor object - the one how is logged in
+	 * @param patient         Patient object - the patient whom we want to create a
+	 *                        diagnosis
+	 * @param drugs           An ArrayList of drugs - the list of all drugs in our
+	 *                        database
+	 * @param last            PatientRecord object last patients diagnosis
+	 * @param updateTreatment Boolean flag to update treatment
+	 * @param updateRecord    Boolean flag to update record
+	 * @param appointment     Appoint object in order to connect record with
+	 *                        appointment
 	 */
 	public Diagnosis(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs, PatientRecord last,
 			boolean updateRecord, boolean updateTreatment, Appointment appointment) {
@@ -96,12 +103,17 @@ public class Diagnosis {
 	/**
 	 * Initialize the contents of the frame.
 	 * 
-	 * @param client  Client object for server client communication
-	 * @param doctor  Doctor object - the one how is logged in
-	 * @param patient Patient object - the patient whom we want to create a
-	 *                diagnosis
-	 * @param drugs   An ArrayList of drugs - the list of all drugs in our database
-	 * @param last    PatientRecord object last patients diagnosis
+	 * @param client          Client object for server client communication
+	 * @param doctor          Doctor object - the one how is logged in
+	 * @param patient         Patient object - the patient whom we want to create a
+	 *                        diagnosis
+	 * @param drugs           An ArrayList of drugs - the list of all drugs in our
+	 *                        database
+	 * @param last            PatientRecord object last patients diagnosis
+	 * @param updateTreatment Boolean flag to update treatment
+	 * @param updateRecord    Boolean flag to update record
+	 * @param appointment     Appoint object in order to connect record with
+	 *                        appointment
 	 */
 	private void initialize(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs, PatientRecord last,
 			boolean updateRecord, boolean updateTreatment, Appointment appointment) {
