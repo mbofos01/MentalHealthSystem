@@ -1117,9 +1117,7 @@ public class JDBC {
 				rec.setDropIn(rs.getBoolean("dropIn"));
 				rec.setReceptionist_id(rs.getInt("receptionist_id"));
 				rec.setAttended(rs.getBoolean("attended"));
-
 				rendez.add(rec);
-
 			}
 
 		} catch (SQLException e) {
@@ -1164,12 +1162,12 @@ public class JDBC {
 	 * @return
 	 */
 	public Appointment getAppointment(int app_id) {
+		Appointment rec = new Appointment();
+		System.out.println(app_id);
 		try {
-
-			PreparedStatement cs = this.conn.prepareCall("{call showAppointment(?)}");
+			PreparedStatement cs = this.conn.prepareCall("{call ShowAppointment(?)}");
 			cs.setInt(1, app_id);
 			ResultSet rs = cs.executeQuery();
-			Appointment rec = new Appointment();
 			rec.setDoctor_id(rs.getInt("doctor_id"));
 			rec.setAppoint_id(rs.getInt("appoint_id"));
 			rec.setPatient_id(rs.getInt("patient_id"));
@@ -1178,11 +1176,11 @@ public class JDBC {
 			rec.setDropIn(rs.getBoolean("dropIn"));
 			rec.setReceptionist_id(rs.getInt("receptionist_id"));
 			rec.setAttended(rs.getBoolean("attended"));
-			return rec;
+			System.out.println(rec.toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return rec;
 	}
 
 	/**
@@ -1347,7 +1345,7 @@ public class JDBC {
 				treat.setWarning(true);
 			else
 				treat.setWarning(false);
-			treat.setDoctor_id(rs.getInt("doctor_id"));
+			treat.setDoctor_id(rs.getInt("drug_id"));
 			treat.setAccepted(true);
 			treat.setDate(rs.getString("date"));
 			return treat;
