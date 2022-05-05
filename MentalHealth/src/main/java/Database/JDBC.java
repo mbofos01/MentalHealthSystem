@@ -342,6 +342,7 @@ public class JDBC {
 				patient.setTelephone(rs.getString("telephone"));
 				patient.setName(rs.getString("name"));
 				patient.setSurname(rs.getString("surname"));
+				patient.setAlive(rs.getBoolean("alive"));
 				flag++;
 			}
 		} catch (SQLException e) {
@@ -533,8 +534,8 @@ public class JDBC {
 						t.setDose(treat_rs.getInt("dose"));
 						t.setDrug_id(treat_rs.getInt("drug_id"));
 						t.setPatient_id(treat_rs.getInt("patient_id"));
-						t.setDate(rs.getString("date"));
-						t.setLast_updated(rs.getString("last_update"));
+						t.setDate(treat_rs.getString("date"));
+						t.setLast_updated(treat_rs.getString("last_update"));
 						if (treat_rs.getInt("warning") == 0)
 							flag = false;
 						else
@@ -922,7 +923,6 @@ public class JDBC {
 				if (doesItExist == false)
 					rec.setRecord_id(-1);
 
-				System.out.println(rec.getReceptionist_id() + " " + rec.isAttended());
 				rendez.add(rec);
 
 			}
@@ -1354,14 +1354,69 @@ public class JDBC {
 	}
 
 	/**
+	 * This method fetches the id of the last record inserted in the Database.
+	 * 
+	 * @return Integer ID
+	 */
+	public int getIDofLastRecord() {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getIDofInsertedRecord()}");
+			ResultSet rs = cs.executeQuery();
+			int ret = -1;
+			while (rs.next()) {
+				ret = rs.getInt("last_value");
+			}
+			return ret;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+
+	}
+
+	public int getRecordOfAnAppointment(int appoint) {
+		int rec = -1;
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call checkAppointmentRecordConnection(?)}");
+			cs.setInt(1, appoint);
+			ResultSet rs = cs.executeQuery();
+
+			while (rs.next()) {
+				rec = rs.getInt("record_id");
+			}
+			return rec;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	/**
+	 * This method inserts a Record and Appointment relationship.
+	 * 
+	 * @param rec     Integer id of record
+	 * @param appoint Integer id of appointment
+	 */
+	public void insertRecordAppointmentRelationship(int rec, int appoint) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertRecordAppointmentRealtion(?,?)}");
+			cs.setInt(1, rec);
+			cs.setInt(2, appoint);
+			cs.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Main function for the JDBC, used for testing.
 	 * 
 	 * @param args No arguments needed
 	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
-		HealthServ rec = base.loginHealthService("dhadji02", "1234");
-		System.out.println(rec.getUsername() + " " + rec.getId());
+
 	}
 
 }

@@ -346,40 +346,48 @@ public class PatientView {
 			public void mouseClicked(MouseEvent e) {
 				if (patient.isAlive()) {
 					int p = appointTable.getSelectedRow();
-					System.out.println(p);
-
 					PatientRecord specific = null;
-					System.out.println("---------------------------------------");
-					System.out.println("I SELECTED APPOINTMENT: " + list.get(p).getAppoint_id() + " WITH RECORD (?) "
-							+ list.get(p).getRecord_id());
+					Appointment selectedAppointment = list.get(p);
+					Query t = new Query(Viewpoint.Clinical);
+					t.setFunction("getRecordOfAnAppointment");
+					t.addArgument("" + selectedAppointment.getAppoint_id());
+					client.send(t);
+
+					Integer record_id = new Gson().fromJson(client.read(), Integer.class);
+					Integer treatment_id = -1;
+
+					for (int j = 0; j < patient_records.size(); j++) {
+						PatientRecord s = patient_records.get(j);
+						if (s.getRecord_id() == record_id) {
+							treatment_id = s.getTreatment_id();
+							specific = s;
+							break;
+						}
+					}
 					boolean updateRecord = false;
 					boolean updateTreatment = false;
 
-					if (list.get(p).getRecord_id() == -1) {
+					if (record_id == -1) {
 						// I'll need the last record
+						System.out.println("PAME GIA KAINOURGIO RECORD KAI TREATMENT");
 						specific = last;
 						updateRecord = false;
 					} else {
 						// I'll need to fetch this appointments approved
 						updateRecord = true;
-
-						for (int j = 0; j < patient_records.size(); j++) {
-							PatientRecord s = patient_records.get(j);
-							if (s.getRecord_id() == list.get(p).getRecord_id()) {
-								System.out.println("HELLO");
-								specific = s;
-								break;
-							}
+						System.out.println("PAME GIA ALLAGI TOU RECORD " + record_id);
+						if (treatment_id == -1) {
+							System.out.println("PAME GIA KAINOUTGIO TREATMENT");
+							updateTreatment = false;
+						} else {
+							System.out.println("PAME GIA ALLAGI STO TREATMENT " + treatment_id);
+							updateTreatment = true;
 						}
 
 					}
-					System.out.println("KALAPAEIAFTO:: " + specific.getTreatment_id());
-					if (specific.getTreatment() == null)
-						updateTreatment = false;
-					else
-						updateTreatment = true;
 
-					Diagnosis.openWindow(client, doctor, patient, drugs, specific, updateRecord, updateTreatment);
+					Diagnosis.openWindow(client, doctor, patient, drugs, specific, updateRecord, updateTreatment,
+							selectedAppointment);
 					frmPatientView.dispose();
 
 				}
