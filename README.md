@@ -1,6 +1,8 @@
 # MentalHealthSystem
 EPL441 Homework
 
+<img src="basic_structure.png">
+
 Instructions on set up and first run:
   1) Pull the origin from github ( I recommend github desktop for your convenience)
   2) Enter the Maven project to your IDE of choice (I'm using eclipse)
