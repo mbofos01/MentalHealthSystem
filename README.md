@@ -21,7 +21,7 @@
   <h3>Installation and set up</h3>
   1) Pull the origin from github ( We recommend github desktop for your convenience)
   <br>
-  2) Change files src/main/resources/clientConf.json and src/main/resources/serverConf.json to your IPs
+  2) Change files src/main/resources/clientConf.json and src/main/resources/serverConf.json to the IP address and port number you want to use
   <br>
   3) Run maven command "mvn package" to run the Junit tests and create the 5 jar files needed to run this system
   <br>
