@@ -1,10 +1,20 @@
 # MentalHealthSystem
-EPL441 Homework
+
+<h1>EPL441 Homework</h1>
+
+<h2>Team members</h2>
+  Michail - Panagiotis Bofos
+  Demetra Hadjicosti
+  Ioanna Theophilou
+  Lucia Jimenez Garcia
+
+
+<h2>Model Structure <i>(Client-Server)</i></h2>
 
 <img src="/Images/Structure/clientServer.drawio.png">
 
 Instructions on set up and first run:
-  1) Pull the origin from github ( I recommend github desktop for your convenience)
+  1) Pull the origin from github ( We recommend github desktop for your convenience)
   2) Enter the Maven project to your IDE of choice (I'm using eclipse)
   3) Right click on the project Maven > Update Project
   4) Right click on pom file, run as > Maven Clean
