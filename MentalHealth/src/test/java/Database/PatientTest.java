@@ -57,9 +57,9 @@ class PatientTest {
 	}
 
 	@Test
-	@DisplayName("Ensure that a patient is dead")
+	@DisplayName("Ensure that a patient is not dead")
 	void testPatientAlive() {
-		assertFalse(dead.get(0).isAlive());
+		assertTrue(dead.get(0).isAlive());
 	}
 
 	@Test

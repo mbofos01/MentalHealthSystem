@@ -170,4 +170,90 @@ public class CreatePDF {
 		}
 	}
 
+	public static void createMissed(ArrayList<Patient> list) {
+		Document doc = new Document();
+		try {
+
+			Paragraph doted_line = new Paragraph(
+					"-------------------------------------------------------------------------------------------------------------------------------");
+
+			// generate a PDF at the specified location
+			PdfWriter writer = PdfWriter.getInstance(doc,
+					new FileOutputStream("Report For Missed Appointments " + Clock.currentSQLTime() + ".pdf"));
+			// opens the PDF
+			doc.open();
+			// adding paragraphs to the PDF
+
+			doc.add(new Paragraph("Report For Missed Appointments " + Clock.currentSQLTime()));
+			doc.add(new Paragraph("                                       "));
+			doc.add(doted_line);
+			doc.add(new Paragraph(space));
+			PdfPTable pdfPTable = new PdfPTable(3);
+			pdfPTable.addCell("ID");
+			pdfPTable.addCell("Name");
+			pdfPTable.addCell("Surname");
+
+			for (Patient patient : list) {
+
+				pdfPTable.addCell("" + patient.getPatient_id());
+				pdfPTable.addCell(patient.getName());
+				pdfPTable.addCell(patient.getSurname());
+
+				// Add content to the document using Table objects.
+			}
+			doc.add(pdfPTable);
+			doc.add(new Paragraph(space));
+			doc.add(doted_line);
+
+			doc.close();
+			writer.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void createNotUpdated(ArrayList<Patient> list) {
+		Document doc = new Document();
+		try {
+
+			Paragraph doted_line = new Paragraph(
+					"-------------------------------------------------------------------------------------------------------------------------------");
+
+			// generate a PDF at the specified location
+			PdfWriter writer = PdfWriter.getInstance(doc,
+					new FileOutputStream("Report For Not Updated Appointments " + Clock.currentSQLTime() + ".pdf"));
+			// opens the PDF
+			doc.open();
+			// adding paragraphs to the PDF
+
+			doc.add(new Paragraph("Report For Not Updated Appointments " + Clock.currentSQLTime()));
+			doc.add(new Paragraph("                                       "));
+			doc.add(doted_line);
+			doc.add(new Paragraph(space));
+			PdfPTable pdfPTable = new PdfPTable(3);
+			pdfPTable.addCell("ID");
+			pdfPTable.addCell("Name");
+			pdfPTable.addCell("Surname");
+
+			for (Patient patient : list) {
+
+				pdfPTable.addCell("" + patient.getPatient_id());
+				pdfPTable.addCell(patient.getName());
+				pdfPTable.addCell(patient.getSurname());
+
+				// Add content to the document using Table objects.
+			}
+			doc.add(pdfPTable);
+			doc.add(new Paragraph(space));
+			doc.add(doted_line);
+
+			doc.close();
+			writer.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

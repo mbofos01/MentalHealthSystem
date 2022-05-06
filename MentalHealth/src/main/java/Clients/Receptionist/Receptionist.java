@@ -17,6 +17,7 @@ import Objects.Patient;
 import Objects.ReceptionistObj;
 import Objects.Treatment;
 import Tools.Clock;
+import Tools.CreatePDF;
 import Tools.Query;
 import Tools.Viewpoint;
 import javax.swing.JLabel;
@@ -31,7 +32,7 @@ import javax.swing.JComboBox;
 /**
  * Main Interface for Health Service Staff. As stated in the basic structure
  * each viewpoint must have a client object as an argument.
- * 
+ *
  * @author Demetra Hadjicosti
  *
  */
@@ -55,7 +56,7 @@ public class Receptionist {
 
 	/**
 	 * Launch the Application
-	 * 
+	 *
 	 * @param client Client object for server client communication
 	 * @param model  Receptionist instance
 	 */
@@ -74,7 +75,7 @@ public class Receptionist {
 
 	/**
 	 * Create the Application
-	 * 
+	 *
 	 * @param client Client object for server client communication
 	 * @param model  Receptionist instance
 	 */
@@ -84,7 +85,7 @@ public class Receptionist {
 
 	/**
 	 * Initialize the contents of the frame
-	 * 
+	 *
 	 * @param client Client object for server client communication
 	 * @param model  Receptionist instance
 	 */
@@ -171,7 +172,7 @@ public class Receptionist {
 		tblAppointment = new JTable(modelAppointment);
 		scrollPane1.setViewportView(tblAppointment);
 		tblAppointment.setDefaultEditor(Object.class, null);
-		
+
 		tblAppointment.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -191,7 +192,7 @@ public class Receptionist {
 		JComboBox<String> cmb_Patient = new JComboBox<String>();
 		cmb_Patient.setBounds(245, 471, 165, 21);
 		frmReceptionist.getContentPane().add(cmb_Patient);
-		
+
 		q = new Query(Viewpoint.Receptionist);
 		q.setFunction("getPatients");
 		client.send(q);
@@ -222,7 +223,7 @@ public class Receptionist {
 			public void actionPerformed(ActionEvent e) {
 				Query q = new Query(Viewpoint.Receptionist);
 				q.setFunction("showAllTreatments");
-				q.addArgument(cmb_Patient.getSelectedItem().toString().split(" ")[0] );
+				q.addArgument(cmb_Patient.getSelectedItem().toString().split(" ")[0]);
 				client.send(q);
 				Treatment app = new Gson().fromJson(client.read(), Treatment.class);
 				app.setDate(Clock.currentSQLTime());
@@ -235,8 +236,7 @@ public class Receptionist {
 						q.setFunction("addTreatment");
 						q.addArgument(new Gson().toJson(app));
 						client.send(q);
-						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(),
-								"Prescription repeated.");
+						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(), "Prescription repeated.");
 					} else
 						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(),
 								"Prescription cannot be done, because treatment has not been accepted yet.");
@@ -368,16 +368,28 @@ public class Receptionist {
 		btnNewButton_1.setBackground(new Color(204, 0, 51));
 		btnNewButton_1.setBounds(524, 10, 80, 23);
 		frmReceptionist.getContentPane().add(btnNewButton_1);
-		
+
 		JButton btnNewAppointment_1 = new JButton("Generate Report of missed Appointments");
 		btnNewAppointment_1.setForeground(new Color(255, 255, 255));
 		btnNewAppointment_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				ArrayList<Patient> missed = new ArrayList<>();
+				for (Appointment ap : appointments) {
+					if (ap.getDate().equals(Clock.currentSQLTime()) && ap.isAttended() == false) {
+						Query pat = new Query(Viewpoint.Receptionist);
+						pat.setFunction("getPatientByID");
+						pat.addArgument("" + ap.getPatient_id());
+						client.send(pat);
+						Patient pate = new Gson().fromJson(client.read(), Patient.class);
+						missed.add(pate);
+					}
+				}
+				CreatePDF.createMissed(missed);
 			}
 		});
 		btnNewAppointment_1.setBackground(new Color(204, 0, 51));
 		btnNewAppointment_1.setBounds(20, 217, 270, 21);
 		frmReceptionist.getContentPane().add(btnNewAppointment_1);
-	
+
 	}
 }

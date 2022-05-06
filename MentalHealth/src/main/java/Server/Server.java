@@ -395,6 +395,10 @@ public class Server {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			} else if (incoming.getFunction().equals("getPatientByID")) {
+				int id = Integer.parseInt(incoming.getArguments().get(0));
+				Patient rec = database.getPatientByID(id);
+				output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
 			}
 		}
 
@@ -657,6 +661,14 @@ public class Server {
 			else if (incoming.getFunction().equals("updateRecord")) {
 				PatientRecord re = new Gson().fromJson(incoming.getArguments().get(0), PatientRecord.class);
 				database.updateRecord(re);
+			}
+			/**
+			 * 
+			 */
+			else if (incoming.getFunction().equals("getPatientByID")) {
+				int id = Integer.parseInt(incoming.getArguments().get(0));
+				Patient rec = database.getPatientByID(id);
+				output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
 			}
 			/**
 			 * If no correct function is called a message should be printed in server side.
