@@ -55,6 +55,11 @@
   <br>
   $java -jar HealthService-jar-with-dependencies.jar
 
+
+<h2>Javadoc Documentation</h2>
+  <a href="https://www.cs.ucy.ac.cy/~mbofos01/epl441/">You can find more info here</a>
+
+
 <h2>Database Creation</h2>
 
   <h3>Recreation of Database</h3>
@@ -92,5 +97,50 @@
   <img src="/Images/Prototypes/Clinical/Submit.png">
 
   <h3>Receptionist Viewpoint</h3>
+
+  <h4>Login</h4>
+  <img src="/Images/Prototypes/Receptionist/Receptionist Login.png">
+  
+  <h4>Main Page</h4>
+  <img src="/Images/Prototypes/Receptionist/Receptionist.png">
+  
+  <h4>Create Appointment</h4>
+  <img src="/Images/Prototypes/Receptionist/Create Appointment.png">
+    
+  <h4>Update Appointment</h4>
+  <img src="/Images/Prototypes/Receptionist/Update Appointment.png">
+
   <h3>Medical Records Viewpoint</h3>
+  
+  <h4>Sign Up</h4>
+  <img src="/Images/Prototypes/MedicalRecords/Sign Up page (1).png">
+    
+  <h4>Sign Up</h4>
+  <img src="/Images/Prototypes/MedicalRecords/Login page.png">
+    
+  <h4>Main Menu</h4>
+  <img src="/Images/Prototypes/MedicalRecords/Main Menu.png">
+    
+  <h4>Patient List 1</h4>
+  <img src="/Images/Prototypes/MedicalRecords/Patients List.png">
+      
+  <h4>Patient List 2</h4>
+  <img src="/Images/Prototypes/MedicalRecords/Patient List.png">
+    
+  <h4>Patient Info</h4>
+  <img src="/Images/Prototypes/MedicalRecords/Patient Info.png">
+  
+  <h4>Requests</h4>
+  <img src="/Images/Prototypes/MedicalRecords/Requests.png">
+    
+  <h4>Transactions</h4>
+  <img src="/Images/Prototypes/MedicalRecords/Transactions.png">
+
+  
   <h3>Health Service Viewpoint</h3>
+
+  <h4>Login</h4>
+  <img src="/Images/Prototypes/HealthService/Health Service Login.png">
+  
+  <h4>Main Page</h4>
+  <img src="/Images/Prototypes/HealthService/Health Service.png">
