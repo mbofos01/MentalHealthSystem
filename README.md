@@ -4,9 +4,13 @@
 
 <h2>Team members</h2>
   Michail - Panagiotis Bofos
+  <br>
   Demetra Hadjicosti
+  <br>
   Ioanna Theophilou
+  <br>
   Lucia Jimenez Garcia
+  <br>
 
 
 <h2>Model Structure <i>(Client-Server)</i></h2>
