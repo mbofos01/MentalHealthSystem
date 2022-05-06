@@ -75,7 +75,7 @@ public class Receptionist {
 	 * Create the Application
 	 * 
 	 * @param client Client object for server client communication
-	 * @param model Receptionist instance
+	 * @param model  Receptionist instance
 	 */
 	public Receptionist(Client client, ReceptionistObj model) {
 		initialize(client, model);
@@ -85,7 +85,7 @@ public class Receptionist {
 	 * Initialize the contents of the frame
 	 * 
 	 * @param client Client object for server client communication
-	 * @param model Receptionist instance
+	 * @param model  Receptionist instance
 	 */
 	private void initialize(Client client, ReceptionistObj model) {
 		frmReceptionist = new JFrame();
@@ -202,14 +202,20 @@ public class Receptionist {
 				client.send(q);
 				Treatment app = new Gson().fromJson(client.read(), Treatment.class);
 				app.setDate(Clock.currentSQLTime());
-				if (app.isAccepted()) {
-					q = new Query(Viewpoint.Receptionist);
-					q.setFunction("addTreatment");
-					q.addArgument(new Gson().toJson(app));
-					client.send(q);
-				} else {
+				if (app.equals(null)) {
 					JOptionPane.showMessageDialog(frmReceptionist.getContentPane(),
-							"Prescription cannot be done, because treatment has not been accepted yet.");
+							"Prescription cannot be done, no previous prescription is recorder.");
+				} else {
+					if (app.isAccepted()) {
+						q = new Query(Viewpoint.Receptionist);
+						q.setFunction("addTreatment");
+						q.addArgument(new Gson().toJson(app));
+						client.send(q);
+						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(),
+								"Prescription repeated.");
+					} else
+						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(),
+								"Prescription cannot be done, because treatment has not been accepted yet.");
 				}
 			}
 		});
