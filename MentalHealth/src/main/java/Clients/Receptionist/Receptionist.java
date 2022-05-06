@@ -375,7 +375,6 @@ public class Receptionist {
 				ArrayList<Patient> missed = new ArrayList<>();
 				for (Appointment ap : appointments) {
 					if (ap.getDate().equals(Clock.currentSQLTime()) && ap.isAttended() == false) {
-						System.out.println(ap.getAppoint_id() + " den irthe");
 						Query pat = new Query(Viewpoint.Receptionist);
 						pat.setFunction("getPatientByID");
 						pat.addArgument("" + ap.getPatient_id());
