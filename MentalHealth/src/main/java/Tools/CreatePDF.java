@@ -170,6 +170,11 @@ public class CreatePDF {
 		}
 	}
 
+	/**
+	 * This function creates a PDF report for all patients whom lost an appointment.
+	 * 
+	 * @param list An ArrayList of patients
+	 */
 	public static void createMissed(ArrayList<Patient> list) {
 		Document doc = new Document();
 		try {
@@ -213,6 +218,12 @@ public class CreatePDF {
 		}
 	}
 
+	/**
+	 * This function creates a PDF report of patients whose records did not get
+	 * updated.
+	 * 
+	 * @param list An ArrayList of patients
+	 */
 	public static void createNotUpdated(ArrayList<Patient> list) {
 		Document doc = new Document();
 		try {
