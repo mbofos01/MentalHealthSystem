@@ -5,33 +5,22 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 import Clients.Client;
-import Objects.Drug;
-import Objects.RecordsStaff;
 import Objects.Request;
 import Objects.Transaction;
 import Tools.CustomColours;
-import Tools.Query;
-import Tools.Viewpoint;
-
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.google.gson.Gson;
-
-import static javax.swing.JOptionPane.showMessageDialog;
-
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+
 /**
- * This class represents 
+ * This class represents
+ * 
  * @author Ioanna Theophilou
  *
  */
@@ -54,8 +43,9 @@ public class Transactions {
 	private JLabel lblNewLabel;
 
 	/**
-	 * to start the app
-	 * @param client
+	 * To start the application.
+	 * 
+	 * @param client Client object
 	 */
 	private void initialize(Client client) {
 		frame = new JFrame();
@@ -71,10 +61,9 @@ public class Transactions {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		String col[] = { "Request Type", "Request", "Accepted", "Date" };
 		int index = 0;
-		System.out.println(Transaction.req.size());
 		String data[][] = new String[Transaction.req.size()][col.length];
 		for (Request tr : Transaction.req) {
 			data[index][0] = tr.getType() + "";
@@ -93,7 +82,7 @@ public class Transactions {
 		scrollPane.setViewportView(table);
 		table = new JTable(model);
 		scrollPane.setViewportView(table);
-		
+
 		lblNewLabel = new JLabel("All Transactions");
 		lblNewLabel.setFont(new Font("Segoe Script", Font.PLAIN, 25));
 		lblNewLabel.setBounds(153, 10, 255, 60);
@@ -101,18 +90,20 @@ public class Transactions {
 		table.setDefaultEditor(Object.class, null);
 
 	}
+
 	/**
-	 * The constructor 
-	 * @param client
+	 * The constructor
+	 * 
+	 * @param client Client object
 	 */
 	public Transactions(Client client) {
 		initialize(client);
 	}
-	
+
 	/**
-	 * The function to open this window. 
-	 * @param client
-	 * @param req
+	 * The function to open this window.
+	 * 
+	 * @param client Client object
 	 */
 	public static void openWindow(Client client) {
 		EventQueue.invokeLater(new Runnable() {

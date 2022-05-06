@@ -326,8 +326,8 @@ public class JDBC {
 	/**
 	 * This method returns the allergy by id.
 	 * 
-	 * @param id
-	 * @return the allergy.
+	 * @param id Integer id
+	 * @return the allergy (Allergy object)
 	 */
 	public Allergy getAllergy(int id) {
 		try {
@@ -350,7 +350,6 @@ public class JDBC {
 		}
 		Allergy rec = new Allergy();
 		rec.setAllergy_id(-1);
-		System.out.println("rec");
 		return rec;
 	}
 
@@ -435,11 +434,13 @@ public class JDBC {
 	}
 
 	/**
-	 * This is used for the insertDoctorPatientRelationship procedure found on the DB. This is used in the Assign.java file 
-	 * where the Medical Records staff can assign patients to Doctors. 
-	 * @param patient_id
-	 * @param doctor_id
-	 * @return
+	 * This is used for the insertDoctorPatientRelationship procedure found on the
+	 * DB. This is used in the Assign.java file where the Medical Records staff can
+	 * assign patients to Doctors.
+	 * 
+	 * @param patient_id Integer patient id
+	 * @param doctor_id  Integer doctor id
+	 * @return True if insert was successful otherwise false
 	 */
 	public boolean insertDoctorPatientRelationship(int patient_id, int doctor_id) {
 		try {
@@ -454,9 +455,11 @@ public class JDBC {
 		}
 		return false;
 	}
+
 	/**
-	 * This procedure changes the accept field when needed of the allergy Table. 
-	 * @param recId
+	 * This procedure changes the accept field when needed of the allergy Table.
+	 * 
+	 * @param recId Integer record id
 	 * @return a flag for true or false only for checking purposes
 	 */
 	public boolean changeAllAccept(int recId) {
@@ -470,9 +473,11 @@ public class JDBC {
 		}
 		return false;
 	}
+
 	/**
-	 * This procedure changes the accept field when needed of the Records Table. 
-	 * @param recId
+	 * This procedure changes the accept field when needed of the Records Table.
+	 * 
+	 * @param recId Integer record id
 	 * @return a flag for true or false only for checking purposes
 	 */
 	public boolean changeRecAccept(int recId) {
@@ -486,11 +491,12 @@ public class JDBC {
 		}
 		return false;
 	}
+
 	/**
-	 * This procedure deletes the patient from the pending patients table, and updates the corresponding
-	 * patient as not alive. 
-	 *  
-	 * @param recId
+	 * This procedure deletes the patient from the pending patients table, and
+	 * updates the corresponding patient as not alive.
+	 * 
+	 * @param recId Integer record id
 	 * @return a flag for true or false only for checking purposes
 	 */
 	public boolean changeDeath(int recId) {
@@ -504,9 +510,11 @@ public class JDBC {
 		}
 		return false;
 	}
+
 	/**
-	 * This procedure changes the accept field when needed of the Treatments Table. 
-	 * @param recId
+	 * This procedure changes the accept field when needed of the Treatments Table.
+	 * 
+	 * @param recId Integer record id
 	 * @return a flag for true or false only for checking purposes
 	 */
 	public boolean changeTreatAccept(int recId) {
@@ -726,7 +734,6 @@ public class JDBC {
 			cs.setBoolean(8, treat.isAccepted());
 			cs.setString(9, treat.getDate());
 			cs.execute();
-			System.out.println(cs.getInt(1));
 			return cs.getInt(1);
 
 		} catch (SQLException e) {
@@ -861,8 +868,7 @@ public class JDBC {
 		ArrayList<Counter> merged = new ArrayList<>();
 		ArrayList<Doctor> doctors_of_a_clinic = this.getDoctorsOfAClinic(clinic_id);
 		String week[] = Clock.getLastWeek();
-		for (String week_day : week)
-			System.out.println(week_day);
+
 		try {
 			for (String day : week) {
 				ArrayList<Condition> conds = this.getConditions();
@@ -896,8 +902,6 @@ public class JDBC {
 				merged.add(inse);
 
 			}
-			for (Counter m : merged)
-				System.out.println(m.getName() + " " + m.getValue());
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -917,8 +921,7 @@ public class JDBC {
 		ArrayList<Counter> merged = new ArrayList<>();
 		ArrayList<Doctor> doctors_of_a_clinic = this.getDoctorsOfAClinic(clinic_id);
 		String week[] = Clock.getLastWeek();
-		for (String week_day : week)
-			System.out.println(week_day);
+
 		try {
 			for (String day : week) {
 				ArrayList<Drug> drugs = this.getDrugList();
@@ -953,17 +956,16 @@ public class JDBC {
 				merged.add(inse);
 
 			}
-			for (Counter m : merged)
-				System.out.println(m.getName() + " " + m.getValue());
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return merged;
 	}
+
 	/**
-	 * This procedure returns a list of all the Doctors. 
-	 * @param recId
+	 * This procedure returns a list of all the Doctors.
+	 * 
 	 * @return a list of the doctors
 	 */
 	public ArrayList<Doctor> getDoctors() {
@@ -992,9 +994,10 @@ public class JDBC {
 		}
 		return doctors;
 	}
+
 	/**
-	 * This procedure returns a list of all the Patients. 
-	 * @param recId
+	 * This procedure returns a list of all the Patients.
+	 * 
 	 * @return a list of the patients
 	 */
 	public ArrayList<Patient> getPatients() {
@@ -1114,14 +1117,14 @@ public class JDBC {
 		}
 		return rendez;
 	}
+
 	/**
-	 * There are 4 types of Requests : 
-	 * - Treatments
-	 * - Records
-	 * - Patients
-	 * - Allergies
+	 * There are 4 types of Requests : - Treatments - Records - Patients - Allergies
 	 * 
-	 * This returns all the requests, meaning all the above types where the accept field is 0	  
+	 * This returns all the requests, meaning all the above types where the accept
+	 * field is 0
+	 * 
+	 * @return An ArrayList of Request objects
 	 */
 	public ArrayList<Request> getRequests() {
 		ArrayList<Request> requests = new ArrayList<>();
@@ -1329,9 +1332,7 @@ public class JDBC {
 				cs.execute();
 
 				week[i] = cs.getInt(1);
-				System.out.println(dates[i] + " " + week[i]);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -1341,9 +1342,9 @@ public class JDBC {
 	}
 
 	/**
-	 * This method, fetches all the patients from the database
+	 * Main function no needed for the project, only for testing.
 	 * 
-	 * @return An Array List that contains all patients in the database
+	 * @param args No arguments needed
 	 */
 	public static void main(String[] args) {
 		JDBC base = new JDBC();
@@ -1351,9 +1352,9 @@ public class JDBC {
 
 	}
 
-//***************************************************/
 	/**
-	 * This returns the patient by the id. 
+	 * This returns the patient by the id.
+	 * 
 	 * @param pat the patient id
 	 * @return the patient with that id
 	 */
@@ -1384,8 +1385,9 @@ public class JDBC {
 //***************************************************/		
 	/**
 	 * Returns a patient Record by the id
-	 * @param pat
-	 * @return
+	 * 
+	 * @param pat Integer patient id
+	 * @return PatientRecord object
 	 */
 	public PatientRecord getRecordByID(int pat) {
 		try {
@@ -1541,7 +1543,6 @@ public class JDBC {
 	 */
 	public Appointment getAppointment(int app_id) {
 		Appointment rec = new Appointment();
-		System.out.println(app_id);
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call ShowAppointment(?)}");
 			cs.setInt(1, app_id);
@@ -1576,7 +1577,6 @@ public class JDBC {
 			ResultSet rs = cs.executeQuery();
 			while (rs.next()) {
 				is = rs.getBoolean("alive");
-				System.out.println(is);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1670,8 +1670,6 @@ public class JDBC {
 	 * @param treat Updated Treatment record
 	 */
 	public void updateTreatment(Treatment treat) {
-		System.out.println("\n\n Update Treatment \n\n");
-
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call updateTreatment(?, ?, ?, ?, ?, ?)}");
 			cs.setInt(1, treat.getTreatment_id());
@@ -1693,7 +1691,6 @@ public class JDBC {
 	 * @param rec Updated Patient record
 	 */
 	public void updateRecord(PatientRecord rec) {
-		System.out.println("\n\n Update Record \n\n");
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call updateRecord(?, ?, ?, ?, ?, ?, ?, ?)}");
 			cs.setInt(1, rec.getRecord_id());

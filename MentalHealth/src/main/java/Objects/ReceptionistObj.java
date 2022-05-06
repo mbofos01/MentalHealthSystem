@@ -10,120 +10,129 @@ package Objects;
  */
 public class ReceptionistObj {
 
-			/**
-			 * A Health Service person must have an id.
-			 */
-			private int id;
-			/**
-			 * A Health Service person must have a name.
-			 */
-			private String name;
-			/**
-			 * A Health Service person must have a surname.
-			 */
-			private String surname;
-			/**
-			 * A Health person must have an email.
-			 */
-			private String email;
-			/**
-			 * A Health Service person must have an username.
-			 */
-			private String username;
-			/**
-			 * 
-			 */
-			private int clinic_id;
-			/**
-			 * @return the id
-			 */
-			public int getId() {
-				return id;
-			}
+	/**
+	 * A Health Service person must have an id.
+	 */
+	private int id;
+	/**
+	 * A Health Service person must have a name.
+	 */
+	private String name;
+	/**
+	 * A Health Service person must have a surname.
+	 */
+	private String surname;
+	/**
+	 * A Health person must have an email.
+	 */
+	private String email;
+	/**
+	 * A Health Service person must have an username.
+	 */
+	private String username;
+	/**
+	 * 
+	 */
+	private int clinic_id;
 
-			/**
-			 * @param id the id to set
-			 */
-			public void setId(int id) {
-				this.id = id;
-			}
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
 
-			/**
-			 * @return the name
-			 */
-			public String getName() {
-				return name;
-			}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
 
-			/**
-			 * @param name the name to set
-			 */
-			public void setName(String name) {
-				this.name = name;
-			}
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-			/**
-			 * @return the surname
-			 */
-			public String getSurname() {
-				return surname;
-			}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-			/**
-			 * @param surname the surname to set
-			 */
-			public void setSurname(String surname) {
-				this.surname = surname;
-			}
+	/**
+	 * @return the surname
+	 */
+	public String getSurname() {
+		return surname;
+	}
 
-			/**
-			 * @return the email
-			 */
-			public String getEmail() {
-				return email;
-			}
+	/**
+	 * @param surname the surname to set
+	 */
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
 
-			/**
-			 * @param email the email to set
-			 */
-			public void setEmail(String email) {
-				this.email = email;
-			}
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
 
-			/**
-			 * @return the username
-			 */
-			public String getUsername() {
-				return username;
-			}
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-			/**
-			 * @param username the username to set
-			 */
-			public void setUsername(String username) {
-				this.username = username;
-			}
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
 
-			@Override
-			public String toString() {
-				return "Receptionist [id=" + id + ", name=" + name + ", surname=" + surname + ", email=" + email + ", username="
-						+ username + "]";
-			}
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-			/**
-			 * If we want to indicate a failed log in attempt we add the id value -1.
-			 */
-			public void emptyValue() {
-				id = -1;
+	@Override
+	public String toString() {
+		return "Receptionist [id=" + id + ", name=" + name + ", surname=" + surname + ", email=" + email + ", username="
+				+ username + "]";
+	}
 
-			}
+	/**
+	 * If we want to indicate a failed log in attempt we add the id value -1.
+	 */
+	public void emptyValue() {
+		id = -1;
 
-			public int getClinic_id() {
-				return clinic_id;
-			}
+	}
 
-			public void setClinic_id(int clinic_id) {
-				this.clinic_id = clinic_id;
-			}
+	/**
+	 * 
+	 * @return Integer clinic id
+	 */
+	public int getClinic_id() {
+		return clinic_id;
+	}
+
+	/**
+	 * 
+	 * @param clinic_id Integer clinic id
+	 */
+	public void setClinic_id(int clinic_id) {
+		this.clinic_id = clinic_id;
+	}
 
 }

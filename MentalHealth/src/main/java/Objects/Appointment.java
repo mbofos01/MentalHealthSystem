@@ -49,6 +49,7 @@ public class Appointment {
 	 * Each appointment could have a record id to correspond
 	 */
 	private int clinic_id;
+
 	/**
 	 * @return the appoint_id
 	 */
@@ -191,10 +192,18 @@ public class Appointment {
 		this.attended = attended;
 	}
 
+	/**
+	 * 
+	 * @return Integer clinic id
+	 */
 	public int getClinic_id() {
 		return clinic_id;
 	}
 
+	/**
+	 * 
+	 * @param clinic_id Integer clinic id
+	 */
 	public void setClinic_id(int clinic_id) {
 		this.clinic_id = clinic_id;
 	}

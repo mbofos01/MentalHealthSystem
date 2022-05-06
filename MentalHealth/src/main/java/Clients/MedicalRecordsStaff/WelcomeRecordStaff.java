@@ -8,8 +8,6 @@ import javax.swing.JLabel;
 
 import Clients.Client;
 import Objects.RecordsStaff;
-import Tools.Query;
-import Tools.Viewpoint;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.SystemColor;
@@ -21,7 +19,7 @@ import java.awt.event.ActionEvent;
  * This application windows is used (as of now) just for displaying some info
  * about the record management staff.
  * 
- *@author Ioanna Theophilou
+ * @author Ioanna Theophilou
  *
  */
 public class WelcomeRecordStaff {
@@ -67,10 +65,6 @@ public class WelcomeRecordStaff {
 	 * @param model  RecordStaff object for the person logged in
 	 */
 	private void initialize(Client client, RecordsStaff model) {
-		Query q = new Query(Viewpoint.Clinical);
-		
-		q.setFunction("see");
-		client.send(q);
 		frame = new JFrame();
 		frame.getContentPane().setForeground(Color.RED);
 		frame.setBounds(100, 100, 899, 442);
@@ -86,12 +80,12 @@ public class WelcomeRecordStaff {
 		lblNewLabel_1.setFont(new Font("Segoe Script", Font.PLAIN, 29));
 		lblNewLabel_1.setBounds(517, 22, 195, 48);
 		frame.getContentPane().add(lblNewLabel_1);
-		
+
 		JLabel lblNewLabel_4 = new JLabel("Welcome");
 		lblNewLabel_4.setFont(new Font("Segoe Script", Font.BOLD, 32));
 		lblNewLabel_4.setBounds(152, 10, 243, 70);
 		frame.getContentPane().add(lblNewLabel_4);
-		
+
 		JButton btnNewButton = new JButton("Transactions");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -102,7 +96,7 @@ public class WelcomeRecordStaff {
 		btnNewButton.setFont(new Font("Segoe Script", Font.PLAIN, 20));
 		btnNewButton.setBounds(82, 161, 183, 151);
 		frame.getContentPane().add(btnNewButton);
-		
+
 		JButton btnNewButton_1 = new JButton("View Requests");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -113,7 +107,7 @@ public class WelcomeRecordStaff {
 		btnNewButton_1.setBackground(SystemColor.inactiveCaption);
 		btnNewButton_1.setBounds(383, 161, 183, 151);
 		frame.getContentPane().add(btnNewButton_1);
-		
+
 		JButton btnNewButton_1_1 = new JButton("Assign Patients");
 		btnNewButton_1_1.setFont(new Font("Segoe Script", Font.PLAIN, 16));
 		btnNewButton_1_1.setBackground(SystemColor.inactiveCaption);
@@ -124,8 +118,6 @@ public class WelcomeRecordStaff {
 			}
 		});
 		frame.getContentPane().add(btnNewButton_1_1);
-		
-		
 
 	}
 }

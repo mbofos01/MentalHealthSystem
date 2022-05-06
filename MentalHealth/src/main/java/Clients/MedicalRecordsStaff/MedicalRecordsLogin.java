@@ -15,17 +15,13 @@ import javax.swing.SwingConstants;
 import com.google.gson.Gson;
 
 import Clients.Client;
-import Objects.Clinic;
-import Objects.Condition;
 import Objects.RecordsStaff;
 import Tools.Query;
 import Tools.Viewpoint;
 import Tools.CustomColours;
 
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import javax.swing.JComboBox;
 
 /**
  * In-page for the Medical Records Management Viewpoint. As stated in the basic
@@ -36,7 +32,7 @@ import javax.swing.JComboBox;
  */
 public class MedicalRecordsLogin {
 	/**
-	 * Frame 
+	 * Frame
 	 */
 	private JFrame frmMedicalRecordsStaff;
 	/**
@@ -133,7 +129,6 @@ public class MedicalRecordsLogin {
 					System.exit(0);
 
 				} else {
-					System.out.println(record.toString());
 					frmMedicalRecordsStaff.dispose();
 					WelcomeRecordStaff.openWindow(client, record);
 				}
@@ -175,8 +170,5 @@ public class MedicalRecordsLogin {
 		title2.setBounds(154, 69, 239, 38);
 		frmMedicalRecordsStaff.getContentPane().add(title2);
 
-		
-
-		
 	}
 }

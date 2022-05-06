@@ -1,7 +1,5 @@
 package Clients.MedicalRecordsStaff;
 
-import static javax.swing.JOptionPane.showMessageDialog;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -11,7 +9,6 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -22,13 +19,13 @@ import com.google.gson.Gson;
 
 import Clients.Client;
 import Objects.Request;
-import Objects.Transaction;
 import Tools.CustomColours;
 import Tools.Query;
 import Tools.Viewpoint;
+
 /**
- * This class represents the Requests. It shows all the requests of this system. 
- * If a request is selected, it can be accepted or declined. 
+ * This class represents the Requests. It shows all the requests of this system.
+ * If a request is selected, it can be accepted or declined.
  * 
  * @author Ioanna Theophilou
  *
@@ -43,7 +40,7 @@ public class Requests {
 	 */
 	private JPanel contentPane;
 	/**
-	 * the table used bellow 
+	 * the table used bellow
 	 */
 	public static JTable table;
 	/**
@@ -53,10 +50,13 @@ public class Requests {
 	/**
 	 * the client
 	 */
+	@SuppressWarnings("unused")
 	private Client client;
-	
+
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client Client object
 	 */
 	private void initialize(Client client) {
 
@@ -80,7 +80,6 @@ public class Requests {
 		client.send(q);
 
 		Integer size = new Gson().fromJson(client.read(), Integer.class);
-		// System.out.println(size);.
 		ArrayList<Request> req = new ArrayList<Request>();
 		for (int i = 0; i < size; i++)
 			req.add(new Gson().fromJson(client.read(), Request.class));
@@ -107,10 +106,7 @@ public class Requests {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int p = table.getSelectedRow();
-				System.out.println("i selected: " + req.get(p).getDescr());
-				
 				HandleRequests.openWindow(client, req.get(p));
-				
 				frmAllRequests.dispose();
 			}
 		});
@@ -122,17 +118,30 @@ public class Requests {
 		table.setDefaultEditor(Object.class, null);
 
 	}
+
+	/**
+	 * Static table access.
+	 * 
+	 * @return JTable object
+	 */
 	public static JTable getTable() {
 		return table;
 	}
+
+	/**
+	 * Alter JTable.
+	 * 
+	 * @param table JTable object
+	 */
+	@SuppressWarnings("static-access")
 	public void setTable(JTable table) {
 		this.table = table;
 	}
-	
+
 	/**
-	 * The function to open this window. 
-	 * @param client
-	 * @param req
+	 * The function to open this window.
+	 * 
+	 * @param client Client object
 	 */
 	public static void openWindow(Client client) {
 		EventQueue.invokeLater(new Runnable() {
@@ -146,6 +155,12 @@ public class Requests {
 			}
 		});
 	}
+
+	/**
+	 * Constructor with client.
+	 * 
+	 * @param client Client object
+	 */
 	public Requests(Client client) {
 		initialize(client);
 	}

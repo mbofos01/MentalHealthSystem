@@ -12,20 +12,19 @@ import javax.swing.JTable;
 import com.google.gson.Gson;
 
 import Clients.Client;
-import Objects.Clinic;
 import Objects.Doctor;
 import Objects.Patient;
-import Objects.Transaction;
 import Tools.Query;
 import Tools.Viewpoint;
 import javax.swing.JButton;
-import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 /**
  * To assign the patient with the doctors.
+ * 
  * @author Ioanna Theophilou
  *
  */
@@ -37,6 +36,7 @@ public class Assign {
 	/**
 	 * The content pane
 	 */
+	@SuppressWarnings("unused")
 	private JPanel contentPane;
 	/**
 	 * The table used bellow
@@ -45,22 +45,28 @@ public class Assign {
 	/**
 	 * The label used bellow
 	 */
+	@SuppressWarnings("unused")
 	private JLabel lblNewLabel;
 	/**
 	 * The client used bellow
 	 */
+	@SuppressWarnings("unused")
 	private Client client;
 	/**
-	 * The index of the selected item of one of the dropdown lists. 
+	 * The index of the selected item of one of the dropdown lists.
 	 */
+	@SuppressWarnings("unused")
 	private int selected = -1;
 	/**
-	 * The index of the selected item of the other dropdown list. 
+	 * The index of the selected item of the other dropdown list.
 	 */
+	@SuppressWarnings("unused")
 	private int selected1 = -1;
 
 	/**
 	 * Initialize the contents of the frame.
+	 *
+	 * @param client Client Object
 	 */
 	private void initialize(Client client) {
 
@@ -82,8 +88,6 @@ public class Assign {
 
 		for (int i = 0; i < size; i++)
 			p.add(new Gson().fromJson(client.read(), Patient.class));
-
-		System.out.println(p.size());
 
 		for (int i = 0; i < size; i++) {
 			Patient patient = p.get(i);
@@ -130,18 +134,18 @@ public class Assign {
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnNewButton.setBounds(360, 214, 100, 55);
 		frmAssignPatientTo.getContentPane().add(btnNewButton);
-		
+
 		JLabel lblNewLabel_1 = new JLabel("Assign Patient to Doctor");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		lblNewLabel_1.setBounds(119, 10, 326, 79);
 		frmAssignPatientTo.getContentPane().add(lblNewLabel_1);
 
 	}
-	
+
 	/**
-	 * The function to open this window. 
-	 * @param client
-	 * @param req
+	 * The function to open this window.
+	 * 
+	 * @param client Client object
 	 */
 	public static void openWindow(Client client) {
 		EventQueue.invokeLater(new Runnable() {
@@ -156,6 +160,11 @@ public class Assign {
 		});
 	}
 
+	/**
+	 * Constructor with client.
+	 * 
+	 * @param client Client object
+	 */
 	public Assign(Client client) {
 		initialize(client);
 	}

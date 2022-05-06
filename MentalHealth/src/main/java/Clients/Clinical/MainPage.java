@@ -114,7 +114,6 @@ public class MainPage {
 		client.send(q);
 
 		Integer size = new Gson().fromJson(client.read(), Integer.class);
-		// System.out.println(size);
 		ArrayList<Drug> drug_list = new ArrayList<Drug>();
 		for (int i = 0; i < size; i++)
 			drug_list.add(new Gson().fromJson(client.read(), Drug.class));
@@ -185,7 +184,6 @@ public class MainPage {
 		client.send(q);
 
 		size = new Gson().fromJson(client.read(), Integer.class);
-		// System.out.println(size);
 		ArrayList<Patient> patient_list = new ArrayList<Patient>();
 		for (int i = 0; i < size; i++)
 			patient_list.add(new Gson().fromJson(client.read(), Patient.class));
@@ -257,7 +255,6 @@ public class MainPage {
 		client.send(getApps);
 
 		Integer size_ap = new Gson().fromJson(client.read(), Integer.class);
-		// System.out.println(size);
 		ArrayList<Appointment> list = new ArrayList<Appointment>();
 		for (int i = 0; i < size_ap; i++)
 			list.add(new Gson().fromJson(client.read(), Appointment.class));
@@ -278,7 +275,6 @@ public class MainPage {
 			else
 				data3[index3][4] = "YES";
 
-			// System.out.println(data3[index3][3]);
 			index3++;
 		}
 

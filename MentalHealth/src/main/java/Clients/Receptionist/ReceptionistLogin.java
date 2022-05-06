@@ -64,7 +64,7 @@ public class ReceptionistLogin {
 	/**
 	 * Create the application.
 	 * 
-	 * @param client Client object must be passed in order to communicate with the
+	 * @param Client Client object must be passed in order to communicate with the
 	 *               server
 	 */
 	public ReceptionistLogin(Client Client) {
@@ -125,7 +125,6 @@ public class ReceptionistLogin {
 					System.exit(0);
 
 				} else {
-					System.out.println(record.toString());
 					frmReceptionistLogin.dispose();
 					Receptionist.openWin(client, record);
 				}

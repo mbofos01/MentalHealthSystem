@@ -39,7 +39,6 @@ public class RecordReport {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("From now on " + file.getAbsolutePath() + " will be your console");
 		PrintStream stdout = System.out;
 		System.setOut(stream);
 

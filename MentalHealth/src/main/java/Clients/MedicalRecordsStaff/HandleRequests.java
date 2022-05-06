@@ -1,15 +1,10 @@
 package Clients.MedicalRecordsStaff;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,10 +17,6 @@ import javax.swing.table.DefaultTableModel;
 import com.google.gson.Gson;
 
 import Clients.Client;
-import Objects.Allergy;
-import Objects.Appointment;
-import Objects.Doctor;
-import Objects.Drug;
 import Objects.Patient;
 import Objects.PatientRecord;
 import Objects.Request;
@@ -34,8 +25,10 @@ import Tools.CustomColours;
 import Tools.Query;
 import Tools.RequestType;
 import Tools.Viewpoint;
+
 /**
- * The class that handles each request differently according to the type. 
+ * The class that handles each request differently according to the type.
+ * 
  * @author Ioanna Theophilou
  *
  */
@@ -45,20 +38,22 @@ public class HandleRequests {
 	 */
 	private JFrame frmRequestDescription;
 	/**
-	 * the content pane 
+	 * the content pane
 	 */
 	private JPanel contentPane;
 	/**
-	 * the table used 
+	 * the table used
 	 */
 	private JTable table;
 	/**
-	 * a label used bellow 
+	 * a label used bellow
 	 */
+	@SuppressWarnings("unused")
 	private JLabel lblNewLabel;
 	/**
 	 * The client
 	 */
+	@SuppressWarnings("unused")
 	private Client client;
 	/**
 	 * the button used bellow
@@ -74,8 +69,11 @@ public class HandleRequests {
 	 */
 
 	/**
-	 * Create the application. The constructor of this class that gets a selected request 
-	 * from the Request table of the Request.java table. 
+	 * Create the application. The constructor of this class that gets a selected
+	 * request from the Request table of the Request.java table.
+	 * 
+	 * @param client Client object
+	 * @param req    Request object
 	 */
 	public HandleRequests(Client client, Request req) {
 		initialize(client, req);
@@ -83,6 +81,9 @@ public class HandleRequests {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
+	 * @param client Client object
+	 * @param req    Request object
 	 */
 	private void initialize(Client client, Request re) {
 		frmRequestDescription = new JFrame();
@@ -250,7 +251,6 @@ public class HandleRequests {
 					getR.addArgument("" + re.getId());
 					client.send(getR);
 					PatientRecord late = new Gson().fromJson(client.read(), PatientRecord.class);
-					System.out.println("KS: " + re.getId());
 					int patient_id = late.getPatient_id();
 					// get patient
 					Query getP = new Query(Viewpoint.MedicalRecords);
@@ -258,9 +258,7 @@ public class HandleRequests {
 					getP.addArgument("" + patient_id);
 					client.send(getP);
 					Patient pate = new Gson().fromJson(client.read(), Patient.class);
-					System.out.println(patient_id + " " + late.getRecord_id() + " " + late.isSelf_harm());
 					if (pate.isAlive() && late.isSelf_harm()) {
-						System.out.println("HELLOOOO");
 						String message = "Dear caregiver we regret to inform you that " + pate.getName() + " "
 								+ pate.getSurname() + " has shown signs of self harm.";
 						Tools.EmailService.sendEmail(pate.getEmail(), "URGENT SELF HARM", message, false);
@@ -349,14 +347,15 @@ public class HandleRequests {
 		}
 
 	}
+
 	/**
-	 * The function to open this window. 
-	 * @param client
-	 * @param req
+	 * The function to open this window.
+	 * 
+	 * @param client Client object
+	 * @param req    Request object
 	 */
 
 	public static void openWindow(Client client, Request req) {
-		// System.out.println("MPIKA");
 		EventQueue.invokeLater(new Runnable() {
 
 			public void run() {

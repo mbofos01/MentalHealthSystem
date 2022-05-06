@@ -117,7 +117,6 @@ public class Diagnosis {
 	 */
 	private void initialize(Client client, Doctor doctor, Patient patient, ArrayList<Drug> drugs, PatientRecord last,
 			boolean updateRecord, boolean updateTreatment, Appointment appointment) {
-		System.out.println(last.getTreatment_id());
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(CustomColours.interChangableWhite());
@@ -164,13 +163,11 @@ public class Diagnosis {
 
 		JComboBox<String> treatmentDropdown = new JComboBox<String>();
 		treatmentDropdown.addItem("No Treatment");
-		System.out.println("TR: " + last.getTreatment_id());
 		int selected_drug = 0;
 		for (int i = 0; i < size; i++) {
 			Drug dr = drugs.get(i);
 			treatmentDropdown.addItem(dr.getCommercial_name());
 			if (last.getTreatment() != null && last.getTreatment().getDrug_id() == dr.getId()) {
-				System.out.println("selectd: " + i + " " + drugs.get(i).getCommercial_name());
 				selected_drug = i + 1;
 			}
 		}
@@ -260,7 +257,6 @@ public class Diagnosis {
 		ArrayList<Allergy> getPatientAllergies = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
 			getPatientAllergies.add(new Gson().fromJson(client.read(), Allergy.class));
-			// System.out.println(getPatientAllergies.get(i).getDrug_id());
 		}
 
 		submitBtn.setForeground(CustomColours.interChangableWhite());
@@ -299,15 +295,12 @@ public class Diagnosis {
 					 * insert treatment and fetch its id
 					 */
 					if (updateTreatment == false) {
-						System.out.println("FTIAXNO KAINOURGIO TREATMENT ");
 						Query addTreatmentQuery = new Query(Viewpoint.Clinical);
 						addTreatmentQuery.setFunction("addTreatment");
 						addTreatmentQuery.addArgument(new Gson().toJson(treat));
 						client.send(addTreatmentQuery);
 						treat_id = new Gson().fromJson(client.read(), Integer.class);
-						System.out.print(treat_id + " \n");
 					} else if (updateTreatment == true) {
-						System.out.println("ALLAZO TO TREATMENT " + last.getTreatment_id());
 						treat.setLast_updated(Clock.currentSQLTime());
 						treat.setTreatment_id(last.getTreatment_id());
 						Query updateOne = new Query(Viewpoint.Clinical);
@@ -316,7 +309,6 @@ public class Diagnosis {
 
 						client.send(updateOne);
 						treat_id = last.getTreatment_id();
-						System.out.println("UPDATE TREATMENT id: " + treat_id + " " + last.getTreatment_id());
 					}
 					addTreament = true;
 
@@ -351,7 +343,6 @@ public class Diagnosis {
 					record.setTreatment_id(-1);
 				}
 				if (updateRecord == false) {
-					System.out.println("ADDITION");
 					Query addRecordQuery = new Query(Viewpoint.Clinical);
 					addRecordQuery.setFunction("addRecord");
 					addRecordQuery.addArgument(new Gson().toJson(record));

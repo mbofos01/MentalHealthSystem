@@ -122,7 +122,6 @@ public class PatientView {
 			for (int i = 0; i < size; i++)
 				patient_records.add(new Gson().fromJson(client.read(), PatientRecord.class));
 
-			// System.out.println(size);
 			if (patient_records.size() != 0)
 				last = patient_records.get(patient_records.size() - 1);
 		}
@@ -173,7 +172,6 @@ public class PatientView {
 		addComment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// System.out.println(commentsText.getText());
 				if (commentsText.getText().length() > 0) {
 					Query q = new Query(Viewpoint.Clinical);
 					q.setFunction("addComment");
@@ -182,7 +180,6 @@ public class PatientView {
 					q.addArgument(commentsText.getText());
 					client.send(q);
 					String answer = client.read();
-					// System.out.println(answer);
 					if (answer.equals("SUCCESS")) {
 						JOptionPane.showMessageDialog(null, "          Comment Submitted!" + '\n', "Submitted Comment",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -249,7 +246,6 @@ public class PatientView {
 				q.setFunction("getConditions");
 				client.send(q);
 				Integer size = new Gson().fromJson(client.read(), Integer.class);
-				// System.out.println(size);
 				ArrayList<Condition> conds = new ArrayList<>();
 
 				for (int i = 0; i < size; i++)
@@ -298,7 +294,6 @@ public class PatientView {
 		client.send(getApps);
 
 		Integer size_ap = new Gson().fromJson(client.read(), Integer.class);
-		// System.out.println(size);
 		ArrayList<Appointment> list = new ArrayList<Appointment>();
 		for (int i = 0; i < size_ap; i++)
 			list.add(new Gson().fromJson(client.read(), Appointment.class));
@@ -368,18 +363,14 @@ public class PatientView {
 
 					if (record_id == -1) {
 						// I'll need the last record
-						System.out.println("PAME GIA KAINOURGIO RECORD KAI TREATMENT");
 						specific = last;
 						updateRecord = false;
 					} else {
 						// I'll need to fetch this appointments approved
 						updateRecord = true;
-						System.out.println("PAME GIA ALLAGI TOU RECORD " + record_id);
 						if (treatment_id == -1) {
-							System.out.println("PAME GIA KAINOUTGIO TREATMENT");
 							updateTreatment = false;
 						} else {
-							System.out.println("PAME GIA ALLAGI STO TREATMENT " + treatment_id);
 							updateTreatment = true;
 						}
 
