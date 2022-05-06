@@ -1,7 +1,7 @@
 # MentalHealthSystem
 
 <h1>EPL441 Homework</h1>
-<img src="/Images/kris.png">
+
 <h2>Team members</h2>
   <a href="mailto:mbofos01@ucy.ac.cy">Michail - Panagiotis Bofos</a>
   <br>
@@ -66,6 +66,31 @@
 <h2>Prototypes</h2>
 
   <h3>Clinical Viewpoint</h3>
+
+  <h4>Login</h4>
+  <img src="/Images/Prototypes/Clinical/Log In.png">
+
+  <h4>Main Page</h4>
+  <img src="/Images/Prototypes/Clinical/Main Clinical.png">
+
+  <h5>See Side Effects</h5>
+  <img src="/Images/Prototypes/Clinical/See side effects.png">
+
+  <h4>Patient Page</h4>
+  <img src="/Images/Prototypes/Clinical/Patient View.png">
+
+  <h5>See Comments</h5>
+  <img src="/Images/Prototypes/Clinical/Comments.png">
+
+  <h5>Add Allergies</h5>
+  <img src="/Images/Prototypes/Clinical/Allergies.png">
+
+  <h4>Add or Edit Diagnosis</h4>
+  <img src="/Images/Prototypes/Clinical/Diagnosis.png">
+
+  <h5>Warning Triggered</h5>
+  <img src="/Images/Prototypes/Clinical/Submit.png">
+
   <h3>Receptionist Viewpoint</h3>
   <h3>Medical Records Viewpoint</h3>
   <h3>Health Service Viewpoint</h3>
