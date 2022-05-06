@@ -17,6 +17,7 @@ import Objects.Patient;
 import Objects.ReceptionistObj;
 import Objects.Treatment;
 import Tools.Clock;
+import Tools.CreatePDF;
 import Tools.Query;
 import Tools.Viewpoint;
 import javax.swing.JLabel;
@@ -26,11 +27,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 /**
  * Main Interface for Health Service Staff. As stated in the basic structure
  * each viewpoint must have a client object as an argument.
- * 
+ *
  * @author Demetra Hadjicosti
  *
  */
@@ -54,7 +56,7 @@ public class Receptionist {
 
 	/**
 	 * Launch the Application
-	 * 
+	 *
 	 * @param client Client object for server client communication
 	 * @param model  Receptionist instance
 	 */
@@ -73,7 +75,7 @@ public class Receptionist {
 
 	/**
 	 * Create the Application
-	 * 
+	 *
 	 * @param client Client object for server client communication
 	 * @param model  Receptionist instance
 	 */
@@ -83,7 +85,7 @@ public class Receptionist {
 
 	/**
 	 * Initialize the contents of the frame
-	 * 
+	 *
 	 * @param client Client object for server client communication
 	 * @param model  Receptionist instance
 	 */
@@ -92,7 +94,7 @@ public class Receptionist {
 		frmReceptionist.setResizable(false);
 		frmReceptionist.setTitle("Receptionist");
 		frmReceptionist.getContentPane().setBackground(Color.WHITE);
-		frmReceptionist.setBounds(100, 100, 639, 531);
+		frmReceptionist.setBounds(100, 100, 646, 596);
 		frmReceptionist.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmReceptionist.getContentPane().setLayout(null);
 
@@ -119,7 +121,7 @@ public class Receptionist {
 
 		DefaultTableModel modelPatient = new DefaultTableModel(data, col);
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(63, 301, 518, 128);
+		scrollPane.setBounds(63, 322, 518, 128);
 		frmReceptionist.getContentPane().add(scrollPane);
 		tblPatient = new JTable();
 		scrollPane.setViewportView(tblPatient);
@@ -163,13 +165,14 @@ public class Receptionist {
 
 		DefaultTableModel modelAppointment = new DefaultTableModel(data1, col1);
 		JScrollPane scrollPane1 = new JScrollPane();
-		scrollPane1.setBounds(20, 43, 584, 153);
+		scrollPane1.setBounds(20, 54, 584, 153);
 		frmReceptionist.getContentPane().add(scrollPane1);
 		tblAppointment = new JTable();
 		scrollPane1.setViewportView(tblAppointment);
 		tblAppointment = new JTable(modelAppointment);
 		scrollPane1.setViewportView(tblAppointment);
 		tblAppointment.setDefaultEditor(Object.class, null);
+
 		tblAppointment.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -186,19 +189,41 @@ public class Receptionist {
 			}
 		});
 
+		JComboBox<String> cmb_Patient = new JComboBox<String>();
+		cmb_Patient.setBounds(245, 471, 165, 21);
+		frmReceptionist.getContentPane().add(cmb_Patient);
+
+		q = new Query(Viewpoint.Receptionist);
+		q.setFunction("getPatients");
+		client.send(q);
+		size = new Gson().fromJson(client.read(), Integer.class);
+		patient_list = new ArrayList<Patient>();
+		for (int i = 0; i < size; i++) {
+			Patient toAdd = new Gson().fromJson(client.read(), Patient.class);
+			if (toAdd.isAlive())
+				patient_list.add(toAdd);
+		}
+		index = 0;
+		data = new String[patient_list.size()][5];
+		for (Patient p1 : patient_list) {
+			data[index][0] = p1.getPatient_id() + "";
+			data[index][1] = p1.getName();
+			data[index][2] = p1.getSurname();
+			data[index][3] = p1.getTelephone();
+			data[index][4] = p1.getEmail();
+			String add = data[index][0] + " " + data[index][1] + " " + data[index][2];
+			cmb_Patient.insertItemAt(add, index);
+			index++;
+		}
+		cmb_Patient.setSelectedIndex(0);
+
 		JButton btnPresc = new JButton("Generate Last Perscription for selected patient");
+		btnPresc.setForeground(new Color(255, 255, 255));
 		btnPresc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Query q = new Query(Viewpoint.Receptionist);
 				q.setFunction("showAllTreatments");
-				int p = tblPatient.getSelectedRow();
-				int a = 0;
-				for (Patient p1 : patient_list) {
-					if (patient_list.get(p).getPatient_id() == p1.getPatient_id()) {
-						a = patient_list.get(p).getPatient_id();
-					}
-				}
-				q.addArgument(a + "");
+				q.addArgument(cmb_Patient.getSelectedItem().toString().split(" ")[0]);
 				client.send(q);
 				Treatment app = new Gson().fromJson(client.read(), Treatment.class);
 				app.setDate(Clock.currentSQLTime());
@@ -211,25 +236,25 @@ public class Receptionist {
 						q.setFunction("addTreatment");
 						q.addArgument(new Gson().toJson(app));
 						client.send(q);
-						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(),
-								"Prescription repeated.");
+						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(), "Prescription repeated.");
 					} else
 						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(),
 								"Prescription cannot be done, because treatment has not been accepted yet.");
 				}
 			}
 		});
-		btnPresc.setBackground(new Color(0, 204, 102));
-		btnPresc.setBounds(63, 439, 309, 34);
+		btnPresc.setBackground(new Color(204, 0, 51));
+		btnPresc.setBounds(162, 502, 334, 34);
 		frmReceptionist.getContentPane().add(btnPresc);
 
 		txtSearch = new JTextField();
 		txtSearch.setText("Search patient by name...");
-		txtSearch.setBounds(63, 264, 162, 19);
+		txtSearch.setBounds(63, 293, 162, 19);
 		frmReceptionist.getContentPane().add(txtSearch);
 		txtSearch.setColumns(10);
 
 		JButton btnSearch = new JButton("Search");
+		btnSearch.setForeground(new Color(255, 255, 255));
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String search = txtSearch.getText();
@@ -267,10 +292,11 @@ public class Receptionist {
 			}
 		});
 		btnSearch.setBackground(new Color(0, 153, 255));
-		btnSearch.setBounds(496, 263, 85, 21);
+		btnSearch.setBounds(235, 291, 85, 21);
 		frmReceptionist.getContentPane().add(btnSearch);
 
 		JButton btnNewAppointment = new JButton("New Appointment");
+		btnNewAppointment.setForeground(new Color(255, 255, 255));
 		btnNewAppointment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmReceptionist.dispose();
@@ -278,18 +304,19 @@ public class Receptionist {
 			}
 		});
 		btnNewAppointment.setBackground(new Color(0, 204, 102));
-		btnNewAppointment.setBounds(427, 206, 177, 21);
+		btnNewAppointment.setBounds(427, 217, 177, 21);
 		frmReceptionist.getContentPane().add(btnNewAppointment);
 
 		JLabel lblNewLabel = new JLabel("Appointments:");
-		lblNewLabel.setBounds(20, 20, 98, 13);
+		lblNewLabel.setBounds(20, 31, 98, 13);
 		frmReceptionist.getContentPane().add(lblNewLabel);
 
 		JLabel lblPatients = new JLabel("Patients:");
-		lblPatients.setBounds(63, 241, 98, 13);
+		lblPatients.setBounds(63, 270, 98, 13);
 		frmReceptionist.getContentPane().add(lblPatients);
 
 		JButton btnReset = new JButton("Reset Table");
+		btnReset.setForeground(new Color(255, 255, 255));
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Query q = new Query(Viewpoint.Receptionist);
@@ -326,7 +353,7 @@ public class Receptionist {
 			}
 		});
 		btnReset.setBackground(new Color(0, 153, 255));
-		btnReset.setBounds(473, 444, 108, 21);
+		btnReset.setBounds(473, 291, 108, 21);
 		frmReceptionist.getContentPane().add(btnReset);
 
 		// LOGOUT
@@ -338,8 +365,31 @@ public class Receptionist {
 			}
 		});
 		btnNewButton_1.setForeground(Color.WHITE);
-		btnNewButton_1.setBackground(new Color(215, 0, 21));
+		btnNewButton_1.setBackground(new Color(204, 0, 51));
 		btnNewButton_1.setBounds(524, 10, 80, 23);
 		frmReceptionist.getContentPane().add(btnNewButton_1);
+
+		JButton btnNewAppointment_1 = new JButton("Generate Report of missed Appointments");
+		btnNewAppointment_1.setForeground(new Color(255, 255, 255));
+		btnNewAppointment_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ArrayList<Patient> missed = new ArrayList<>();
+				for (Appointment ap : appointments) {
+					if (ap.getDate().equals(Clock.currentSQLTime()) && ap.isAttended() == false) {
+						Query pat = new Query(Viewpoint.Receptionist);
+						pat.setFunction("getPatientByID");
+						pat.addArgument("" + ap.getPatient_id());
+						client.send(pat);
+						Patient pate = new Gson().fromJson(client.read(), Patient.class);
+						missed.add(pate);
+					}
+				}
+				CreatePDF.createMissed(missed);
+			}
+		});
+		btnNewAppointment_1.setBackground(new Color(204, 0, 51));
+		btnNewAppointment_1.setBounds(20, 217, 270, 21);
+		frmReceptionist.getContentPane().add(btnNewAppointment_1);
+
 	}
 }

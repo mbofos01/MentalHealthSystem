@@ -14,6 +14,7 @@ import Objects.Doctor;
 import Objects.Drug;
 import Objects.Patient;
 import Tools.Clock;
+import Tools.CreatePDF;
 import Tools.CustomColours;
 import Tools.Query;
 import Tools.Viewpoint;
@@ -30,6 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import static javax.swing.JOptionPane.showMessageDialog;
+import java.awt.Color;
 
 /**
  * This application window is used to provide the doctors a main page to select
@@ -289,6 +291,29 @@ public class MainPage {
 		scrollPane3.setViewportView(appointTable);
 		appointTable = new JTable(model3);
 		scrollPane3.setViewportView(appointTable);
+
+		JButton reportBtn = new JButton("Todays' Report");
+		reportBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ArrayList<Patient> toRepo = new ArrayList<>();
+				for (Appointment ap : list) {
+					if (ap.isAttended() && ap.getRecord_id() == -1) {
+						Query pat = new Query(Viewpoint.Clinical);
+						pat.setFunction("getPatientByID");
+						pat.addArgument("" + ap.getPatient_id());
+						client.send(pat);
+						Patient pate = new Gson().fromJson(client.read(), Patient.class);
+						toRepo.add(pate);
+					}
+				}
+				CreatePDF.createNotUpdated(toRepo);
+
+			}
+		});
+		reportBtn.setBackground(CustomColours.Pink());
+		reportBtn.setForeground(CustomColours.interChangableWhite());
+		reportBtn.setBounds(133, 411, 131, 21);
+		contentPane.add(reportBtn);
 		appointTable.setDefaultEditor(Object.class, null);
 		//////////////////////////////////////////////////////////////////////////////////////////////////////
 		appointTable.addMouseListener(new MouseAdapter() {

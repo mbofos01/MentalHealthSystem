@@ -1585,7 +1585,7 @@ public class JDBC {
 	}
 
 	/**
-	 * This methos, inserts a new appoint ment into the database
+	 * This method, inserts a new appointment into the database
 	 * 
 	 * @param doctor_id       Doctor ID
 	 * @param patient_id      Patient ID
@@ -1732,9 +1732,10 @@ public class JDBC {
 	}
 
 	/**
+	 * This method gets the last Treatment of a patient
 	 * 
-	 * @param patient_id
-	 * @return
+	 * @param patient_id Patient ID
+	 * @return Treatment instance
 	 */
 	public Treatment getgenTreat(int patient_id) {
 
