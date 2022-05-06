@@ -222,7 +222,7 @@ public class Receptionist {
 			public void actionPerformed(ActionEvent e) {
 				Query q = new Query(Viewpoint.Receptionist);
 				q.setFunction("showAllTreatments");
-				q.addArgument(cmb_Patient.getSelectedItem().toString().split(" ")[0] );
+				q.addArgument(cmb_Patient.getSelectedItem().toString().split(" ")[0]);
 				client.send(q);
 				Treatment app = new Gson().fromJson(client.read(), Treatment.class);
 				app.setDate(Clock.currentSQLTime());
