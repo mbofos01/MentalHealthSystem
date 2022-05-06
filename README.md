@@ -1,7 +1,7 @@
 # MentalHealthSystem
 EPL441 Homework
 
-<img src="Images/Structure/clientServer.drawio.png">
+<img src="/Images/Structure/clientServer.drawio.png">
 
 Instructions on set up and first run:
   1) Pull the origin from github ( I recommend github desktop for your convenience)
