@@ -51,6 +51,7 @@ public class Receptionist {
 	 * Table that displays the patients
 	 */
 	private JTable tblPatient;
+	private JTextField txtID;
 
 	/**
 	 * Launch the Application
@@ -220,7 +221,7 @@ public class Receptionist {
 			}
 		});
 		btnPresc.setBackground(new Color(0, 204, 102));
-		btnPresc.setBounds(63, 439, 309, 34);
+		btnPresc.setBounds(174, 439, 289, 34);
 		frmReceptionist.getContentPane().add(btnPresc);
 
 		txtSearch = new JTextField();
@@ -341,5 +342,20 @@ public class Receptionist {
 		btnNewButton_1.setBackground(new Color(215, 0, 21));
 		btnNewButton_1.setBounds(524, 10, 80, 23);
 		frmReceptionist.getContentPane().add(btnNewButton_1);
+		
+		txtID = new JTextField();
+		txtID.setText("Enter ID");
+		txtID.setBounds(63, 447, 96, 19);
+		frmReceptionist.getContentPane().add(txtID);
+		txtID.setColumns(10);
+		
+		JButton btnNewAppointment_1 = new JButton("Generate Report of missed Appointments");
+		btnNewAppointment_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnNewAppointment_1.setBackground(new Color(0, 204, 102));
+		btnNewAppointment_1.setBounds(20, 206, 270, 21);
+		frmReceptionist.getContentPane().add(btnNewAppointment_1);
 	}
 }
