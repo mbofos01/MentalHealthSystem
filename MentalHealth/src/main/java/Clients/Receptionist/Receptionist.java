@@ -17,6 +17,7 @@ import Objects.Patient;
 import Objects.ReceptionistObj;
 import Objects.Treatment;
 import Tools.Clock;
+import Tools.CreatePDF;
 import Tools.Query;
 import Tools.Viewpoint;
 import javax.swing.JLabel;
@@ -212,8 +213,7 @@ public class Receptionist {
 						q.setFunction("addTreatment");
 						q.addArgument(new Gson().toJson(app));
 						client.send(q);
-						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(),
-								"Prescription repeated.");
+						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(), "Prescription repeated.");
 					} else
 						JOptionPane.showMessageDialog(frmReceptionist.getContentPane(),
 								"Prescription cannot be done, because treatment has not been accepted yet.");
@@ -342,16 +342,29 @@ public class Receptionist {
 		btnNewButton_1.setBackground(new Color(215, 0, 21));
 		btnNewButton_1.setBounds(524, 10, 80, 23);
 		frmReceptionist.getContentPane().add(btnNewButton_1);
-		
+
 		txtID = new JTextField();
 		txtID.setText("Enter ID");
 		txtID.setBounds(63, 447, 96, 19);
 		frmReceptionist.getContentPane().add(txtID);
 		txtID.setColumns(10);
-		
+
 		JButton btnNewAppointment_1 = new JButton("Generate Report of missed Appointments");
 		btnNewAppointment_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				ArrayList<Patient> missed = new ArrayList<>();
+				for (Appointment ap : appointments) {
+					if (ap.getDate().equals(Clock.currentSQLTime()) && ap.isAttended() == false) {
+						System.out.println(ap.getAppoint_id() + " den irthe");
+						Query pat = new Query(Viewpoint.Receptionist);
+						pat.setFunction("getPatientByID");
+						pat.addArgument("" + ap.getPatient_id());
+						client.send(pat);
+						Patient pate = new Gson().fromJson(client.read(), Patient.class);
+						missed.add(pate);
+					}
+				}
+				CreatePDF.createMissed(missed);
 			}
 		});
 		btnNewAppointment_1.setBackground(new Color(0, 204, 102));
