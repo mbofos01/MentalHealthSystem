@@ -199,7 +199,8 @@ public class Receptionist {
 		patient_list = new ArrayList<Patient>();
 		for (int i = 0; i < size; i++) {
 			Patient toAdd = new Gson().fromJson(client.read(), Patient.class);
-			patient_list.add(toAdd);
+			if (toAdd.isAlive())
+				patient_list.add(toAdd);
 		}
 		index = 0;
 		data = new String[patient_list.size()][5];
