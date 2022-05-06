@@ -50,7 +50,7 @@ public class Transactions {
 	private void initialize(Client client) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 582, 484);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		JLabel lblNewLabel_4 = new JLabel("       View all Transactions");
 		lblNewLabel_4.setFont(new Font("Segoe Script", Font.BOLD, 32));

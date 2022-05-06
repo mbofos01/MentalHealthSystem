@@ -89,7 +89,7 @@ public class HandleRequests {
 		frmRequestDescription = new JFrame();
 		frmRequestDescription.setTitle("Request Description");
 		frmRequestDescription.setBounds(100, 100, 395, 467);
-		frmRequestDescription.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmRequestDescription.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		JLabel lblNewLabel_4 = new JLabel("       View all Requests");
 		lblNewLabel_4.setFont(new Font("Segoe Script", Font.BOLD, 32));

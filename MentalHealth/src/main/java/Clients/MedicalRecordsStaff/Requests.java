@@ -63,7 +63,7 @@ public class Requests {
 		frmAllRequests = new JFrame();
 		frmAllRequests.setTitle("All Requests");
 		frmAllRequests.setBounds(100, 100, 910, 504);
-		frmAllRequests.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmAllRequests.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		JLabel lblNewLabel_4 = new JLabel("       View all Requests");
 		lblNewLabel_4.setFont(new Font("Segoe Script", Font.BOLD, 32));
