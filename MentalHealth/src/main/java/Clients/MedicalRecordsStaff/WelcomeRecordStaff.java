@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
  * This application windows is used (as of now) just for displaying some info
  * about the record management staff.
  * 
- * @author Michail Panagiotis Bofos
+ *@author Ioanna Theophilou
  *
  */
 public class WelcomeRecordStaff {

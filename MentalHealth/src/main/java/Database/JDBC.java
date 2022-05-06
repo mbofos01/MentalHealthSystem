@@ -323,6 +323,12 @@ public class JDBC {
 		return rec;
 	}
 
+	/**
+	 * This method returns the allergy by id.
+	 * 
+	 * @param id
+	 * @return the allergy.
+	 */
 	public Allergy getAllergy(int id) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call getAllergy(?)}");
@@ -428,6 +434,13 @@ public class JDBC {
 		return false;
 	}
 
+	/**
+	 * This is used for the insertDoctorPatientRelationship procedure found on the DB. This is used in the Assign.java file 
+	 * where the Medical Records staff can assign patients to Doctors. 
+	 * @param patient_id
+	 * @param doctor_id
+	 * @return
+	 */
 	public boolean insertDoctorPatientRelationship(int patient_id, int doctor_id) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call insertDoctorPatientRelationship(?,?)}");
@@ -441,7 +454,11 @@ public class JDBC {
 		}
 		return false;
 	}
-
+	/**
+	 * This procedure changes the accept field when needed of the allergy Table. 
+	 * @param recId
+	 * @return a flag for true or false only for checking purposes
+	 */
 	public boolean changeAllAccept(int recId) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call changeAllAccept(?)}");
@@ -453,7 +470,11 @@ public class JDBC {
 		}
 		return false;
 	}
-
+	/**
+	 * This procedure changes the accept field when needed of the Records Table. 
+	 * @param recId
+	 * @return a flag for true or false only for checking purposes
+	 */
 	public boolean changeRecAccept(int recId) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call changeRecAccept(?)}");
@@ -465,7 +486,13 @@ public class JDBC {
 		}
 		return false;
 	}
-
+	/**
+	 * This procedure deletes the patient from the pending patients table, and updates the corresponding
+	 * patient as not alive. 
+	 *  
+	 * @param recId
+	 * @return a flag for true or false only for checking purposes
+	 */
 	public boolean changeDeath(int recId) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call changeDeath(?)}");
@@ -477,7 +504,11 @@ public class JDBC {
 		}
 		return false;
 	}
-
+	/**
+	 * This procedure changes the accept field when needed of the Treatments Table. 
+	 * @param recId
+	 * @return a flag for true or false only for checking purposes
+	 */
 	public boolean changeTreatAccept(int recId) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call changeTreatAccept(?)}");
@@ -930,7 +961,11 @@ public class JDBC {
 		}
 		return merged;
 	}
-
+	/**
+	 * This procedure returns a list of all the Doctors. 
+	 * @param recId
+	 * @return a list of the doctors
+	 */
 	public ArrayList<Doctor> getDoctors() {
 
 		ArrayList<Doctor> doctors = new ArrayList<>();
@@ -957,7 +992,11 @@ public class JDBC {
 		}
 		return doctors;
 	}
-
+	/**
+	 * This procedure returns a list of all the Patients. 
+	 * @param recId
+	 * @return a list of the patients
+	 */
 	public ArrayList<Patient> getPatients() {
 
 		ArrayList<Patient> patients = new ArrayList<Patient>();
@@ -1075,7 +1114,15 @@ public class JDBC {
 		}
 		return rendez;
 	}
-
+	/**
+	 * There are 4 types of Requests : 
+	 * - Treatments
+	 * - Records
+	 * - Patients
+	 * - Allergies
+	 * 
+	 * This returns all the requests, meaning all the above types where the accept field is 0	  
+	 */
 	public ArrayList<Request> getRequests() {
 		ArrayList<Request> requests = new ArrayList<>();
 		try {
@@ -1305,6 +1352,11 @@ public class JDBC {
 	}
 
 //***************************************************/
+	/**
+	 * This returns the patient by the id. 
+	 * @param pat the patient id
+	 * @return the patient with that id
+	 */
 	public Patient getPatientByID(int pat) {
 		try {
 
@@ -1330,7 +1382,11 @@ public class JDBC {
 	}
 
 //***************************************************/		
-
+	/**
+	 * Returns a patient Record by the id
+	 * @param pat
+	 * @return
+	 */
 	public PatientRecord getRecordByID(int pat) {
 		try {
 
@@ -1352,26 +1408,6 @@ public class JDBC {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	public ArrayList<Clinic> getClinicsJo() {
-		ArrayList<Clinic> clinics = new ArrayList<>();
-		try {
-
-			PreparedStatement cs = this.conn.prepareCall("{call getClinics()}");
-
-			ResultSet rs = cs.executeQuery();
-
-			while (rs.next()) {
-				Clinic rec = new Clinic();
-				rec.setName(rs.getString("name"));
-				rec.setClinic_id(rs.getInt("clinic_id"));
-				clinics.add(rec);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return clinics;
 	}
 
 	/**

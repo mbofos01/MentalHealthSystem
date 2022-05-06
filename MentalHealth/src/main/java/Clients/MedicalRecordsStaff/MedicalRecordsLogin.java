@@ -31,13 +31,21 @@ import javax.swing.JComboBox;
  * In-page for the Medical Records Management Viewpoint. As stated in the basic
  * structure each viewpoint must have a client object as an argument.
  * 
- * @author Michail Panagiotis Bofos
+ * @author Ioanna Theophilou
  *
  */
 public class MedicalRecordsLogin {
-
+	/**
+	 * Frame 
+	 */
 	private JFrame frmMedicalRecordsStaff;
+	/**
+	 * The field to hold the username
+	 */
 	private JTextField usernameField;
+	/**
+	 * The field that holds the password
+	 */
 	private JPasswordField passwordField;
 
 	/**

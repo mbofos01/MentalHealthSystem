@@ -24,20 +24,40 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+/**
+ * To assign the patient with the doctors.
+ * @author Ioanna Theophilou
+ *
+ */
 public class Assign {
-
-	private JFrame frmAssignPatientTo;
-	private JPanel contentPane;
-	public static JTable table;
-	private JLabel lblNewLabel;
-	private Client client;
-	private int selected = -1;
-	private int selected1 = -1;
-
 	/**
-	 * Launch the application.
+	 * The frame
 	 */
+	private JFrame frmAssignPatientTo;
+	/**
+	 * The content pane
+	 */
+	private JPanel contentPane;
+	/**
+	 * The table used bellow
+	 */
+	public static JTable table;
+	/**
+	 * The label used bellow
+	 */
+	private JLabel lblNewLabel;
+	/**
+	 * The client used bellow
+	 */
+	private Client client;
+	/**
+	 * The index of the selected item of one of the dropdown lists. 
+	 */
+	private int selected = -1;
+	/**
+	 * The index of the selected item of the other dropdown list. 
+	 */
+	private int selected1 = -1;
 
 	/**
 	 * Initialize the contents of the frame.
@@ -117,7 +137,12 @@ public class Assign {
 		frmAssignPatientTo.getContentPane().add(lblNewLabel_1);
 
 	}
-
+	
+	/**
+	 * The function to open this window. 
+	 * @param client
+	 * @param req
+	 */
 	public static void openWindow(Client client) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

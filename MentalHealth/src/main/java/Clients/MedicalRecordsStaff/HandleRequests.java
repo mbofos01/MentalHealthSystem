@@ -34,15 +34,39 @@ import Tools.CustomColours;
 import Tools.Query;
 import Tools.RequestType;
 import Tools.Viewpoint;
-
+/**
+ * The class that handles each request differently according to the type. 
+ * @author Ioanna Theophilou
+ *
+ */
 public class HandleRequests {
-
+	/**
+	 * the frame
+	 */
 	private JFrame frmRequestDescription;
+	/**
+	 * the content pane 
+	 */
 	private JPanel contentPane;
+	/**
+	 * the table used 
+	 */
 	private JTable table;
+	/**
+	 * a label used bellow 
+	 */
 	private JLabel lblNewLabel;
+	/**
+	 * The client
+	 */
 	private Client client;
+	/**
+	 * the button used bellow
+	 */
 	private JButton btnNewButton;
+	/**
+	 * a cancel button
+	 */
 	private JButton cancel;
 
 	/**
@@ -50,7 +74,8 @@ public class HandleRequests {
 	 */
 
 	/**
-	 * Create the application.
+	 * Create the application. The constructor of this class that gets a selected request 
+	 * from the Request table of the Request.java table. 
 	 */
 	public HandleRequests(Client client, Request req) {
 		initialize(client, req);
@@ -324,6 +349,11 @@ public class HandleRequests {
 		}
 
 	}
+	/**
+	 * The function to open this window. 
+	 * @param client
+	 * @param req
+	 */
 
 	public static void openWindow(Client client, Request req) {
 		// System.out.println("MPIKA");

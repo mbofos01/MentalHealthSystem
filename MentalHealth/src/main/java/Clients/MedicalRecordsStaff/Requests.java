@@ -26,24 +26,35 @@ import Objects.Transaction;
 import Tools.CustomColours;
 import Tools.Query;
 import Tools.Viewpoint;
-
+/**
+ * This class represents the Requests. It shows all the requests of this system. 
+ * If a request is selected, it can be accepted or declined. 
+ * 
+ * @author Ioanna Theophilou
+ *
+ */
 public class Requests {
-//record, treatment, 
+	/**
+	 * the frame
+	 */
 	private JFrame frmAllRequests;
+	/**
+	 * the content pane
+	 */
 	private JPanel contentPane;
+	/**
+	 * the table used bellow 
+	 */
 	public static JTable table;
+	/**
+	 * the label used bellow
+	 */
 	private JLabel lblNewLabel;
+	/**
+	 * the client
+	 */
 	private Client client;
-
-	/**
-	 * Launch the application.
-	 */
-
-
-	/**
-	 * Create the application.
-	 */
-
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -117,6 +128,12 @@ public class Requests {
 	public void setTable(JTable table) {
 		this.table = table;
 	}
+	
+	/**
+	 * The function to open this window. 
+	 * @param client
+	 * @param req
+	 */
 	public static void openWindow(Client client) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

@@ -30,15 +30,33 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-
+/**
+ * This class represents 
+ * @author Ioanna Theophilou
+ *
+ */
 public class Transactions {
-
+	/**
+	 * the frame
+	 */
 	private JFrame frame;
+	/**
+	 * the content pane
+	 */
 	private JPanel contentPane;
+	/**
+	 * the table
+	 */
 	private JTable table;
+	/**
+	 * the label
+	 */
 	private JLabel lblNewLabel;
 
-	
+	/**
+	 * to start the app
+	 * @param client
+	 */
 	private void initialize(Client client) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 582, 484);
@@ -83,11 +101,19 @@ public class Transactions {
 		table.setDefaultEditor(Object.class, null);
 
 	}
-
+	/**
+	 * The constructor 
+	 * @param client
+	 */
 	public Transactions(Client client) {
 		initialize(client);
 	}
-
+	
+	/**
+	 * The function to open this window. 
+	 * @param client
+	 * @param req
+	 */
 	public static void openWindow(Client client) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
