@@ -175,7 +175,7 @@ public class PatientView {
 				if (commentsText.getText().length() > 0) {
 					Query q = new Query(Viewpoint.Clinical);
 					q.setFunction("addComment");
-					q.addArgument("" + doctor.getClinic_id());
+					q.addArgument("" + doctor.getId());
 					q.addArgument("" + patient.getPatient_id());
 					q.addArgument(commentsText.getText());
 					client.send(q);
