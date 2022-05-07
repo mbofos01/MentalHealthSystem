@@ -346,8 +346,7 @@ public class Create_Appointment {
 							chk_drop.setSelected(false);
 							q.addArgument("0");
 						}
-					}
-					else 
+					} else
 						q.addArgument("0");
 
 					q.addArgument(txt_Receptionist.getText());
@@ -365,6 +364,8 @@ public class Create_Appointment {
 					client.send(q2);
 					JOptionPane.showMessageDialog(crt_app.getContentPane(), "Updated successfully");
 				}
+				crt_app.dispose();
+				Receptionist.openWin(client, model);
 			}
 		});
 		btnNewButton.setBackground(new Color(0, 102, 255));
