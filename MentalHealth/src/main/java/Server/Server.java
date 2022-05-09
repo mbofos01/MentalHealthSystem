@@ -413,7 +413,13 @@ public class Server {
 				boolean suc = database.insertNewPatient(tr);
 				output.writeBytes(new Gson().toJson(suc) + System.lineSeparator());
 
+			} else if (incoming.getFunction().equals("getPatientsLatestAppointment")) {
+				int id = Integer.parseInt(incoming.getArguments().get(0));
+				Appointment app = database.getPatientsLatestAppointment(id);
+				output.writeBytes(new Gson().toJson(app) + System.lineSeparator());
+
 			}
+
 		}
 
 		/**

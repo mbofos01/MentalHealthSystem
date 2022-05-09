@@ -331,12 +331,14 @@ public class Create_Appointment {
 					q.addArgument(txtDate.getText());
 					q.addArgument(txtTime.getText());
 
+					/************************************************/
 					Query q3 = new Query(Viewpoint.Receptionist);
-					q3.setFunction("getAppointment");
-					q3.addArgument(a + "");
+					q3.setFunction("getPatientsLatestAppointment");
+					q3.addArgument(cmb_Patient.getSelectedItem().toString().split(" ")[0] + "");
 					client.send(q3);
+					/************************************************/
 					Appointment app = new Gson().fromJson(client.read(), Appointment.class);
-					if (chk_drop.isSelected()) {
+					if (chk_drop.isSelected() && app != null) {
 						int option = JOptionPane.showConfirmDialog(null,
 								"Last Appointment was at: " + app.getDate() + ".\nDo you want to continue?",
 								"Overprescription Alert", JOptionPane.YES_NO_OPTION);
@@ -345,6 +347,7 @@ public class Create_Appointment {
 						else {
 							chk_drop.setSelected(false);
 							q.addArgument("0");
+							return;
 						}
 					} else
 						q.addArgument("0");

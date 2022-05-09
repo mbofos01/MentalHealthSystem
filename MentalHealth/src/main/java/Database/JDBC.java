@@ -1342,17 +1342,6 @@ public class JDBC {
 	}
 
 	/**
-	 * Main function no needed for the project, only for testing.
-	 * 
-	 * @param args No arguments needed
-	 */
-	public static void main(String[] args) {
-		JDBC base = new JDBC();
-		base.insertDoctorPatientRelationship(4, 0);
-
-	}
-
-	/**
 	 * This returns the patient by the id.
 	 * 
 	 * @param pat the patient id
@@ -1847,6 +1836,49 @@ public class JDBC {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * This function fetches the last attended appointment of a specific patient.
+	 * 
+	 * @param patient Integer id of patient
+	 * @return Last attended appointment
+	 */
+	public Appointment getPatientsLatestAppointment(int patient) {
+		Appointment app = new Appointment();
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call getPatientsLatestAppointment(?)}");
+			cs.setInt(1, patient);
+			ResultSet rs = cs.executeQuery();
+			while (rs.next()) {
+				app.setDoctor_id(rs.getInt("doctor_id"));
+				app.setAppoint_id(rs.getInt("appoint_id"));
+				app.setPatient_id(rs.getInt("patient_id"));
+				app.setDate(rs.getString("date"));
+				app.setTime(rs.getString("time"));
+				app.setDropIn(rs.getBoolean("dropIn"));
+				app.setReceptionist_id(rs.getInt("receptionist_id"));
+				app.setAttended(rs.getBoolean("attended"));
+				return app;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Main function no needed for the project, only for testing.
+	 * 
+	 * @param args No arguments needed
+	 */
+	public static void main(String[] args) {
+		JDBC base = new JDBC();
+		Appointment s = base.getPatientsLatestAppointment(20);
+		System.out.println(s.getDate());
+
 	}
 
 }
