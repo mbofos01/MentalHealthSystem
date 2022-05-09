@@ -1827,4 +1827,24 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This method inserts a Patient to the Database.
+	 * 
+	 * @param p Patient object
+	 */
+	public void insertNewPatient(Patient p) {
+		try {
+			PreparedStatement cs = this.conn.prepareCall("{call insertPatient(?,?,?,?,?)}");
+			cs.setString(1, p.getName());
+			cs.setString(2, p.getSurname());
+			cs.setString(3, p.getDate());
+			cs.setString(4, p.getEmail());
+			cs.setString(5, p.getTelephone());
+			cs.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

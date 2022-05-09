@@ -47,7 +47,7 @@ import Tools.Viewpoint;
 public class Server {
 
 	private static class TCPWorker implements Runnable {
-		
+
 		/**
 		 * The socket
 		 */
@@ -408,6 +408,10 @@ public class Server {
 				int id = Integer.parseInt(incoming.getArguments().get(0));
 				Patient rec = database.getPatientByID(id);
 				output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
+			} else if (incoming.getFunction().equals("insertNewPatient")) {
+				Patient tr = new Gson().fromJson(incoming.getArguments().get(0), Patient.class);
+				System.out.println(tr.getName());
+				database.insertNewPatient(tr);
 			}
 		}
 
@@ -705,7 +709,7 @@ public class Server {
 					rec.emptyValue();
 				}
 				output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
-			}else if (incoming.getFunction().equals("getClinics")) {
+			} else if (incoming.getFunction().equals("getClinics")) {
 				ArrayList<Clinic> clinics = database.getClinics();
 				try {
 					output.writeBytes(new Gson().toJson(clinics.size()) + System.lineSeparator());

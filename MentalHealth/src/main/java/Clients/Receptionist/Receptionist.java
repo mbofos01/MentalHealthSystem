@@ -391,5 +391,18 @@ public class Receptionist {
 		btnNewAppointment_1.setBounds(20, 217, 270, 21);
 		frmReceptionist.getContentPane().add(btnNewAppointment_1);
 
+		JButton addPatient = new JButton("New Patient");
+		addPatient.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CreatePatient.openWindow(client, model);
+				frmReceptionist.dispose();
+
+			}
+		});
+		addPatient.setForeground(Color.WHITE);
+		addPatient.setBackground(new Color(0, 153, 255));
+		addPatient.setBounds(335, 291, 128, 21);
+		frmReceptionist.getContentPane().add(addPatient);
+
 	}
 }
