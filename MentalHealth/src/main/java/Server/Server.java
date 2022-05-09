@@ -410,8 +410,9 @@ public class Server {
 				output.writeBytes(new Gson().toJson(rec) + System.lineSeparator());
 			} else if (incoming.getFunction().equals("insertNewPatient")) {
 				Patient tr = new Gson().fromJson(incoming.getArguments().get(0), Patient.class);
-				System.out.println(tr.getName());
-				database.insertNewPatient(tr);
+				boolean suc = database.insertNewPatient(tr);
+				output.writeBytes(new Gson().toJson(suc) + System.lineSeparator());
+
 			}
 		}
 

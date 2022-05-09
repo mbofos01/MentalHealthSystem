@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 
@@ -143,16 +145,40 @@ public class CreatePatient {
 				p.setSurname(surnameTxt.getText());
 				p.setName(nameTxt.getText());
 
+				if (p.getName().equals("")) {
+					p.setName(null);
+				}
+				if (p.getSurname().equals("")) {
+					p.setSurname(null);
+				}
+				if (p.getTelephone().equals("")) {
+					p.setTelephone(null);
+				}
+				if (p.getEmail().equals("")) {
+					p.setEmail(null);
+				}
+				if (p.getDate().equals("")) {
+					p.setDate(null);
+				}
+
 				Query q = new Query(Viewpoint.Receptionist);
 				q.setFunction("insertNewPatient");
 				q.addArgument(new Gson().toJson(p));
 				client.send(q);
-				frame.dispose();
-				Receptionist.openWin(client, model);
+				Boolean flag = new Gson().fromJson(client.read(), Boolean.class);
+				if (flag) {
+					JOptionPane.showMessageDialog(frame.getContentPane(), "New patient added successfully");
+					frame.dispose();
+					Receptionist.openWin(client, model);
+				} else {
+					JOptionPane.showMessageDialog(frame, "New patient addition failed!", "Swing Tester",
+							JOptionPane.ERROR_MESSAGE);
+				}
+
 			}
 		});
 		btnNewButton.setBackground(new Color(0, 204, 102));
-		btnNewButton.setForeground(new Color(0, 0, 0));
+		btnNewButton.setForeground(Color.WHITE);
 		btnNewButton.setBounds(226, 465, 151, 32);
 		frame.getContentPane().add(btnNewButton);
 
@@ -164,7 +190,7 @@ public class CreatePatient {
 			}
 		});
 		btnNewButton_1.setBackground(new Color(204, 0, 51));
-		btnNewButton_1.setForeground(new Color(0, 0, 0));
+		btnNewButton_1.setForeground(Color.WHITE);
 		btnNewButton_1.setBounds(42, 465, 151, 32);
 		frame.getContentPane().add(btnNewButton_1);
 	}

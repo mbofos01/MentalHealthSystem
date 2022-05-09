@@ -1831,8 +1831,9 @@ public class JDBC {
 	 * This method inserts a Patient to the Database.
 	 * 
 	 * @param p Patient object
+	 * @return True if the addition was successful otherwise false
 	 */
-	public void insertNewPatient(Patient p) {
+	public boolean insertNewPatient(Patient p) {
 		try {
 			PreparedStatement cs = this.conn.prepareCall("{call insertPatient(?,?,?,?,?)}");
 			cs.setString(1, p.getName());
@@ -1843,8 +1844,9 @@ public class JDBC {
 			cs.execute();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
 }
