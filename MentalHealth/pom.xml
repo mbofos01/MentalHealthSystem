@@ -81,7 +81,11 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
 				<configuration>
+					<mainClass>Server.Server</mainClass>
+					<!--<mainClass>Clients.Clinical.ClinicalLogin</mainClass>
+					<mainClass>Clients.HealthService.HealthServiceLogin</mainClass>
 					<mainClass>Clients.MedicalRecordsStaff.MedicalRecordsLogin</mainClass>
+					<mainClass>Clients.Receptionist.ReceptionistLogin</mainClass>-->
 				</configuration>
 			</plugin>
 
