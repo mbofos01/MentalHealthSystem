@@ -53,6 +53,10 @@ public class Receptionist {
 	 * Table that displays the patients
 	 */
 	private JTable tblPatient;
+	/**
+	 * Scroll panel for patient table
+	 */
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the Application
@@ -120,7 +124,7 @@ public class Receptionist {
 		}
 
 		DefaultTableModel modelPatient = new DefaultTableModel(data, col);
-		JScrollPane scrollPane = new JScrollPane();
+		scrollPane = new JScrollPane();
 		scrollPane.setBounds(63, 322, 518, 128);
 		frmReceptionist.getContentPane().add(scrollPane);
 		tblPatient = new JTable();
@@ -257,6 +261,9 @@ public class Receptionist {
 		btnSearch.setForeground(new Color(255, 255, 255));
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				frmReceptionist.getContentPane().remove(scrollPane);
+				frmReceptionist.repaint();
+
 				String search = txtSearch.getText();
 				Query q = new Query(Viewpoint.Receptionist);
 				q.setFunction("getPatientsSearch");
@@ -266,8 +273,7 @@ public class Receptionist {
 				Integer size = new Gson().fromJson(client.read(), Integer.class);
 				ArrayList<Patient> patient_list = new ArrayList<Patient>();
 				for (int i = 0; i < size; i++)
-					patient_list.add(new Gson().fromJson(client.read(), Patient.class));
-				// SHOW
+					patient_list.add(new Gson().fromJson(client.read(), Patient.class)); // SHOW
 				String col[] = { "Patient ID", "Name", "Surname", "Telephone", "Email" };
 				int index = 0;
 				String data[][] = new String[patient_list.size()][col.length];
@@ -281,14 +287,15 @@ public class Receptionist {
 				}
 
 				DefaultTableModel modelPatient = new DefaultTableModel(data, col);
-				JScrollPane scrollPane = new JScrollPane();
-				scrollPane.setBounds(63, 301, 518, 128);
+				scrollPane = new JScrollPane();
+				scrollPane.setBounds(63, 322, 518, 128);
 				frmReceptionist.getContentPane().add(scrollPane);
 				tblPatient = new JTable();
 				scrollPane.setViewportView(tblPatient);
 				tblPatient = new JTable(modelPatient);
 				scrollPane.setViewportView(tblPatient);
 				tblPatient.setDefaultEditor(Object.class, null);
+
 			}
 		});
 		btnSearch.setBackground(new Color(0, 153, 255));
@@ -298,6 +305,7 @@ public class Receptionist {
 		JButton btnNewAppointment = new JButton("New Appointment");
 		btnNewAppointment.setForeground(new Color(255, 255, 255));
 		btnNewAppointment.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				frmReceptionist.dispose();
 				Create_Appointment.main(client, model, -1, 0, -1);
@@ -319,6 +327,7 @@ public class Receptionist {
 		btnReset.setForeground(new Color(255, 255, 255));
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				Query q = new Query(Viewpoint.Receptionist);
 				q.setFunction("getPatients");
 				client.send(q);
@@ -339,10 +348,13 @@ public class Receptionist {
 					data[index][4] = p.getEmail();
 					index++;
 				}
+				frmReceptionist.getContentPane().remove(scrollPane);
+				frmReceptionist.repaint();
 
 				DefaultTableModel modelPatient = new DefaultTableModel(data, col);
-				JScrollPane scrollPane = new JScrollPane();
-				scrollPane.setBounds(63, 301, 518, 128);
+				scrollPane = new JScrollPane();
+				scrollPane.setBounds(63, 322, 518, 128);
+
 				frmReceptionist.getContentPane().add(scrollPane);
 				tblPatient = new JTable();
 				scrollPane.setViewportView(tblPatient);

@@ -66,8 +66,9 @@ public class WelcomeRecordStaff {
 	 */
 	private void initialize(Client client, RecordsStaff model) {
 		frame = new JFrame();
+		frame.setResizable(false);
 		frame.getContentPane().setForeground(Color.RED);
-		frame.setBounds(100, 100, 899, 442);
+		frame.setBounds(100, 100, 957, 442);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -105,7 +106,7 @@ public class WelcomeRecordStaff {
 		});
 		btnNewButton_1.setFont(new Font("Segoe Script", Font.PLAIN, 20));
 		btnNewButton_1.setBackground(SystemColor.inactiveCaption);
-		btnNewButton_1.setBounds(383, 161, 183, 151);
+		btnNewButton_1.setBounds(349, 161, 259, 151);
 		frame.getContentPane().add(btnNewButton_1);
 
 		JButton btnNewButton_1_1 = new JButton("Assign Patients");
