@@ -49,7 +49,7 @@ public class JDBC {
 	 * 
 	 */
 	private Connection getDBConnection() {
-		String dbConnString = "jdbc:sqlserver://mssql.cs.ucy.ac.cy:1433;databaseName=team4;user=team4;password=banmb65B;";
+		String dbConnString = "jdbc:sqlserver://*:*;databaseName=*;user=*;password=*;";
 
 		if (!dbDriverLoaded)
 			try {
