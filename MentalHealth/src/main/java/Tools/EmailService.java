@@ -51,7 +51,7 @@ public class EmailService {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-				return new PasswordAuthentication("epl441.mentalhealth@gmail.com", "Fjk2Ls1!lasd");
+				return new PasswordAuthentication("*@gmail.com", "*");
 
 			}
 
@@ -91,7 +91,7 @@ public class EmailService {
 	 * @param args No arguments needed
 	 */
 	public static void main(String[] args) {
-		sendEmail("mbofos@gmail.com", "test", "as", true);
+		sendEmail("*@gmail.com", "test", "as", true);
 	}
 
 }
